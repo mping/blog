@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>(mcorbin.fr): Exploitez vos logs Ansible !</title>
+    <title>(mcorbin.fr): Exploitez vos logs Ansible ! / Use your Ansible logs !</title>
     <link rel="canonical" href="http://mcorbin.fr/posts/10-08-2016-logs-ansible/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
@@ -63,11 +63,11 @@
         <div class="col-lg-6">10 août 2016</div>
         
     </div>
-    <h2>Exploitez vos logs Ansible !</h2>
+    <h2>Exploitez vos logs Ansible ! / Use your Ansible logs !</h2>
 </div>
 <div>
     
-    <p>J'utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l'utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.</p><p>Tout cela génère une <strong>énorme</strong> quantité de logs, dont nous ne faisons pas grand chose à part une consultation après un déploiement via l'interface de Jenkins.</p><p>J'expliquerais dans cet article une façon d'exploiter ces logs, en s'appuyant sur les plugins callback d'Ansible. Grâce à ces plugins, il est possible d'obtenir des logs beaucoup plus détaillés que les logs Ansible de base, ainsi que de facilement les manipuler pour en tirer un maximum d'informations et de statistiques.</p><h2><a name="les&#95;callbacks&#95;plugins&#95;d'ansible"></a>Les callbacks plugins d'Ansible</h2><h3><a name="&nbsp;&nbsp;&nbsp;&nbsp;&#95;<strong>présentation&#95;générale</strong>"></a>&nbsp;&nbsp;&nbsp;&nbsp; <strong>Présentation générale</strong></h3><p>Ansible peut être "étendu" avec des plugins. Je vais présenter ici les plugins de type callback <a href='http://docs.ansible.com/ansible/developing_plugins.html#callbacks'>(documentation)</a>. Les examples ici concernent Ansible 1.X, mais le fonctionnement est quasiment identique en version 2 et plus.</p><p>Ce plugin permet de définir un objet dont les fonctions seront appelées à différents moments lors de l'exécution d'Ansible. Exemple :</p><pre><code class="python">class CallbackModule&#40;object&#41;:
+    <p>English version <a href='https://mcorbin.fr/pages/logs-ansible'>here</a></p><p>J'utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l'utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.</p><p>Tout cela génère une <strong>énorme</strong> quantité de logs, dont nous ne faisons pas grand chose à part une consultation après un déploiement via l'interface de Jenkins.</p><p>J'expliquerais dans cet article une façon d'exploiter ces logs, en s'appuyant sur les plugins callback d'Ansible. Grâce à ces plugins, il est possible d'obtenir des logs beaucoup plus détaillés que les logs Ansible de base, ainsi que de facilement les manipuler pour en tirer un maximum d'informations et de statistiques.</p><h2><a name="les&#95;callbacks&#95;plugins&#95;d'ansible"></a>Les callbacks plugins d'Ansible</h2><h3><a name="&nbsp;&nbsp;&nbsp;&nbsp;&#95;<strong>présentation&#95;générale</strong>"></a>&nbsp;&nbsp;&nbsp;&nbsp; <strong>Présentation générale</strong></h3><p>Ansible peut être "étendu" avec des plugins. Je vais présenter ici les plugins de type callback <a href='http://docs.ansible.com/ansible/developing_plugins.html#callbacks'>(documentation)</a>. Les examples ici concernent Ansible 1.X, mais le fonctionnement est quasiment identique en version 2 et plus.</p><p>Ce plugin permet de définir un objet dont les fonctions seront appelées à différents moments lors de l'exécution d'Ansible. Exemple:</p><pre><code class="python">class CallbackModule&#40;object&#41;:
 
     def on&#95;any&#40;self, &#42;args, &#42;&#42;kwargs&#41;:
         pass
@@ -89,7 +89,7 @@
 
     # etc...
 
-</code></pre><p>Un callback plugin est donc juste un objet implémentant un certain nombre de méthodes. J'en ai mis quelques unes dans cet exemple, mais il en existe beaucoup plus pour tout type d'événements (vous pouvez retrouver ces fonctions dans la doc d'Ansible ou dans les plugins callbacks fournis avec Ansible).</p><h3><a name="&nbsp;&nbsp;&nbsp;&nbsp;&#95;<strong>fonctionnement&#95;détaillé</strong>"></a>&nbsp;&nbsp;&nbsp;&nbsp; <strong>Fonctionnement détaillé</strong></h3><p>Par exemple, la fonction <strong>runner&#95;on&#95;failed</strong> sera appelé quand une task Ansible échouera. De la même façon, <strong>runner&#95;on&#95;ok</strong> sera appelé lorsque qu'une tâche sera en succès, <strong>runner&#95;on&#95;skipped</strong> lors d'une tâche ignorée etc...</p><p>Les fonctions de type <strong>playbook&#95;on_</strong> seront elles exécutées lors d'évènements liés aux playbooks (<strong>playbook&#95;on&#95;start</strong> lors du démarrage du playbook etc...).</p><p>Toutes ces fonctions recoivent des paramètres. C'est là que ça devient intéressant. Par exemple, nous disposons dans <strong>runner&#95;on&#95;ok</strong> des variables <strong>self</strong>, <strong>host</strong>, et <strong>res</strong> :</p><ul><li>Commençons par la variable <strong>host</strong>. Comme son nom l'indique, cette variable contient l'host sur lequel s'applique la task.</li><li>La variable <strong>res</strong> contient les différentes informations sur la machine comme par exemple les variables de type <em>fact</em>, ainsi que quelques informations sur la task (état <em>changed</em>, module appelé...).</li><li>L'objet callback <strong>self</strong> contient un grand nombre d'informations sur l'exécution en cours. Rajoutons par exemple <strong>import pdb; pdb.set_trace();</strong> dans la fonction (pour utiliser le débugger Python) et lançons un déploiement. Un <strong>pp dir(self)</strong> pour lister les champs de l'objet donne:</li></ul><pre><code>&#40;Pdb&#41; pp dir&#40;self&#41;
+</code></pre><p>Un callback plugin est donc juste une classe implémentant un certain nombre de méthodes. J'en ai mis quelques unes dans cet exemple, mais il en existe beaucoup plus pour tout type d'événements (vous pouvez retrouver ces fonctions dans la doc d'Ansible ou dans les plugins callbacks fournis avec Ansible).</p><h3><a name="&nbsp;&nbsp;&nbsp;&nbsp;&#95;<strong>fonctionnement&#95;détaillé</strong>"></a>&nbsp;&nbsp;&nbsp;&nbsp; <strong>Fonctionnement détaillé</strong></h3><p>Par exemple, la fonction <strong>runner&#95;on&#95;failed</strong> sera appelé quand une task Ansible échouera. De la même façon, <strong>runner&#95;on&#95;ok</strong> sera appelé lorsque qu'une tâche sera en succès, <strong>runner&#95;on&#95;skipped</strong> lors d'une tâche ignorée etc...</p><p>Les fonctions de type <strong>playbook&#95;on_</strong> seront elles exécutées lors d'évènements liés aux playbooks (<strong>playbook&#95;on&#95;start</strong> lors du démarrage du playbook etc...).</p><p>Toutes ces fonctions recoivent des paramètres. C'est là que ça devient intéressant. Par exemple, nous disposons dans <strong>runner&#95;on&#95;ok</strong> des variables <strong>self</strong>, <strong>host</strong>, et <strong>res</strong> :</p><ul><li>Commençons par la variable <strong>host</strong>. Comme son nom l'indique, cette variable contient l'host sur lequel s'applique la task.</li><li>La variable <strong>res</strong> contient les différentes informations sur la machine comme par exemple les variables de type <em>fact</em>, ainsi que quelques informations sur la task (état <em>changed</em>, module appelé...).</li><li>L'objet callback <strong>self</strong> contient un grand nombre d'informations sur l'exécution en cours. Rajoutons par exemple <strong>import pdb; pdb.set_trace();</strong> dans la fonction <strong>runner&#95;on&#95;ok</strong> (pour utiliser le débugger Python) et lançons un déploiement. Un <strong>pp dir(self)</strong> pour lister les champs de l'objet donne:</li></ul><pre><code>&#40;Pdb&#41; pp dir&#40;self&#41;
 &#91;'&#95;&#95;class&#95;&#95;',
  '&#95;&#95;delattr&#95;&#95;',
  '&#95;&#95;dict&#95;&#95;',
@@ -183,7 +183,7 @@
 
 </div>
 
-            <a href="#top">Retour en haut de page</a>
+            <a href="#top">Top of page</a>
           </div>
         </div>
 
@@ -197,7 +197,7 @@
               <h3>Recent posts</h3>
               <ul>
                 
-                <li>- <a href="/posts/10-08-2016-logs-ansible/">Exploitez vos logs Ansible !</a></li>
+                <li>- <a href="/posts/10-08-2016-logs-ansible/">Exploitez vos logs Ansible ! / Use your Ansible logs !</a></li>
                 
                 <li>- <a href="/posts/22-04-2016-lesspipe/">Un jour une manpage / one day one manpage: lesspipe</a></li>
                 

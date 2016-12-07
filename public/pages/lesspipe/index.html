@@ -62,7 +62,7 @@
         <h2>One day one manpage: lesspipe</h2>
     </div>
     
-    <p><em>The 'one day one manpage concept' is simple: I randomly select one manpage and explore the associated command.</em></p><p>Today, I will describe the <strong>lesspipe</strong> utility. First, a <strong>man lesspipe</strong> : </p><blockquote><p> lessfile, lesspipe - "input preprocessor" for  less.  lessfile and lesspipe are programs that can be used to modify the  way  the contents of a file are displayed in less </p></blockquote><p>Lesspipe allows to manipulate content of a file before sending it to <strong>less</strong>. Why ? The answer is easy. have you ever tried to launch <strong>less</strong> on an image, a .deb, .rpm, .tar.gz... ? You may have some problems. Lesspipe allow you (among others things) to enrich less to explore new file types with it.</p><p>To activate Lesspipe, just launch (or add it on your .bachrc or equivalent) :</p><pre><code>eval &quot;$&#40;lesspipe&#41;&quot;
+    <p><div id="post-meta">22 april 2016</div></p><p><em>The 'one day one manpage concept' is simple: I randomly select one manpage and explore the associated command.</em></p><p>Today, I will describe the <strong>lesspipe</strong> utility. First, a <strong>man lesspipe</strong> : </p><blockquote><p> lessfile, lesspipe - "input preprocessor" for  less.  lessfile and lesspipe are programs that can be used to modify the  way  the contents of a file are displayed in less </p></blockquote><p>Lesspipe allows to manipulate content of a file before sending it to <strong>less</strong>. Why ? The answer is easy. have you ever tried to launch <strong>less</strong> on an image, a .deb, .rpm, .tar.gz... ? You may have some problems. Lesspipe allow you (among others things) to enrich less to explore new file types with it.</p><p>To activate Lesspipe, just launch (or add it on your .bachrc or equivalent) :</p><pre><code>eval &quot;$&#40;lesspipe&#41;&quot;
 </code></pre><h2><a name="how&#95;it&#95;works&#95;?"></a>How it works ?</h2><p>Launch <strong>lesspipe</strong> on a terminal. You will have :</p><pre><code>export LESSOPEN=&quot;| /usr/bin/lesspipe %s&quot;;
 export LESSCLOSE=&quot;/usr/bin/lesspipe %s %s&quot;;
 </code></pre><p>Two variables are defined: LESSOPEN and LESSCLOSE.</p><p>The <strong>less</strong> manpage indicates, in the <strong>INPUT PREPROCESSOR</strong> section, that the LESSOPEN variable is used to activate a preprocessor for less. This proprocessor receives the file name sent to less, creates a temporary file and output the temporary file name. Next, less will use the temporary file.</p><p>The preprocessor script can also directly send to <strong>less</strong> information, without creating a temporary file. In this case, the stdout of the LESSOPEN script will be sent to <strong>less</strong>. The <strong>less</strong> man page says:</p><blockquote><p>It is also possible to set up an input preprocessor to pipe the file  data  directly to less, rather than putting the data into a replacement file. [...] To use an input pipe, make the first character in the LESSOPEN environment variable a vertical bar (|) to  signify  that  the  input  pre-processor is an input pipe. </p></blockquote><p>In our case, lesspipe will not create a temporary file, because the LESSOPEN variable begins with <strong>|</strong>.</p><p>So, when <strong>less</strong> is called, the <code>/usr/bin/lesspipe</code> script will be called with the file name as a parameter. Let's try to call <code>/usr/bin/lesspipe</code> manually, on a file for example:</p><pre><code>$ lesspipe myimage.png
@@ -73,6 +73,10 @@ myimage.png PNG 254x29 1920x1080+12+134 8-bit sRGB 3.69KB 0.000u 0:00.000
 
     <div id="prev-next">
         
+        <a href="/pages/logs-ansible/">&laquo; Use your Ansible logs !</a>
+        
+        
+        ||
         
         
         <a href="/pages/about/">A propos/About &raquo;</a>
@@ -80,7 +84,7 @@ myimage.png PNG 254x29 1920x1080+12+134 8-bit sRGB 3.69KB 0.000u 0:00.000
     </div>
 </div>
 
-            <a href="#top">Retour en haut de page</a>
+            <a href="#top">Top of page</a>
           </div>
         </div>
 
@@ -94,7 +98,7 @@ myimage.png PNG 254x29 1920x1080+12+134 8-bit sRGB 3.69KB 0.000u 0:00.000
               <h3>Recent posts</h3>
               <ul>
                 
-                <li>- <a href="/posts/10-08-2016-logs-ansible/">Exploitez vos logs Ansible !</a></li>
+                <li>- <a href="/posts/10-08-2016-logs-ansible/">Exploitez vos logs Ansible ! / Use your Ansible logs !</a></li>
                 
                 <li>- <a href="/posts/22-04-2016-lesspipe/">Un jour une manpage / one day one manpage: lesspipe</a></li>
                 
