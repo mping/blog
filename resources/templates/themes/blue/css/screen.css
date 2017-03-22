@@ -35,7 +35,8 @@ a:hover {
 
 .navbar-default .navbar-brand {
     color: #000;
-    font-family: 'Alegreya';
+    text-align: center;
+
 }
 
 .navbar-default .navbar-brand:hover {
@@ -90,7 +91,10 @@ a:hover {
 
 #content {
     background-color: #F9F9F9;
+    max-width: 1000px;
     border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 0 0 0 0,0 6px 12px rgba(34,34,34,0.1);
 }
 
@@ -102,7 +106,7 @@ a:hover {
 footer {
     font-size: 16px;
     text-align: center;
-    padding-top: 75px;
+    padding-top: 20px;
     padding-bottom: 30px;
 }
 
@@ -133,8 +137,8 @@ hr {
 }
 
 #post-meta {
-    font-size: 14px;
-    color: rgba(0,0,0,0.4)
+    font-size: 16px;
+    color: grey
 }
 
 #page-header {
@@ -149,11 +153,15 @@ hr {
     color: blue;
 }
 
+#custom-page a {
+    color: blue;
+}
+
 #post-tags a {
     color: blue;
 }
 
-#post a {
+.alink {
     color: blue;
 }
 
@@ -174,9 +182,9 @@ code {
 }
 
 pre, code, .hljs {
-    background-color: #f8f8f8;
+    background-color: ##2b2b2b;
     font-size: 16px;
-    font-family: Consolas, Monaco, monospace
+    font-family: "Open Sans", sans-serif
     white-space: pre-wrap
 }
 
@@ -251,4 +259,21 @@ tr:nth-child(odd) {
     float: left;
     width: 50%;
     padding: 10px;
+}
+
+#head {
+    margin-top:20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#head a {
+    font-size: 1.2em;
+    border: 1px solid grey;
+    border-radius: 3px;
+    margin-right: 20px;
+    padding: 9px;
+    background-color: #fffef5;
 }

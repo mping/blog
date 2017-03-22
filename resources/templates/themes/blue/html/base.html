@@ -5,18 +5,18 @@
     <title>{{title}}{% block subtitle %}{% endblock %}</title>
     <link rel="canonical" href="{{site-url}}{{uri}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    {% style "css/styles/github.css" %}
+
+    {% style "css/bootstrap.min.css" %}
+    {% style "css/font-awesome.min.css" %}
+    {% style "css/styles/tomorrow-night.css" %}
     {% style "css/screen.css" %}
+
   </head>
   <body><a name="top"></a>
     <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -24,7 +24,7 @@
           </button>
           <a class="navbar-brand" href="{{index-uri}}">{{title}}</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar1" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li {% if home %} class="active" {% endif %}><a href="{{index-uri}}">Home</a></li>
             <li
@@ -44,47 +44,18 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-12">
           <div id="content">
             {% block content %}
             {% endblock %}
-            <a href="#top">Top of page</a>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div id="sidebar">
-            <h3>Links</h3>
-            <ul id="links">
-              <li>- <a href="http://clojure.org/">clojure.org</a></li>
-            {% if latest-posts|not-empty %}
-            <div id="recent">
-              <h3>Recent posts</h3>
-              <ul>
-                {% for post in latest-posts %}
-                <li>- <a href="{{post.uri}}">{{post.title}}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            {% endif %}
-            {% if tags|not-empty %}
-            <div id="tags">
-              <h3>Tags</h3>
-              <ul>
-                {% for tag in tags %}
-                <li>- <a href="{{tag.uri}}">{{tag.name}}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            {% endif %}
+            <a href="#top" class="alink" >Top of page</a>
           </div>
         </div>
       </div>
-      <footer>Copyright &copy; {{today|date:yyyy}} {{author}}
-        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+      <footer>Copyright &copy; {{today|date:yyyy}} {{author}}</footer>
     </div>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    {% script "js/jquery-1.11.0.min.js" %}
+    {% script "js/bootstrap.min.js" %}
     {% script "js/highlight.pack.js" %}
     <script>hljs.initHighlightingOnLoad();</script>
   </body>
