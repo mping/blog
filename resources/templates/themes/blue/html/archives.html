@@ -15,6 +15,24 @@
         {% endfor %}
         </ul>
     {% endfor %}
-
+        <hr>
+        <div id="tour-riemann">
+          <h2>A tour of Riemann</h3>
+          <ul>
+            <li><a href="/posts/09-04-2017-a-tour-of-riemann/">Introduction</a></li>
+            <li><a href="/posts/10-04-2017-installing-riemann/">Installing Riemann</a></li>
+            <li><a href="/posts/04-05-2017-simple-check/">A simple check</a></li>
+          </ul>
+          <hr>
+    {% if tags|not-empty %}
+        <div id="tags">
+          <h2>Tags</h3>
+          <ul>
+            {% for tag in tags %}
+            <li><a href="{{tag.uri}}">{{tag.name}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+     {% endif %}
 </div>
 {% endblock %}
