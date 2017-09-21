@@ -29,18 +29,18 @@ a:hover {
 }
 
 .navbar-default {
-    background-color: #fffef5;
+    background-color: #39ac73;
     border: none;
 }
 
 .navbar-default .navbar-brand {
-    color: #000;
+    color: #000000;
     text-align: center;
 
 }
 
 .navbar-default .navbar-brand:hover {
-    color: #000;
+    color: #000066;
 }
 
 .navbar-default .navbar-nav li a {
@@ -49,21 +49,21 @@ a:hover {
 
 .navbar-default .navbar-nav li a:hover {
     color: #000;
-    background-color: #fdfeb9;
+    background-color: #F9F9F9;
 }
 
 .navbar-default .navbar-nav .active a {
     color: #000;
-    background-color: #fdfeb9;
+    background-color: #F9F9F9;
 }
 
 .navbar-default .navbar-nav .active a:hover {
     color: #000;
-    background-color: #fdfeb9;
+    background-color: #F9F9F9;
 }
 
 .navbar-default .navbar-toggle:hover{
-    background-color: #fdfeb9;
+    background-color: #F9F9F9;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
