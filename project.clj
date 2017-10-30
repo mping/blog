@@ -1,6 +1,6 @@
 (defproject cryogen "0.1.0"
-  :description "Simple static site generator"
-  :url "https://github.com/lacarmen/cryogen"
+  :description "My personal blog"
+  :url "https://mcorbin.fr"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
