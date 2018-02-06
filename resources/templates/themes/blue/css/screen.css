@@ -5,7 +5,7 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
     color: #222;
-    background-color: #eaeaea;
+    background-color: #FAFAFA;
     font-family: serif, Arial;
     font-size: 19px;
 }
@@ -29,32 +29,33 @@ a:hover {
 }
 
 .navbar-default {
-    background-color: #39ac73;
+    background-color: #1e1e1e;
     border: none;
 }
 
 .navbar-default .navbar-brand {
-    color: #000000;
+    color: #e8e8e8;
     text-align: center;
 
 }
 
 .navbar-default .navbar-brand:hover {
-    color: #000066;
+    color: #00fff2;
 }
 
 .navbar-default .navbar-nav li a {
-    color: #000;
+    color: #e8e8e8;
+    font-weight: bold;
 }
 
 .navbar-default .navbar-nav li a:hover {
     color: #000;
-    background-color: #F9F9F9;
+    background-color: #e8e8e8;
 }
 
 .navbar-default .navbar-nav .active a {
     color: #000;
-    background-color: #F9F9F9;
+    background-color: #e8e8e8;
 }
 
 .navbar-default .navbar-nav .active a:hover {
@@ -78,7 +79,7 @@ a:hover {
 
 #sidebar h3 {
     padding-bottom: 5px;
-    border-bottom: 3px solid #069473;
+    border-bottom: 3px solid #1e1e1e;
 }
 
 #sidebar ul {
@@ -90,8 +91,8 @@ a:hover {
 }
 
 #content {
-    background-color: #F9F9F9;
-    max-width: 1000px;
+    background-color: #FAFAFA;
+    max-width: 1024px;
     border-radius: 3px;
     margin-left: auto;
     margin-right: auto;
@@ -111,7 +112,7 @@ footer {
 }
 
 hr {
-    border-top: 2px solid #069473;
+    border-top: 2px solid #1e1e1e;
 }
 
 #links {
