@@ -1,0 +1,2434 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+<channel>
+<atom:link href='https://mcorbin.fr' rel='self' type='application/rss+xml'/>
+<title>
+(mcorbin.fr)
+</title>
+<link>
+https://mcorbin.fr
+</link>
+<description>
+Blog de mcorbin
+</description>
+<lastBuildDate>
+Sun, 29 Apr 2018 16:27:26 +0200
+</lastBuildDate>
+<generator>
+clj-rss
+</generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2018-02-08-spring-generateur/
+</guid>
+<link>
+https://mcorbin.fr/posts/2018-02-08-spring-generateur/
+</link>
+<title>
+Spring, générateurs, des amis qui vous veulent du bien
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aujourd&amp;#8217;hui, j&amp;#8217;ai vu passer un tweet qui fut la goutte d&amp;#8217;eau. Il faut que je vous parler de Spring. Spring ? C&amp;#8217;est LE framework web Java. Il faut dire que c&amp;#8217;est tellement simple, surtout avec Spring Boot et un générateur du type JHipster. Simple, rly ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_simple_rly&quot;&gt;Simple, rly ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On le sait tous au fond de nous, Spring n&amp;#8217;est pas simple. Sous le capot, ça fait beaucoup, beaucoup de choses.&lt;br&gt;
+Des états mutables partout, rapidement des dizaine de classes dans le projet (surtout quand on rajoute bonne vieille archi N tiers resources services repository DAO DTO VO WTF, et les mappers entre chaque classe), un arbre de dépendance chaotique avec des conflits permanents entre dépendances (merci les spring boot starter pour rajouter un peu plus de chaos dans l&amp;#8217;arbre de dépendance), toujours 10 façons de faire les choses, des montées de versions compliquées, des surcouches de surcouches, l&amp;#8217;injection de dépendance qui devient vite un bordel sans nom&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Même les experts sur la techno passeront de longues heures de debugging dans les tréfonds du framework et de Stackoverflow, car au fond personne ne sait vraiment pourquoi son bean est à null.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/spring/fine.jpg&quot; alt=&quot;everything is fine&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt; Cette image de Kyle Kingsbury tirée d&amp;#8217;un talk sur &lt;a href=&quot;http://jepsen.io/&quot;&gt;jepsen&lt;/a&gt; résume bien la situation &lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Rajoutez à tout ça du Spring Security, du Spring Data, un Spring Cloud, des abstractions louches du type Spring Kafka, un peu d&amp;#8217;AspectJ ou encore un bon vieux Hibernate des familles, et bienvenue en enfer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bon, au moins, vous aurez le temps de prendre votre café le temps que votre microservice démarre.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_générateurs&quot;&gt;Les générateurs&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais heureusement, les générateurs type JHipster sont là pour nous sauver. En un clic, j&amp;#8217;ai un projet qui démarre.&lt;br&gt;
+Un projet qui démarre, mais avec une archi prédifinie probablement non adaptée à votre use case et difficilement modifiable sans tout péter. Un projet qui utilise vous ne savez quoi comme librairie, configuré vous ne savez comment.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Votre pom fait également maintenant plus de 1000 lignes, vous tirez des dizaines de dépendances, un gros tas de plugins Maven. Vous ne maitrisez plus votre projet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La slide suivante, tirée du célèbre &lt;a href=&quot;https://www.infoq.com/presentations/Simple-Made-Easy&quot;&gt;Simple Made Easy&lt;/a&gt; de Rich Hickey résume là encore parfaitement la situation:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/spring/simple.jpg&quot; alt=&quot;simple made easy&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Spring et les générateurs sont faciles. Vous avez une appli qui boot en 2 minutes, mais je reste persuadé que sur le long terme, vous êtes perdant (du vécu sur un gros projet).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, une autre citation du talk est parfaitement dans le sujet:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So the word in this case is about being familiar.&lt;br&gt;
+&lt;br&gt;
+I think that, collectively, we are infatuated with these two notions of easy. We are just so self-involved in these two aspects; it&amp;#8217;s hurting us tremendously. Right? All we care about is, you know, can I get this instantly and start running it in five seconds? It could be this giant hairball that you got, but all you care is, you know, can you get it.
+ [&amp;#8230;&amp;#8203;]&lt;br&gt;
+&lt;br&gt;
+In particular, if you want everything to be familiar, you will never learn anything new because it can&amp;#8217;t be significantly different from what you already know and not drift away from the familiarity.
+[&amp;#8230;&amp;#8203;]&lt;br&gt;
+&lt;br&gt;
+And it is, and I think you really have to ask yourself, you know, are you programming with a loom? You know, you&amp;#8217;re having a great time. You&amp;#8217;re throwing that shuttle back and forth. And what&amp;#8217;s coming out the other side is this knotted, you know, mess. I mean it may look pretty, but you have this problem. Right? What is the problem? The problem is the knitted castle problem. Right?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bon je vais m&amp;#8217;arrêter là avec les citations du talk car en fait je me rend compte que je pourrais mettre ici tout le transcript.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un projet informatique, c&amp;#8217;est pas une conférence où je montre que je peux boot une appli en 30 minutes sous les applaudissements de la salle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_lock_in&quot;&gt;Lock in&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous avez commencé votre projet avec Spring, et maintenant vous voulez changer sans tout péter car Spring ne vous convient plus.&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On entre dans le fameux débat framework vs librairie. Un framework comme Spring conditionnera votre façon de coder, posera un cadre extrêmement rigide sur ce que vous pouvez faire, et il sera très dur de sortir de ce cadre. C&amp;#8217;est généralement à ce moment que les gros hacks pour contourner le framework apparaissent dans le projet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous êtes malheureusement condamné à utiliser Spring jusqu&amp;#8217;à la mort du projet, deal with it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_spring_5&quot;&gt;Spring 5&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Bob, revenant du DevoxxFR&lt;/strong&gt;: Mais Spring 5 arrive, c&amp;#8217;est reactive !&lt;br&gt;
+&lt;strong&gt;Alice&lt;/strong&gt;: Oui mais peut être que ce paradigme-&lt;br&gt;
+&lt;strong&gt;Bob&lt;/strong&gt;: Non mais mon programme sera reactive ! Spring en reactive c&amp;#8217;est génial ! En plus je peux le faire en Kotlin !&lt;br&gt;
+&lt;strong&gt;Alice&lt;/strong&gt;: &amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Oui, j&amp;#8217;aurais pû mettre des balises &amp;lt;rant&amp;gt;&amp;lt;/rant&amp;gt; autour de ce post, et c&amp;#8217;est peut être légèrement (?) exagéré. Vous ne serez probablement pas d&amp;#8217;accord avec moi.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pas grave, suis un sysadmin au quotidien, donc Spring ou pas Spring finalement&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/gif/dontcare.gif&quot; alt=&quot;i don&amp;#8217;t care&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 08 Feb 2018 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2018-01-26-ansible-templating/
+</guid>
+<link>
+https://mcorbin.fr/posts/2018-01-26-ansible-templating/
+</link>
+<title>
+Ansible role configuration: best practice
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s take for example HAProxy. This wonderful piece of software can be configured with hundreds of options. How to write an Ansible role to handle this, AND share this role accross multiple projects/teams/companies ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_the_naive_solution_the_boss_template&quot;&gt;The naive solution: the boss template&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you use Ansible, you may have met the boss template: a big template, with dozens of variables (frequently nested) to handle all available configuration options, {% if %} and {% for %} jinja2 everywhere&amp;#8230;&amp;#8203; And when someone needs a new option, a new variable is added.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Theses roles are nightmares to maintain. For &lt;a href=&quot;https://www.haproxy.org/download/1.8/doc/configuration.txt&quot;&gt;HAproxy&lt;/a&gt;, your template will be huge. Same thing for other softwares (softwares like Kafka, Elasticsearch&amp;#8230;&amp;#8203; also have a lot of configuration options).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Furthermore, these roles are impossible to share between teams/open source, because they are often designed for a specific company use case, with a specific configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_move_configuration_outside_of_the_role&quot;&gt;Move configuration outside of the role.&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s continue with HAProxy. Just write a simple HAProxy role: installing HAProxy, templating a default configuration, and dealing with restart/reload on configuration change. But let the person using the role override the default configuration files.&lt;br&gt;
+You can see my HAProxy role &lt;a href=&quot;https://github.com/mcorbin/haproxy-ansible-role&quot;&gt;on Github&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In &lt;code&gt;defaults/main.yml&lt;/code&gt;, define a variable containing a list of templates (HAProxy does not support loading configuration from a directory, so these files will be assembled together by the role):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;haproxy_templates:
+  - src: haproxy.config.j2
+    dest: 01_haproxy_config&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;haproxy.config.j2&lt;/code&gt; contains the default HAProxy configuration (the same you have when you install HAProxy using &lt;code&gt;apt-get&lt;/code&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now, in &lt;code&gt;playbook_dir&lt;/code&gt; you will probably have this arborescence:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;playbook.yml
+group_vars/
+    haproxy.yml
+templates/
+    haproxy/
+         my-config.j2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The user can now provide his own configuration for HAProxy, by overriding &lt;code&gt;haproxy_templates&lt;/code&gt; in &lt;code&gt;group_vars/haproxy.yml&lt;/code&gt; for example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;haproxy_templates:
+  - src: haproxy/my-config.j2
+    dest: 01_my_config&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The user can put everything he wants in &lt;code&gt;my-config.j2&lt;/code&gt;, use his own configuration variables in the file without polluting the role.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The role stay simple and the user can do everything he wants.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Moving the configuration out of a role is often the right thing to do. Just let the user override the whole role templates, and don&amp;#8217;t over conplexify the role itself. Simplicity is the key.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Fri, 26 Jan 2018 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-12-03-velocity-1/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-12-03-velocity-1/
+</link>
+<title>
+Velocity Londres 2017: jour 1
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;étais à O&amp;#8217;Reilly Velocity Londres les 19 et 20 Octobre 2017, et cet article résumera ma première journée de conférence.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je ne parlerais pas forcément de tous les talks ou keynotes que j&amp;#8217;ai vu, mais ceux qui furent selon moi les plus intéressants.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_l_organisation_de_la_conférence&quot;&gt;L&amp;#8217;organisation de la conférence&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout d&amp;#8217;abord, bravo aux organisateurs !
+La conférence est parfaitement organisée.
+Elle se déroulait à l&amp;#8217;hôtel Hilton Métropole, et on sent le professionnalisme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il y a de l&amp;#8217;espace, les salles sont grandes, bien équipées, l&amp;#8217;image et le son sont parfaits. Il y avait en tout 6 salles de conférences (donc 6 talks en parallèle), et les keynotes étaient réalisées dans une énorme salle (en fait 2 salles classiques rassemblées).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il y avait également un grande salle contenant l&amp;#8217;espace sponsor avec des stands. C&amp;#8217;est aussi dans cette salle que l&amp;#8217;on prenait le repas du midi notamment.
+J&amp;#8217;ai d&amp;#8217;ailleurs trouvé ce repas assez moyen, mais bon ce n&amp;#8217;est pas le plus important.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Concernant les sujets des talks et keynotes, c&amp;#8217;est technique, assez spécialisé, et pile dans mon domaine. En même temps, une conférence qui titre &lt;code&gt;Build &amp;amp; maintain complex distributed systems&lt;/code&gt;, ça ne pouvait que m&amp;#8217;intéresser :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_keynotes&quot;&gt;Keynotes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Après être arrivé assez tôt, avoir pris mon petit déjeuner (gratuit chaque matin de conférence) et participé à un speed networking (histoire de faire connaissance avec d&amp;#8217;autres participants et de parler un peu anglais), je m&amp;#8217;installe confortablement pour les keynotes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_cloud_native_security_threat_or_opportunity&quot;&gt;Cloud native: Security threat or opportunity?&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une Keynote intéressante fut celle de Liz Rice sur la sécurité des architectures dites &lt;strong&gt;Cloud natives&lt;/strong&gt;: les vm, conteneurs, orchestrateurs, et tout ce qui va avec.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout d&amp;#8217;abord, Liz Rice nous explique qu&amp;#8217;aujourd&amp;#8217;hui, on le sait pas forcément où le code tourne.
+On a des centaines de VM/serveurs, certaines applications sont composées de dizaines de microservices, et les containers et orchestrateurs rajoutent une couche de complexité au dessus de tout ça.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La speaker expliquait aussi la différence entre &lt;strong&gt;l&amp;#8217;ancien temps&lt;/strong&gt; (ou le présent si vous travaillez pour un grand groupe Français ^^) où les serveurs étaient patchés (à la main ?) et maintenus en vie sur de longues périodes, là ou aujourd&amp;#8217;hui on va plutôt essayer de mettre en place des infrastructures immuables (en gros on pète et on reconstruit).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais quid de la sécurité dans ces nouvelles architectures ? Vu la multiplicité des briques logicielles et la complexité des architectures, elle doit être intégrée directement dans le pipeline de déploiement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Par exemple, on peut scanner nos containers avant et après le build pour rechercher des vulnérabilités: voir les versions des produits déployés, vérifier que l&amp;#8217;utilisateur lançant un process n&amp;#8217;est pas root, vérifier l&amp;#8217;isolation du container par rapport à l&amp;#8217;host&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Concernant l&amp;#8217;host, des OS spécialisés pour faire tourner des containers (CoreOS, RancherOS&amp;#8230;&amp;#8203;) peuvent également être une solution. Je n&amp;#8217;ai personnellement pas d&amp;#8217;avis sur ces OS, ne les ayant jamais utilisés.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bien sûr, les IDS traditionnels peuvent toujours être utilisés si besoin.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Concernant le réseau, là aussi il faut sécuriser les communications, que ce soit au niveau chiffrement, authentification, ou restrictions (j&amp;#8217;évite que des services qui n&amp;#8217;ont pas à discuter entre eux puissent le faire).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enfin, des protections &quot;au runtime&quot; comme SELinux ou AppArmor ont été évoquées.
+La présentation s&amp;#8217;est finie sur une petite démo de la faille Shellshock où un serveur httpd pouvait exécuter du code arbitraire.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion, une keynote intéressante, mais un détail méritait d&amp;#8217;être évoqué et ne l&amp;#8217;a pas été selon moi. La meilleure sécurité, c&amp;#8217;est quand même d&amp;#8217;essayer d&amp;#8217;avoir une architecture la plus simple et comprehensible possible avec les contraintes de scalabilité/tolérance aux pannes de notre produit. Restez simple !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_why_an_interactive_picture_is_worth_a_thousand_numbers&quot;&gt;Why an interactive picture is worth a thousand numbers ?&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Peut être ma keynote préférée des deux jours, ça envoyait du lourd ! Sara-Jane Dunn travaille pour Microsoft Research, et nous expliquait ici l&amp;#8217;importance des visualisations par rapport notamment à des chiffres bruts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aujourd&amp;#8217;hui, on a de plus en plus de données, de logs&amp;#8230;&amp;#8203; On calcule souvent des statistiques sur ces données, mais ces statistiques sont parfois trompeuses !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Deux jeux de données peuvent produire des statistiques (moyennes, médianes&amp;#8230;&amp;#8203;) semblables alors que les données n&amp;#8217;ont rien à voir.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De plus, on doit parfois partager ces données avec des collègues, pas forcément de notre domaine (par exemple avec des scientifiques en biologie alors que nous on est informaticien).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est là que les visualisations interviennent.
+Pouvoir représenter et explorer des données de façon graphique est devenu indispensable aujourd&amp;#8217;hui.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La speaker, à l&amp;#8217;aide de nombreux exemples, nous montrait comment des visualisations aident à résoudre des problèmes parfois très complexes. Les exemples venaient du monde de la biologie, où un chercheur a même avoué que sans l&amp;#8217;outil de visualisation développé par la speaker, ces recherches n&amp;#8217;auraient probablement pas abouties.
+Les visualisations lui avaient permis de voir son problème sous un angle totalement différent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/velocity/visu1.jpg&quot; alt=&quot;Exemples de deux visualisations représentant les mêmes données mais où une est meilleure.&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt;Ici, on voit clairement que la visualisation 2 (avec les courbes) est plus parlante que la première (avec les couleurs).&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La speaker présentait ensuite quelques techniques pour créer des visualisations pertinentes. Cette slide montre bien par exemple qu&amp;#8217;une visualisation à base de formes/graphes est largement plus pertinente qu&amp;#8217;une visualisation à base de couleurs.
+L&amp;#8217;intéractivité est aussi aujourd&amp;#8217;hui la clé de visualisations pertinentes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion, investissez du temps pour créer les outils permettant de visualiser vos données !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_talks&quot;&gt;Talks&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_consumer_driven_contract_testing_with_pact_and_docker&quot;&gt;Consumer-driven contract testing with Pact and Docker&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce talk, donné par Harry Winser, expliquait les stratégies et les outils et process développés pour valider des API HTTP dans une architecture microservice.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les problèmes pour les API HTTP sont toujours les mêmes. Comment gérer la montée de version d&amp;#8217;un service ? Comment je m&amp;#8217;assure que les clients d&amp;#8217;une version antérieure sont toujours compatibles avec la nouvelle version ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une solution peut être les &lt;strong&gt;consumer driven contracts&lt;/strong&gt;. On définit un contrat d&amp;#8217;interface pour notre API. Cela permet aux équipes de travailler de manière indépendantes, et d&amp;#8217;écrire des tests pour valider nos contrats.
+Une phrase prononcée intéressante était &lt;strong&gt;write your consumer first&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Attention, ces contrats ne concernent que la partie API, et ne permet donc pas de vérifier la logique métier des applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le speakeur utilisait dans son entreprise un format appelé Pact, Ce format permet de décrire une requête HTTP, et s&amp;#8217;intègre facilement dans des pipelines de déploiements grâce à une intégration avec de nombreux langages/plateformes (comme par exemple la JVM).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les contrats Pact sont stockés dans une base appelée &lt;strong&gt;Pact broker&lt;/strong&gt;. Quand une application est build, son artifact (comme par exemple son .jar pour une application Java) est poussée dans un Nexus ou autre, et les contrats Pact de cette application (et pour cette version) dans le broker.
+Il est aussi important de stocker des stubs/mock de l&amp;#8217;API de l&amp;#8217;application, qui seront ensuite utilisés par la suite.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans l&amp;#8217;intégration continue des consumers d&amp;#8217;une API, on utilise les stubs de l&amp;#8217;API générés précédemment et les fichiers Pact présent dans le broker pour vérifier que l&amp;#8217;API correspond bien à un ou des contrats Pact et si les clients peuvent communiquer avec.&lt;br&gt;
+Par exemple, un client communiquant avec 3 API pourra tester si il valide le contrat Pact pour ces 3 services.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il est aussi possible de tester différentes versions de l&amp;#8217;API, pour voir si on garde une rétrocompatibilité en cas d&amp;#8217;une montée de version par exemple.
+Ensuite, le résultat de ces tests sont publiés pour être exploités.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce talk était intéressant. Je n&amp;#8217;avais jamais entendu parler de Pact, le format et l&amp;#8217;écosystème autour semblent prometteurs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;../../pdf/velocity_2017/pact_docker.pdf&quot;&gt;Slides&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_real_world_consistency_explained&quot;&gt;Real-world consistency explained&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Attention, on passe au meilleur talk des deux jours !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce talk, donné par Uwe Friedrichsen, parlait de systèmes distribués, de consensus, de niveaux d&amp;#8217;isolations dans les base de données&amp;#8230;&amp;#8203; Bref, d&amp;#8217;un sujet super important mais que l&amp;#8217;on ne croise pas souvent.&lt;br&gt;
+je consacrerais d&amp;#8217;ailleurs un article sur ces sujets prochainement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;_le_passé&quot;&gt;Le &quot;passé&quot;&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le speaker commence tout d&amp;#8217;abord à parler du &quot;passé&quot; (les guillemets sont importante).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On a donc depuis longtemps des bases de données relationnelles, avec des propriétés ACID (Atomicité, Cohérence, Isolation, Durabilité), Ces base de données fonctionnent très bien, il est facile de raisonner avec (ACID apporte sur le papier des propriétés fortes intéressantes).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais (car il y a toujours un mais), ACID != Serializability (en résumé que les transactions sont exécutées sans se marcher dessus) ! Des anomalies peuvent apparaîtres, et les transactions ne sont pas si isolées qu&amp;#8217;on ne le pense (d&amp;#8217;où les différents niveaux d&amp;#8217;isolations dans les bases de données: read commited, snapshot isolation, serializability&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/velocity/write_skew.jpg&quot; alt=&quot;exemple de write skew&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt;Exemple de write skew tiré de l&amp;#8217;excellent &lt;a href=&quot;https://dataintensive.net/&quot;&gt;Designing Data-Intensive Applications&lt;/a&gt; de Martin Kleppmann. Ici, deux transactions se chevauchent et provoquent un bug dans le système (plus aucun médecin n&amp;#8217;est d&amp;#8217;asteinte). Cette erreur peut se produire en snapshot isolation.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;le problème du mode serializable dans une base de donnée est la grande perte de performance associée (il faut par exemple parfois locker complètement les tables pour avoir ce niveau d&amp;#8217;isolation, ce qui diminue fortement les performances).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De plus, les configurations par défaut des bases de données n&amp;#8217;activent pas la sérialization.&lt;br&gt;
+Ces configurations par défaut, couplées à une méconnaissance des différents niveaux d&amp;#8217;isolations des bases de données, peuvent causer de sérieux soucis (et difficilement détectables) en production.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion, les bases de données ACID sont très utiles, fournissent un certain nombre de garanties, mais il faut faire attention car des problèmes de cohérences peuvent toujours se produire.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/velocity/consistencyfull.jpg&quot; alt=&quot;Les différents niveaux d isolations des transactions dans une base de données&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt;Vous croyez le monde des transactions facile ?&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;_le_présent&quot;&gt;Le &quot;présent&quot;&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cloud, NoSQL, microservices&amp;#8230;&amp;#8203; On a maintenant des architectures distribués. Et cela &lt;strong&gt;doit&lt;/strong&gt; vous inquiéter ! Notamment les architectures microservices, où un mauvais découpage peut avoir des conséquences désastreuses.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Parlons maintenant un peu de NoSQL. On avait avant les propriétés ACID pour les bases de données traditionnelles, on parle parfois de BASE (Basically Available, Soft state, Eventual consistency) pour les base de données NoSQL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais en dehors de l&amp;#8217;aspect technologique, un gros problème de ces base de données est le marketing et le buzz qui font que les gens l&amp;#8217;utilisent sans n&amp;#8217;avoir aucune connaissance sur la technologie ou des systèmes distribués en général.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les choix de base de données se font donc pour des raisons non techniques, ce qui conduit inévitablement à la catastrophe.
+Anecdote personnelle, mais j&amp;#8217;ai déjà vu des décideurs hésiter entre entre Couchbase et Cassandra (wtf) ou entre Cassandra et Redis (wtf^10000), sans même vraiment connaître ni le besoin ni ces technos !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un grand nombre de projets n&amp;#8217;ont pas besoin de bases NoSQL. Le speaker donnait l&amp;#8217;exemple de MySQL qui peut très bien traiter plusieurs milliards d&amp;#8217;enregistrements.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les base de données NoSQL ont des use cases, mais il est limité ! Il faut également très bien comprendre les garanties (et l&amp;#8217;absence de garanties) qu&amp;#8217;offrent les base de données NoSQL, notamment les garanties de cohérences des données et de disponibilité de la base.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le speaker a ensuite présenté différents problèmes pouvant se produire dans une base de données distribuée, comme par exemple le fameux &lt;strong&gt;read your own write&lt;/strong&gt;, ou alors que contrairement à une croyance populaire, définir un quorum en lecture ne veut pas dire avoir un état cohérent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Etait également présenté quelques techniques pour gérer ces problèmes de cohérences, comme par exemple le &lt;strong&gt;read repair&lt;/strong&gt;. Etait évoqué également les difficultés à travailler côté développement avec une base de données BASE, où l&amp;#8217;absence de transactions et les joies des systèmes distribués peuvent causer des surprises.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_en_conclusion&quot;&gt;En conclusion&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il existe aujourd&amp;#8217;hui une multitude d&amp;#8217;outils, ces derniers étant quelque part  entre ACID et BASE niveau cohérence des données, le choix des technologies doit donc se faire de manière intelligence.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Attention au marketing et aux promesses des vendeurs qui viennent vous vendre du rêve.
+Attention aux base de données NoSQL et aux architectures distribuées en général, et toujours se poser la question &lt;strong&gt;&quot;est ce que j&amp;#8217;ai vraiment besoin de ça ?&quot;&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il faut également comprendre son système, et les différents incidents qui peuvent se produire.
+Même les personnes d&amp;#8217;administrant pas mais utilisant les outils doivent le comprendre, comme par exemple les développeurs.
+Ces derniers doivent connaître les potentiels problèmes pouvant se produire avec des bases de données NoSQL (ou même SQL avec un niveau d&amp;#8217;isolation faible) pour pouvoir les requêter correctement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et surtout, surtout, &lt;strong&gt;pas&lt;/strong&gt; de transactions entre différents services/outils de storage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Encore merci au speaker pour ce talk génial, que l&amp;#8217;on devrait diffuser à chaque personne prononçant le mode &lt;strong&gt;NoSQL&lt;/strong&gt; et &lt;strong&gt;microservice&lt;/strong&gt; en entreprise.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;../../pdf/velocity_2017/real_world_consistency.pdf&quot;&gt;Slides&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_surviving_failure_in_rabbitmq&quot;&gt;Surviving failure in RabbitMQ&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce talk donné par  Lorna Mitchell traitait des queues de messages et plus particulièrement de RabbitMQ.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La speakeur commençait par décrire l&amp;#8217;utilité d&amp;#8217;une queue de message: asynchronisme/communication entre applications, mise en place assez facile, nombre de workers ajustables en fonction de la charge&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais comme d&amp;#8217;habitude, on peut avoir des erreurs. Un message peut ne pas être traité. Il faut donc se poser la question les garanties de traitement de notre système (at least once, at most once&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ces garanties de traitements nous forcent donc à réaliser du code défensif (par exemple avec une garantie &lt;strong&gt;at least once&lt;/strong&gt; au niveau du broker, il est possible d&amp;#8217;éviter de traiter deux fois le même message en faisant le travail côté application).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il est également possible d&amp;#8217;essayer de récupérer des erreurs en poussant un message traité comme erreur dans un exchange particulier du broker (dead letter dans RabbitMQ), pour éventuellement le traiter ultérieurement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La speakeur insistait également sur l&amp;#8217;obligation de monitorer les queues de messages, comme par exemple en reportant le nombre de messages dans les différentes queues, ou encore le temps de traitement des messages par les workers.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Configurer une taille de queue maximale et un TTL sur les messages pour éviter qu&amp;#8217;une queue grandisse pour toujours peut également être intéressant. De plus, les messages rejetés peuvent éventuellement être injectés dans l&amp;#8217;exchange &lt;strong&gt;dead letter&lt;/strong&gt; et traités ensuite.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion, un talk intéressant sur les queues de messages, avec RabbitMQ comme exemple.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_traefik_make_load_balancing_great_again&quot;&gt;Traefik: Make load balancing great again&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce talk donné par Emile Vauge nous présentait Traefik. Tout d&amp;#8217;abord, ça fait du bien d&amp;#8217;enfin voir un speaker Français ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Emile nous expliquait donc ce qu&amp;#8217;est &lt;a href=&quot;https://traefik.io/&quot;&gt;Traefik&lt;/a&gt;, que je connaissais déjà très bien pour connaître l&amp;#8217;équipe autour et avoir déjà utilisé Traefik.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image right&quot;&gt;&lt;img src=&quot;/img/velocity/traefik.png&quot; alt=&quot;logo de Traefik&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Traefik est donc un reverse proxy conçu pour les infrastructures d&amp;#8217;aujourd&amp;#8217;hui, c&amp;#8217;est à dire où les serveurs et applications vont et viennent.
+Les solutions de load balancing traditionnelles ne sont pas vraiment prévues pour ce genre d&amp;#8217;infrastructures (bien que beaucoup d&amp;#8217;efforts sont actuellement fait sur des produits comme HAproxy pour que ce soit le cas).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Traefik peut donc se brancher sur un backend (un orchestrateur comme Kubernetes ou Mesos, Docker Swarm, Consul, Etcd&amp;#8230;&amp;#8203;) et générer sa configuration à partir de celà. En cas de changement sur le backend (par exemple, un nouveau pod démarre sur votre cluster Kubernetes), Traefik mettra automatiquement à jour sa configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Traefik supporte également nativement &lt;a href=&quot;https://letsencrypt.org&quot;&gt;Let&amp;#8217;s Encrypt&lt;/a&gt; pour générer des certificats.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Plusieurs slides étaient consacrés aux dernières releases de Traefik, et la quantité de nouveautés à chaque release est impressionnante: Custom headers, statd/datadog integration, proxy protocol, HTTP2, Websockets&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On a également eu droit à une démo où on pouvait voir la réactivité de Traefik lorsque la configuration du backend change, et des stickers ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bravo à Emile et à toute la team de &lt;a href=&quot;https://containo.us/&quot;&gt;Containous&lt;/a&gt; pour le travail accompli. Je suis sûr que Traefik est un produit que l&amp;#8217;on rencontrera de plus en plus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;../../pdf/velocity_2017/traefik.pdf&quot;&gt;Slides&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette première journée s&amp;#8217;est ensuite terminée dans un bar/restaurant privatisé pour l&amp;#8217;occasion avec pizza/bières gratuites ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;j&amp;#8217;ai aussi découvert ce superbe nom de restaurant sur le chemin du retour vers mon Airbnb:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/velocity/chien.jpg&quot; alt=&quot;Un restaurant nommé les couilles du chien&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;aimerais conclure par la chose qui m&amp;#8217;a le plus plût durant cette conférence: les gens (speaker comme spectateurs) savaient de quoi ils parlaient et connaissaient les traeoff des différentes technologies qu&amp;#8217;ils ou elles utilisent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Personne ne vendait de solutions miracles, et beaucoup de gens étaient très critiques envers le &lt;strong&gt;buzzword driven development&lt;/strong&gt;. Et ça, ça fait plaisir !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 03 Dec 2017 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-08-09-coalesce/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-08-09-coalesce/
+</link>
+<title>
+A tour of Riemann : Coalesce
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A small article about the Riemann coalesce stream.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_how_it_works&quot;&gt;How it works ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;a href=&quot;http://riemann.io/api/riemann.streams.html#var-coalesce&quot;&gt;API doc&lt;/a&gt; is pretty clear. Coalesce remembers the most recent event for each host/service, and send every N seconds a vector containing the most recent states.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(streams
+  (with :ttl 60
+    (coalesce 10
+     #(info %))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 1&lt;/strong&gt;  : Riemann receives `&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;{:host &quot;foo&quot; :service &quot;bar&quot; :metric 10 :time 1}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Coalesce instantly emits :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;[{:host &quot;foo&quot; :service &quot;bar&quot; :metric 20 :time 1}]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Coalesce will always emit the first event it receives.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 4&lt;/strong&gt;  : Riemann receives&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;{:host &quot;foo&quot; :service &quot;foobar&quot; :metric 12 :time 4}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 7&lt;/strong&gt;  : Riemann receives&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;{:host &quot;foo&quot; :service &quot;bar&quot; :metric 30 :time 7}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 11&lt;/strong&gt; : Coalesce emits&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;[{:host &quot;foo&quot; :service &quot;foobar&quot; :metric 12 :time 4} {:host &quot;foo&quot; :service &quot;bar&quot; :metric 30 :time 7}]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As you can see, coalesce emits the last event seen for each host/service.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 13&lt;/strong&gt; : Riemann receives&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;{:host &quot;foo&quot; :service &quot;bar&quot; :metric 40 :time 13}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At time &lt;strong&gt;t = 21&lt;/strong&gt; : Coalesce emits&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;[{:host &quot;foo&quot; :service &quot;foobar&quot; :metric 12 :time 4} {:host &quot;foo&quot; :service &quot;bar&quot; :metric 40 :time 13}]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Again, coalesce emits the last states for each host and service.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now, an example.
+I want to monitor a Cassandra cluster, and fire an email if the &lt;code&gt;cpu mean&lt;/code&gt; of the cluster is greater than 60.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_the_code&quot;&gt;The code&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First, create a &lt;code&gt;mycorp/system/cpu.clj&lt;/code&gt; file:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(ns mycorp.system.cpu
+  &quot;check cpu&quot;
+  (:require [riemann.config :refer :all]
+            [riemann.streams :refer :all]
+            [riemann.test :refer :all]
+            [riemann.folds :as folds]
+            [mycorp.output.email :as email]
+            [clojure.tools.logging :refer :all]))
+
+(def cpu-mean-alert-cassandra
+  &quot;A stream checking if the cpu mean for all hosts with service = `cpu` and tagged `cassandra` is &amp;gt; to 60&quot;
+  ;; filter by services and tags
+  (where (and (tagged &quot;cassandra&quot;) (service &quot;cpu&quot;))
+  ;; every 10 seconds, send the last state for each host/service
+  ;; :service will always be &quot;cpu&quot; so we only have differents hosts on events
+    (coalesce 10
+      ;; apply mean using smap to compute the cpu mean
+      (smap folds/mean
+        ;; update the event, remove :host and update the description
+        (with {:host nil :service &quot;cassandra-cpu-mean&quot;}
+          ;; check if mean &amp;gt; 60
+          (where (&amp;gt; (:metric event) 60)
+            ;; send email
+            (io (email/email &quot;foo@mcorbin.fr&quot;))
+            ;; tap for tests
+            (tap :cpu-mean-alert-tap)))))))
+
+(tests
+  (deftest cpu-mean-alert-test
+    (let [result (inject! [mycorp.system.cpu/cpu-mean-alert-cassandra]
+                          [{:host &quot;foo&quot;
+                            :service &quot;cpu&quot;
+                            :metric 65
+                            :tags [&quot;cassandra&quot;]
+                            :ttl 60
+                            :time 1}
+                           {:host &quot;bar&quot;
+                            :service &quot;cpu&quot;
+                            :metric 50
+                            :tags [&quot;cassandra&quot;]
+                            :ttl 50
+                            :time 2}
+                           ;; not tagged
+                           {:host &quot;baz&quot;
+                            :service &quot;cpu&quot;
+                            :metric 99
+                            :tags []
+                            :ttl 60
+                            :time 3}
+                           {:host &quot;foobar&quot;
+                            :service &quot;cpu&quot;
+                            :metric 95
+                            :tags [&quot;cassandra&quot;]
+                            :ttl 60
+                            :time 12}
+                           {:host &quot;foobar&quot;
+                            :service &quot;riemann&quot;
+                            :metric 95
+                            :tags []
+                            :ttl 60
+                            :time 22}])]
+      (is (= (:cpu-mean-alert-tap result)
+            [{:service &quot;cassandra-cpu-mean&quot;
+              :metric 65
+              :tags [&quot;cassandra&quot;]
+              :ttl 60
+              :time 1}
+             {:service &quot;cassandra-cpu-mean&quot;
+              :metric 70
+              :tags [&quot;cassandra&quot;]
+              :ttl 60
+              :time 12}])))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;(Don&amp;#8217;t forget to add &lt;code&gt;cpu.clj&lt;/code&gt; file in your riemann.config file ;))&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the &lt;code&gt;cpu-mean-alert-cassandra&lt;/code&gt; stream, i first filter Cassandra/cpu events with &lt;code&gt;where&lt;/code&gt;, and use &lt;code&gt;coalesce 10&lt;/code&gt; (so coalesce will emit a vector of events every 10 seconds).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After that, i use &lt;code&gt;smap&lt;/code&gt; to apply &lt;code&gt;folds/mean&lt;/code&gt; on the vector of events emitted by coalesce. I now have an event representing the &lt;code&gt;cpu mean&lt;/code&gt; of the cluster.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I use &lt;code&gt;with&lt;/code&gt; to update the event, and &lt;code&gt;where&lt;/code&gt; again to check the mean value against a threshold.
+If the mean is &amp;gt; to 60, i fire an email.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Easy !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_more_use_cases&quot;&gt;More use cases&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Use coalesce when you want to aggregate common events from multiple hosts.
+In the previous example, i used &lt;code&gt;folds/mean&lt;/code&gt; to calculate the mean, but i could do anything i want, for example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Get max, min etc&amp;#8230;&amp;#8203; values.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check for unbalanced values between hosts, for example : why do i have 10 nodes at 30 % CPU but one constantly at 95 % ? I used coalesce to detects unbalanced partitions in Kafka topics (caused by a bad partition key) for example.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_event_expiration&quot;&gt;Event expiration&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Coalesce takes care to expire events. From the &lt;a href=&quot;http://riemann.io/api/riemann.streams.html#var-coalesce&quot;&gt;API&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;When events expire, they are included in the emitted sequence of events once, and removed from the state table thereafter.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This stream is perfect for monitoring distributed systems.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Code &lt;a href=&quot;https://github.com/mcorbin/riemann-configuration-example&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 09 Aug 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-05-21-riemann-by-stream/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-05-21-riemann-by-stream/
+</link>
+<title>
+A tour of Riemann : check disk, by, throttle, email
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How tu use the (by) stream in Riemann ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_the_problem&quot;&gt;The problem&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I now want to monitor disk usage.
+If a filesystem is 80 % full, fire an email.
+But i don&amp;#8217;t want to be spammed , so i want at most 2 mails every hours &lt;strong&gt;for each distinct full filesystem&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I will receive events in Riemann like this one :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;{:host &quot;debian-mathieu.corbin&quot;
+ :service &quot;df-root/percent_bytes-used&quot;
+ :state nil
+ :description nil
+ :metric 73.04872131347656
+ :tags []
+ :time 1495380355
+ :ttl 20.0}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, the &lt;code&gt;root&lt;/code&gt; fs is 73 % full for host &lt;code&gt;debian-mathieu.corbin&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_email&quot;&gt;Email&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can &lt;a href=&quot;http://riemann.io/howto.html#send-email&quot;&gt;send email&lt;/a&gt; using Riemann.
+Let&amp;#8217;s define a stream to send email.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Create a file &lt;code&gt;mycorp/output/email.clj&lt;/code&gt; :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(ns mycorp.output.email
+  &quot;send email&quot;
+  (:require [riemann.config :refer :all]
+            [riemann.streams :refer :all]
+            [riemann.test :refer :all]
+            ;; we should import riemann.email
+            [riemann.email :refer :all]
+            [clojure.tools.logging :refer :all]))
+
+;; this stream can be used to send email
+(def email (mailer {:from &quot;me@mcorbin.fr&quot;
+                    :host &quot;mail.foo.com&quot;
+                    :user &quot;foo&quot;
+                    :password &quot;bar&quot;}))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, we use &lt;code&gt;def&lt;/code&gt; to define a new stream named email.
+We will use it to send emails.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_throttle&quot;&gt;Throttle&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will use &lt;code&gt;throttle&lt;/code&gt; to limit the number of email.
+Take a look at &lt;a href=&quot;http://riemann.io/howto.html#roll-up-and-throttle-events&quot;&gt;the Riemann howto&lt;/a&gt; for more informations about throttle&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_solution&quot;&gt;Solution&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_tests&quot;&gt;Tests&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First, let&amp;#8217;s create a file &lt;code&gt;mycorp/system/disk.clj&lt;/code&gt; and write the tests for our use case:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(ns mycorp.system.disk
+  &quot;Check disk&quot;
+  (:require [riemann.config :refer :all]
+            [riemann.streams :refer :all]
+            [riemann.test :refer :all]
+            [mycorp.output.email :as email]
+            [clojure.tools.logging :refer :all]))
+
+(def disk-stream)
+
+(tests
+ (deftest disk-stream-test
+   ;; i inject test events only in disk-stream
+   (let [result (inject! [mycorp.system.disk/disk-stream]
+                         [;; ok
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 73
+                           :tags []
+                           :time 1
+                           :ttl 20.0}
+                          ;; random event
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;random_service&quot;
+                           :state nil
+                           :description nil
+                           :metric 100
+                           :tags []
+                           :time 1
+                           :ttl 20.0}
+                          ;; debian-mathieu.corbin/root full
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 90
+                           :tags []
+                           :time 3
+                           :ttl 20.0}
+                          ;; debian-mathieu.corbin/var-log full
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-var-log/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 90
+                           :tags []
+                           :time 4
+                           :ttl 20.0}
+                          ;; debian-mathieu.corbin/root full
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 90
+                           :tags []
+                           :time 4
+                           :ttl 20.0}
+                          ;; debian-mathieu.corbin/root full
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 91
+                           :tags []
+                           :time 4
+                           :ttl 20.0}
+                          ;; guixsd-mathieu.corbin/root full
+                          {:host &quot;guixsd-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 90
+                           :tags []
+                           :time 4
+                           :ttl 20.0}
+                          ;; debian-mathieu.corbin/root full
+                          {:host &quot;debian-mathieu.corbin&quot;
+                           :service &quot;df-root/percent_bytes-used&quot;
+                           :state nil
+                           :description nil
+                           :metric 93
+                           :tags []
+                           :time 3605
+                           :ttl 20.0}])]
+     ;; :disk-stream-tap-1 should contains all events indicating a full fs
+     (is (= (:disk-stream-tap-1 result)
+            [{:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 3
+              :ttl 20.0}
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-var-log/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 91
+              :tags []
+              :time 4
+              :ttl 20.0}
+             {:host &quot;guixsd-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 93
+              :tags []
+              :time 3605
+              :ttl 20.0}]))
+     ;; :disk-stream-tap-2 should contains all events passed to the email stream.
+     ;; for each host/service, we want maximum 2 mails every 3600 seconds
+     (is (= (:disk-stream-tap-2 result)
+            [ ;; first debian-mathieu/root
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 3
+              :ttl 20.0}
+             ;; first debian-mathieu/var-log
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-var-log/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             ;; second debian-mathieu/root
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             ;; first debian-mathieu/guixsd
+             {:host &quot;guixsd-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 90
+              :tags []
+              :time 4
+              :ttl 20.0}
+             ;; next window (time = 3605), first debian-mathieu/root
+             {:host &quot;debian-mathieu.corbin&quot;
+              :service &quot;df-root/percent_bytes-used&quot;
+              :state nil
+              :description nil
+              :metric 93
+              :tags []
+              :time 3605
+              :ttl 20.0}])))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this test suite, we have 2 &lt;code&gt;:tap&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first one, &lt;code&gt;:disk-stream-tap-1&lt;/code&gt;, will contain all events representing a fs &amp;gt; to 80 %.
+The second, &lt;code&gt;:disk-stream-tap-2&lt;/code&gt;, all events actually send by email.
+The distinction is important.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Remember, we only want 2 email per hour for &lt;strong&gt;each distinct full filesystem&lt;/strong&gt; to not be spammed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Look at the &lt;code&gt;:disk-stream-tap-2&lt;/code&gt; tests.
+We injected 3 events commented &lt;code&gt;debian-mathieu.corbin/root full&lt;/code&gt;, but in &lt;code&gt;:disk-stream-tap-2&lt;/code&gt; we only had 3, because of &lt;code&gt;throttle&lt;/code&gt; (2 in the first 3600 seconds, 1 after).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Don&amp;#8217;t forget to add in riemann.config the new files :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(include &quot;mycorp/output/email.clj&quot;)
+(include &quot;mycorp/system/ram.clj&quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_first_incorrect_solution&quot;&gt;First (incorrect) solution&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We saw in a previous article how to perform a simple check. Why not reuse it with &lt;code&gt;throttle&lt;/code&gt; and &lt;code&gt;email&lt;/code&gt; ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(def disk-stream
+  &quot;Check if disk if &amp;gt; to 80 %, email if it is. Send only 2 email for each alert type.&quot;
+  ;; #&quot;percent_bytes-used$&quot; is a regex, we only want events where :service match the regex
+  (where (and (service #&quot;percent_bytes-used$&quot;)
+              ;; Test if disk is 80 % full
+              (&amp;gt; (:metric event) 80))
+    (tap :disk-stream-tap-1)
+    ;; 2 events max every 3600 secondes using throttle
+    (throttle 2 3600
+      (tap :disk-stream-tap-2)
+      ;; send email using the email stream defined in mycorp.output.email
+      (io (email/email &quot;foo@mcorbin.fr&quot;)))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Launch &lt;code&gt;riemann test riemann.config&lt;/code&gt;. It fails in the second test (&lt;code&gt;:disk-stream-tap-2&lt;/code&gt;).
+Why ? because in this solution, we only send 2 email &lt;strong&gt;regardless the host/service fields&lt;/strong&gt;.
+If we have 10 alerts for 10 differents filesystem, with this solution we will send &lt;strong&gt;only&lt;/strong&gt; 2 emails for the 2 first alerts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We want to have independant &lt;code&gt;throttle&lt;/code&gt; for each host/filesystem.
+And for this, we will use &lt;a href=&quot;http://riemann.io/howto.html#distinct-streams-for-each-host-service-etc&quot;&gt;the by stream&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_final_solution&quot;&gt;Final solution&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We just need to add &lt;code&gt;(by)&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(def disk-stream
+  &quot;Check if disk if &amp;gt; to 80 %, email if it is. Send only 2 email for each alert type.&quot;
+  ;; #&quot;percent_bytes-used$&quot; is a regex, we only want events where :service match the regex
+  (where (and (service #&quot;percent_bytes-used$&quot;)
+              ;; Test if disk is 80 % full
+              (&amp;gt; (:metric event) 80))
+    (tap :disk-stream-tap-1)
+    ;; use (by) to have independant streams for each host/service couple
+    (by [:host :service]
+      ;; 2 events max every 3600 secondes using throttle
+      (throttle 2 3600
+        (tap :disk-stream-tap-2)
+        ;; send email using the email stream defined in mycorp.output.email
+        (io (email/email &quot;foo@mcorbin.fr&quot;))))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;riemann test riemann.config&lt;/code&gt; is now passing !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You now know how to send email, and how to use &lt;code&gt;by&lt;/code&gt; and &lt;code&gt;throttle&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Code &lt;a href=&quot;https://github.com/mcorbin/riemann-configuration-example&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 21 May 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-05-04-simple-check/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-05-04-simple-check/
+</link>
+<title>
+A tour of Riemann : A simple check
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How to create a simple check with Riemann ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_a_basic_riemann_configuration&quot;&gt;A basic Riemann configuration&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is a basic &lt;code&gt;riemann.config&lt;/code&gt; file (it should be in &lt;code&gt;/etc/riemann/riemann.config&lt;/code&gt; if you have installed Riemann using rpm/deb).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(logging/init {:file &quot;/var/log/riemann/riemann.log&quot;})
+
+(let [host &quot;0.0.0.0&quot;]
+  (tcp-server {:host host})
+  (udp-server {:host host}))
+
+(periodically-expire 10)
+
+(streams)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, i initialize logging, start a tcp and a udp server, and configure index expiration every 10 seconds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;(streams)&lt;/code&gt; do nothing actually.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_check_if_metric_to_a_threshold&quot;&gt;Check if metric &amp;gt; to a threshold&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Create a file named &lt;code&gt;mycorp/system/ram.clj&lt;/code&gt;.
+We want a stream which:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Filter all events excepts events about RAM.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the event in the log file if the RAM is &amp;gt; to 90 %.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will simulate these events using Riemann test API:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/tour/ramperc.png&quot; alt=&quot;ram graph&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s define a basic &lt;code&gt;mycorp/system/ram.clj&lt;/code&gt; (doing nothing):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(ns mycorp.system.ram
+  (:require [riemann.config :refer :all]
+            [riemann.streams :refer :all]
+            [riemann.test :refer :all]
+            [clojure.tools.logging :refer :all]))
+
+(def threshold 90)
+
+(def ram-stream)
+
+(tests
+  (deftest ram-stream-test))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have imported Riemann essentials namespaces, defined a threshold variable, a ram-stream variable (which will contain our stream), and a test.
+Let&amp;#8217;s complete the test part:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(tests
+ (deftest ram-stream-test
+   (let [result (inject! [mycorp.system.ram/ram-stream]
+                         [{:host &quot;foo&quot;
+                           :service &quot;memory/percent-used&quot;
+                           :metric 60
+                           :time 1}
+                          {:host &quot;foo&quot;
+                           :service &quot;ramdom-event&quot;
+                           :metric 4000
+                           :time 3}
+                          {:host &quot;foo&quot;
+                           :service &quot;memory/percent-used&quot;
+                           :metric 95
+                           :time 11}
+                          {:host &quot;foo&quot;
+                           :service &quot;memory/percent-used&quot;
+                           :metric 80
+                           :time 21}
+                           {:host &quot;foo&quot;
+                           :service &quot;foobar&quot;
+                           :metric 3100
+                           :time 24}
+                          {:host &quot;foo&quot;
+                           :service &quot;memory/percent-used&quot;
+                           :metric 92
+                           :time 31}])]
+     (is (= (:ram-stream-tap result)
+            [{:host &quot;foo&quot;
+              :service &quot;memory/percent-used&quot;
+              :metric 95
+              :time 11}
+             {:host &quot;foo&quot;
+              :service &quot;memory/percent-used&quot;
+              :metric 92
+              :time 31}])))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As you can see, i will inject into &lt;code&gt;mycorp.system.ram/ram-stream&lt;/code&gt; a serie of events. Some are RAM events (and are represented by the previous graph), and some random events.
+I store the &lt;code&gt;inject!&lt;/code&gt; result into &lt;code&gt;result&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A &lt;code&gt;tap&lt;/code&gt; is a point where you can observe events. Take a look at the &lt;a href=&quot;http://riemann.io/howto.html#writing-tests&quot;&gt;writing tests&lt;/a&gt; section in the Riemann howto to learn more about tap.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In my test, i get the value of the tap named &lt;code&gt;:ram-stream-tap&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Obviously, my test will fail because &lt;code&gt;ram-stream&lt;/code&gt; is not defined.
+Let&amp;#8217;s define it:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(def ram-stream
+  (where (service &quot;memory/percent-used&quot;)
+    (where (&amp;gt; (:metric event) threshold)
+      (io #(info %))
+      (tap :ram-stream-tap))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I use &lt;code&gt;where&lt;/code&gt; to filter events whose name is not &quot;ram-used&quot; and &lt;code&gt;where&lt;/code&gt; again to filter events with a &lt;code&gt;:metric&lt;/code&gt; &amp;lt; to threshold. I print remaining events in the log file using &lt;code&gt;info&lt;/code&gt; and push them into a tap for testing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I could also use only one &lt;code&gt;where&lt;/code&gt; stream:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(def ram-stream
+  (where (and (service &quot;memory/percent-used&quot;)
+              (&amp;gt; (:metric event) threshold))
+    (io #(info %))
+    (tap :ram-stream-tap)))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now, import your &lt;code&gt;ram.clj&lt;/code&gt; file in riemann.config:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(include &quot;mycorp/system/ram.clj&quot;)
+
+(require '[riemann.test :refer :all]
+         '[mycorp.system.ram :as ram])
+
+;; rest of the file&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Launch your tests:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;riemann test /etc/riemann/riemann.config
+
+Ran 1 tests containing 1 assertions.
+0 failures, 0 errors.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Good job ! You can now use this stream in your configuration. Add it in riemann.config:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(streams
+ ram/ram-stream)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And that&amp;#8217;s it. You have a stream checking the ram.
+Not very useful (just a threshold), but it&amp;#8217;s something :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the next article, things will be more interesting.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Code &lt;a href=&quot;https://github.com/mcorbin/riemann-configuration-example&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 04 May 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-04-10-installing-riemann/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-04-10-installing-riemann/
+</link>
+<title>
+A tour of Riemann : Installing
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How to install Riemann ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_installing_riemann&quot;&gt;Installing Riemann&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Go to &lt;a href=&quot;http://riemann.io/&quot; class=&quot;bare&quot;&gt;http://riemann.io/&lt;/a&gt; and download Riemann for your platform.
+You will also need a JDK (OpenJDK 8 for example).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_configuring_riemann_jvm&quot;&gt;Configuring Riemann JVM&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On &lt;code&gt;Debian&lt;/code&gt;, takes a look at &lt;code&gt;/etc/default/riemann&lt;/code&gt;.
+On RHEL, it should be on &lt;code&gt;/etc/sysconfig/riemann&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For this tutorial, you don&amp;#8217;t need to modify this file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Riemann is just a jar, so that&amp;#8217;s it, you have installed Riemann :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Mon, 10 Apr 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-04-09-a-tour-of-riemann/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-04-09-a-tour-of-riemann/
+</link>
+<title>
+A tour of Riemann
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this blog posts serie, i will present Riemann, an amazing monitoring tool.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Do you know  &lt;a href=&quot;http://riemann.io/&quot;&gt;Riemann&lt;/a&gt; ?
+It&amp;#8217;s an &lt;strong&gt;amazing&lt;/strong&gt; tool, a stream processing engine to monitor your infrastucture.
+Flexible, powerful, it can detects complex problems on your infrastructure, calculate statistics and fire alerts.
+It integrates with many tools (InfluxDB, Kafka, Elasticsearch, Pagerduty&amp;#8230;&amp;#8203;) and is highly costumizable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Riemann configuration is code (real code, it&amp;#8217;s &lt;a href=&quot;https://clojure.org&quot;&gt;Clojure&lt;/a&gt;).
+You will quickly understand why Clojure is Riemann strength compared to a DSL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I will not present Clojure, i advice you to get Clojure basics using these tutorials:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://riemann.io/clojure.html&quot;&gt;Just enough Clojure to work with Riemann&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://aphyr.com/tags/Clojure-from-the-ground-up&quot;&gt;Clojure from the ground up&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.braveclojure.com/clojure-for-the-brave-and-true/&quot;&gt;Clojure for the brave and true&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are some useful links to work with Riemann. I will mostly show use cases on my tutorials,
+it&amp;#8217;s a complement of the Riemann howto and not a replacement.
+I will write unit tests for each use cases.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The official &lt;a href=&quot;http://riemann.io/howto.html&quot;&gt;howto&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;a href=&quot;http://riemann.io/api.html&quot;&gt;Riemann API&lt;/a&gt;, especially the &lt;code&gt;streams&lt;/code&gt; and &lt;code&gt;folds&lt;/code&gt; sections.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I will use &lt;a href=&quot;https://collectd.org/&quot;&gt;collectd&lt;/a&gt; with the &lt;code&gt;write_riemann&lt;/code&gt; plugin to gather system metrics.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s go !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Code &lt;a href=&quot;https://github.com/mcorbin/riemann-configuration-example&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 09 Apr 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2017-04-05-a-propos-clojure/
+</guid>
+<link>
+https://mcorbin.fr/posts/2017-04-05-a-propos-clojure/
+</link>
+<title>
+A propos de Clojure
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ça fait maintenant plus de 2 ans que je me suis mis à &lt;a href=&quot;http://clojure.org/&quot;&gt;Clojure&lt;/a&gt;.
+Bien m&amp;#8217;en a pris.
+C&amp;#8217;est aujourd&amp;#8217;hui le langage où je suis le plus à l&amp;#8217;aise.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je tâcherais dans cet article d&amp;#8217;expliquer pourquoi Clojure est un langage à la fois simple, puissant, et extrêmement fun.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_histoire&quot;&gt;Histoire&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La version 1.0 de Clojure est sortie en 2009.
+Le langage fonctionne sur la JVM (sa cible initiale) mais compile également en Javascript (via le projet ClojureScript).
+Un port de Clojure sur CLR existe également, mais moins populaire que les version Java/JS.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La force de Clojure est qu&amp;#8217;il s&amp;#8217;interface parfaitement avec sa plateforme cible, c&amp;#8217;est à dire qu&amp;#8217;il est très facile d&amp;#8217;utiliser l&amp;#8217;énorme écosystème (libraries, frameworks, outils&amp;#8230;&amp;#8203;) de ces plateformes depuis Clojure.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_syntaxe&quot;&gt;Syntaxe&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Clojure est inspiré de LISP.
+Pour un développeur habitué à C, Java, Python&amp;#8230;&amp;#8203; cela peut faire peur.
+Pourtant la syntaxe de Clojure (et de LISP en général) est une de ses plus grandes forces.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Voici une explication simple de la syntaxe de Clojure :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;1 + 1
+
+foo(bar)
+
+foo(bar, baz)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(+ 1 1)
+
+(foo bar)
+
+(foo bar baz)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div style=&quot;clear:both;&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On se rend compte facilement qu&amp;#8217;en Clojure, l&amp;#8217;opérateur (ou la fonction, le mot clé&amp;#8230;&amp;#8203;) se trouve en premier (après une parenthèse) suivi de ses arguments.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Allons un peu plus loin :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;public int addFive(int number) {
+    return number + 5;
+}
+
+public int addFiveIfOdd(int number) {
+    if (number % 2 == 0) {
+        return number + 5;
+    }
+    return number;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(defn add-five
+  [number]
+  (+ number 5))
+
+(defn add-five-if-odd
+  [number]
+  (if (odd? number)
+    (+ 5 number)
+    number))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On voit ici que la syntaxe de Clojure respecte toujours le même format.
+Une ouverture de parenthèse, un mot clé, et une suite d&amp;#8217;arguments.
+Quelle que soit l&amp;#8217;action à réaliser (un if, une définition de fonction, un appel de fonction&amp;#8230;&amp;#8203;), la syntaxe reste la même.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je trouve personnellement cela très intéressant, et une fois l&amp;#8217;habitude prise, lire du Clojure est très agréable (je vous promets que les parenthèses, vous ne les verrez plus ;)).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, en parlant de parenthèses, comparez les deux codes suivants :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;List&amp;lt;Integer&amp;gt; mylist =
+    Arrays.asList(1, 2, 3, 4);
+myList.stream()
+   .map( x -&amp;gt; x + 1)
+   .mapToInt(x -&amp;gt; x)
+   .sum();&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;(reduce + (map inc [1 2 3 4]))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comptez le nombre de symboles différents dans le code Java.
+On a &lt;code&gt;(){}&amp;lt;&amp;gt;,&amp;#8594;;.&lt;/code&gt;, et beaucoup plus de parenthèses que dans la version Clojure.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_immutabilité&quot;&gt;Immutabilité&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Clojure, (presque) tout est immutable.
+Cela se voit dès que l&amp;#8217;on touche au langage :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;riemann.bin&amp;gt; (def foo [1 2])
+#'riemann.bin/foo
+riemann.bin&amp;gt; (conj foo 3)
+[1 2 3]
+riemann.bin&amp;gt; (conj foo 4)
+[1 2 4]
+riemann.bin&amp;gt; foo
+[1 2]
+riemann.bin&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La même chose s&amp;#8217;applique lors de passage de paramètre à des fonctions :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;riemann.bin&amp;gt; (defn my-fn [my-vec] (conj my-vec 10))
+#'riemann.bin/my-fn
+riemann.bin&amp;gt; (my-fn foo)
+[1 2 10]
+riemann.bin&amp;gt; (my-fn foo)
+[1 2 10]
+riemann.bin&amp;gt; (my-fn [1 2 3])
+[1 2 3 10]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il n&amp;#8217;y a plus à s&amp;#8217;inquiéter des effets de bords, toutes les structures de données de Clojure sont immutables.
+Attention par contre si vous utilisez des objets Java (en utilisant l&amp;#8217;intéropérabilité Clojure/Java), le code perdra cette propriété.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_repl_développement_intéractif&quot;&gt;REPL, développement intéractif&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;adore Clojure car la façon de coder en Clojure correspond bien à ma façon de réfléchir.
+Lorsque je code en Clojure, j&amp;#8217;ai toujours le REPL (l&amp;#8217;interpréteur Clojure) ouvert. Je peux comme cela coder dans mon fichier .clj, le charger dans le REPL et le &quot;tester&quot; en live.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela est très intéressant et permet d&amp;#8217;avoir très rapidement un retour sur ce qu&amp;#8217;on écrit.
+C&amp;#8217;est vraiment la technique ultime pour expérimenter, tester rapidement plusieurs solutions à un problème.
+C&amp;#8217;est aussi très bien pour apprendre le langage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour résumer, mon workflow quand je code en Clojure c&amp;#8217;est :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Explorer les solutions à un problème avec le REPL. En faisant cela, je comprends mieux mon problème, les différentes solutions qui s&amp;#8217;offrent à moi, comment je peux découper le code&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ecrire des tests&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Refactorer ma solution (qui est souvent bancale et ne passe pas mes tests).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les aficionados du TDD ne seraient pas forcément d&amp;#8217;accord avec moi, mais je trouve que manipuler un peu le problème avant d&amp;#8217;écrire des tests apporte une énorme plus value.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le REPL est également agréable à utiliser grâce à la syntaxe simple et expressive de Clojure. Parait que Java 9 aura également un REPL, cool, mais je me vois mal taper dans un REPL à longueur de journée :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;ArrayList&amp;lt;String&amp;gt; foolist = new ArrayList&amp;lt;String&amp;gt;();
+list.add(&quot;foo&quot;);
+list.add(&quot;bar&quot;);
+list.add(&quot;baz&quot;);
+Map&amp;lt;Integer, &amp;lt;List&amp;lt;String&amp;gt;&amp;gt; foomap = new HashMap&amp;lt;&amp;gt;();
+foomap.put(20, foolist)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et vous ? Pour information, l&amp;#8217;équivalent Clojure est &lt;code&gt;&lt;code&gt;{20 [&quot;foo&quot; &quot;bar&quot; &quot;baz&quot;]}&lt;/code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le fait que les fonctions prennent et retournent généralement des structures de données immutables aide aussi.
+Pour tout ce qui est état (connexions aux base de données, web servers&amp;#8230;&amp;#8203;)
+des outils comme &lt;a href=&quot;https://github.com/tolitius/mount&quot;&gt;mount&lt;/a&gt; permettent de définir et recharger en une commande l&amp;#8217;intégralité du programme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le REPL est probablement ce qui me manque le plus dans d&amp;#8217;autres langages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_programmation_concurrente&quot;&gt;Programmation concurrente&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Clojure fournit plusieurs outils permettant de partager facilement des ressources entre threads.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un &lt;a href=&quot;https://clojure.org/reference/atoms&quot;&gt;atom&lt;/a&gt; permet de définir une variable où chaque opération sera atomique. Exemple :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;riemann.bin&amp;gt; (def foo (atom [1 2]))
+#'riemann.bin/foo
+riemann.bin&amp;gt; foo
+#atom[[1 2] 0x58749e6e]
+riemann.bin&amp;gt; @foo
+[1 2]
+riemann.bin&amp;gt; (swap! foo conj 3)
+[1 2 3]
+riemann.bin&amp;gt; @foo
+[1 2 3]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ici, je définis un atom foo. &lt;code&gt;@foo&lt;/code&gt; permet de déférencer l&amp;#8217;atom, c&amp;#8217;est à dire récupérer sa valeur. &lt;code&gt;swap!&lt;/code&gt; permet d&amp;#8217;appliquer une opération sur un atom (ici en y ajoutant la valeur 3).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les atom ont donc un état (et ne sont pas immutables). L&amp;#8217;intêret des atom est qu&amp;#8217;ils sont thread safe.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Imaginons que 2 threads appellent &lt;code&gt;swap!&lt;/code&gt; simultanément sur un atom, par exemple &lt;code&gt;(swap! foo conj 3)&lt;/code&gt; sur le thread 1 puis &lt;code&gt;(swap! foo conj 4)&lt;/code&gt; sur le thread 2.
+Si l&amp;#8217;atom valait initialement &lt;code&gt;[1 2]&lt;/code&gt;, les &quot;bonnes&quot; réponses possibles sont &lt;code&gt;[1 2 3 4]&lt;/code&gt;
+ ou &lt;code&gt;[1 2 4 3]&lt;/code&gt; une fois l&amp;#8217;opération exécutée.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Imaginons que l&amp;#8217;opération 1 se termine. L&amp;#8217;atom vaudra donc &lt;code&gt;[1 2 3]&lt;/code&gt;.
+Pas de chance, pendant ce temps là sur le thread 2, l&amp;#8217;opération swap! produit &lt;code&gt;[1 2 4]&lt;/code&gt; (les deux opérations ayant été lancés au même moment, l&amp;#8217;état de l&amp;#8217;atom en entrée était le même pour les deux).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous ne voulons surtout pas que le résultat final soit &lt;code&gt;[1 2 4]&lt;/code&gt;.
+Heureusement, &lt;code&gt;swap!&lt;/code&gt; détectera que l&amp;#8217;atom a changé pendant qu&amp;#8217;il réalisait l&amp;#8217;opération, et va donc re-réaliser l&amp;#8217;opération en prenant le nouveau état comme paramètre d&amp;#8217;entrée.
+On obtiendra donc comme résultat final &lt;code&gt;[1 2 3 4]&lt;/code&gt;. Le tout sans lock :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un peu de la même façon, les &lt;a href=&quot;https://clojure.org/reference/refs&quot;&gt;refs&lt;/a&gt; permettent de définir des opérations entre plusieurs variables mutables partagées entre plusieurs threads de manière safe, grâce à un système de transaction.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les atom et les ref viennent en plus avec des fonctionnalités intéressantes, comme le fait de pouvoir définir des fonctions qui seront appelées (avec en paramètre l&amp;#8217;ancien et le nouveau état de l&amp;#8217;atom ou de la ref) une fois une action réalisée.
+Des fonctions de validations peuvent également être liées aux refs ou atom pour refuser certains états.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Clojure implémente également d&amp;#8217;autres mécanismes pour la gestion de la concurrence (comme les &lt;a href=&quot;https://clojure.org/reference/agents&quot;&gt;agents&lt;/a&gt;, ou bien &lt;a href=&quot;https://github.com/clojure/core.async&quot;&gt;core.async&lt;/a&gt; qui permet de créer plusieurs processes qui communiqueront avec des channels (un peu à la Go)).
+Et évidemment, tout ce qui tourne sur la JVM (donc java.util.concurrent par exemple) est également disponible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_macros&quot;&gt;Macros&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une liste se définit de cette façon en Clojure:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;riemann.bin&amp;gt; '(1 2 3)
+(1 2 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Définissons une nouvelle liste (rappel: de part sa nature dynamique, une liste en Clojure peut contenir tout et n&amp;#8217;importe quoi) :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;riemann.bin&amp;gt; '(defn my-fn [my-vec] (conj my-vec 10))
+(defn my-fn [my-vec] (conj my-vec 10))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ma liste contient ici la définition de la fonction &lt;code&gt;my-fn&lt;/code&gt; !
+En clojure (et en LISP de façon plus générale), le code est une structure de données manipulable via un mécanisme appelé macros.
+Par exemple, &lt;code&gt;defn&lt;/code&gt; lui même est une macro:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;riemann.bin&amp;gt; (macroexpand '(defn my-fn2 [my-vec] (conj my-vec 10)))
+(def my-fn2 (clojure.core/fn ([my-vec] (conj my-vec 10))))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;macroexpand&lt;/code&gt; retourne la forme &quot;réelle&quot; d&amp;#8217;une expression Clojure.
+On voit ici que defn est en fait un assemblage des mots-clés &lt;code&gt;def&lt;/code&gt; et &lt;code&gt;fn&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les macros sont un outil très puissant (mais à utiliser avec modération), permettant de définir par exemple des DSL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Clojure n&amp;#8217;est pas parfait.
+Il reste beaucoup à faire, comme par exemple les messages d&amp;#8217;erreurs (qui sont des stacktrace Java peu expressives) qui ont tendances à faire fuir les nouveaux venus dans le langage.
+La façon de travailler avec le REPL n&amp;#8217;est pas également facile à acquérir seul.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais le langage est solide, cohérent, et a complètement changé ma façon de programmer (en bien).
+La philosophie du langage (immutabilité, manipulation facile de structures de données, REPL, fonctions/librairies versus frameworks&amp;#8230;&amp;#8203;) correspond parfaitement à ma façon de développer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous ne l&amp;#8217;avez pas encore fait, vous DEVEZ jeter un oeil à Clojure.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_ressources&quot;&gt;Ressources&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://aphyr.com/tags/Clojure-from-the-ground-up&quot;&gt;Clojure from the group up&lt;/a&gt; de Aphyr : une série de tutoriel sur le langage&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.braveclojure.com/clojure-for-the-brave-and-true/&quot;&gt;Brave Clojure&lt;/a&gt; : Un tutoriel complet existant également au format livre.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 05 Apr 2017 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2016-08-10-logs-ansible/
+</guid>
+<link>
+https://mcorbin.fr/posts/2016-08-10-logs-ansible/
+</link>
+<title>
+Use your Ansible logs ! / Exploitez vos logs Ansible !
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/logs-ansible-en&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l&amp;#8217;utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout cela génère une &lt;strong&gt;énorme&lt;/strong&gt; quantité de logs, dont nous ne faisons pas grand chose à part une consultation après un déploiement via l&amp;#8217;interface de Jenkins.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;expliquerais dans cet article une façon d&amp;#8217;exploiter ces logs, en s&amp;#8217;appuyant sur les plugins callback d&amp;#8217;Ansible. Grâce à ces plugins, il est possible d&amp;#8217;obtenir des logs beaucoup plus détaillés que les logs Ansible de base, ainsi que de facilement les manipuler pour en tirer un maximum d&amp;#8217;informations et de statistiques.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_callbacks_plugins_d_ansible&quot;&gt;Les callbacks plugins d&amp;#8217;Ansible&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;__strong_présentation_générale_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Présentation générale&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ansible peut être &quot;étendu&quot; avec des plugins. Je vais présenter ici les plugins de type callback &lt;a href=&quot;http://docs.ansible.com/ansible/developing_plugins.html=callbacks&quot;&gt;(documentation)&lt;/a&gt;. Les examples ici concernent Ansible 1.X, mais le fonctionnement est quasiment identique en version 2 et plus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce plugin permet de définir un objet dont les fonctions seront appelées à différents moments lors de l&amp;#8217;exécution d&amp;#8217;Ansible. Exemple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;class CallbackModule(object):
+
+    def on_any(self, *args, *kwargs):
+        pass
+
+    def runner_on_failed(self, host, res, ignore_errors=False):
+        pass
+
+    def runner_on_ok(self, host, res):
+        pass
+
+    def runner_on_skipped(self, host, item=None):
+        pass
+
+    def playbook_on_start(self):
+        pass
+
+    def playbook_on_task_start(self, name, is_conditional):
+        pass
+
+    = etc...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un callback plugin est donc juste une classe implémentant un certain nombre de méthodes. J&amp;#8217;en ai mis quelques unes dans cet exemple, mais il en existe beaucoup plus pour tout type d&amp;#8217;événements (vous pouvez retrouver ces fonctions dans la doc d&amp;#8217;Ansible ou dans les plugins callbacks fournis avec Ansible).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;__strong_fonctionnement_détaillé_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Fonctionnement détaillé&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Par exemple, la fonction &lt;strong&gt;runner_on_failed&lt;/strong&gt; sera appelé quand une task Ansible échouera. De la même façon, &lt;strong&gt;runner_on_ok&lt;/strong&gt; sera appelé lorsque qu&amp;#8217;une tâche sera en succès, &lt;strong&gt;runner_on_skipped&lt;/strong&gt; lors d&amp;#8217;une tâche ignorée etc&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les fonctions de type &lt;strong&gt;playbook_on_&lt;/strong&gt; seront elles exécutées lors d&amp;#8217;évènements liés aux playbooks (&lt;strong&gt;playbook_on_start&lt;/strong&gt; lors du démarrage du playbook etc&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Toutes ces fonctions recoivent des paramètres. C&amp;#8217;est là que ça devient intéressant. Par exemple, nous disposons dans &lt;strong&gt;runner_on_ok&lt;/strong&gt; des variables &lt;strong&gt;self&lt;/strong&gt;, &lt;strong&gt;host&lt;/strong&gt;, et &lt;strong&gt;res&lt;/strong&gt; :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Commençons par la variable &lt;strong&gt;host&lt;/strong&gt;. Comme son nom l&amp;#8217;indique, cette variable contient l&amp;#8217;host sur lequel s&amp;#8217;applique la task.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La variable &lt;strong&gt;res&lt;/strong&gt; contient les différentes informations sur la machine comme par exemple les variables de type &lt;strong&gt;fact&lt;/strong&gt;, ainsi que quelques informations sur la task (état &lt;strong&gt;changed&lt;/strong&gt;, module appelé&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;L&amp;#8217;objet callback &lt;strong&gt;self&lt;/strong&gt; contient un grand nombre d&amp;#8217;informations sur l&amp;#8217;exécution en cours. Rajoutons par exemple &lt;strong&gt;import pdb; pdb.set_trace();&lt;/strong&gt; dans la fonction &lt;strong&gt;runner_on_ok&lt;/strong&gt; (pour utiliser le débugger Python) et lançons un déploiement. Un &lt;strong&gt;pp dir(self)&lt;/strong&gt; pour lister les champs de l&amp;#8217;objet donne:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(Pdb) pp dir(self)
+['__class__',
+ '__delattr__',
+ '__dict__',
+ '__doc__',
+ '__format__',
+ '__getattribute__',
+ '__hash__',
+ '__init__',
+ '__module__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__setattr__',
+ '__sizeof__',
+ '__str__',
+ '__subclasshook__',
+ '__weakref__',
+ 'on_any',
+ 'play',
+ 'playbook',
+ 'playbook_on_import_for_host',
+ 'playbook_on_no_hosts_matched',
+ 'playbook_on_no_hosts_remaining',
+ 'playbook_on_not_import_for_host',
+ 'playbook_on_notify',
+ 'playbook_on_play_start',
+ 'playbook_on_setup',
+ 'playbook_on_start',
+ 'playbook_on_stats',
+ 'playbook_on_task_start',
+ 'playbook_on_vars_prompt',
+ 'runner_on_async_failed',
+ 'runner_on_async_ok',
+ 'runner_on_async_poll',
+ 'runner_on_failed',
+ 'runner_on_no_hosts',
+ 'runner_on_ok',
+ 'runner_on_skipped',
+ 'runner_on_unreachable',
+ 'state',
+ 'task']&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;objet &lt;strong&gt;self&lt;/strong&gt; est une vraie mine d&amp;#8217;or ! A coup de pdb (&lt;code&gt;pp dir(self.task)&lt;/code&gt;, &lt;code&gt;pp dir(self.play)&lt;/code&gt; etc&amp;#8230;&amp;#8203;) on se rend compte que l&amp;#8217;on a accès à une énorme quantité d&amp;#8217;informations sur notre déploiement. Détail de la tâche en cours (nom, rôle associé&amp;#8230;&amp;#8203;), variables, informations sur le playbook&amp;#8230;&amp;#8203; Il ne reste plus qu&amp;#8217;à piocher dans ce qui nous intéresse ! Bien sûr, chaque fonction du plugin callback aura des paramètres différents (même si l&amp;#8217;on retrouve des similarités, comme par exemple entre &lt;strong&gt;runner_on_failed&lt;/strong&gt; et &lt;strong&gt;runner_on_ok&lt;/strong&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;__strong_playbook_on_start_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on start&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La méthode &lt;strong&gt;playbook_on_start&lt;/strong&gt; s&amp;#8217;exécute, comme son nom l&amp;#8217;indique, au lancement d&amp;#8217;un playbook. Je voulais initialiser quelques variables à partir d&amp;#8217;extra_vars, j&amp;#8217;ai donc utilisé cette fonction pour le faire. Voici un exemple basique (je considère qu&amp;#8217;une fonction &lt;strong&gt;get_timestamp&lt;/strong&gt; me retourne le timestamp actuel) :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;def playbook_on_start(self):
+        extra_vars = self.playbook.extra_vars
+        self.project = extra_vars[&quot;project&quot;]
+        self.version = extra_vars[&quot;version&quot;]
+        self.environment = extra_vars[&quot;environment&quot;]
+        self.start_timestamp = get_timestamp()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ici, je récupère trois variables que je sais présentes en extra_vars. Une variable &lt;strong&gt;projet&lt;/strong&gt; (le projet à déployer), une variable &lt;strong&gt;version&lt;/strong&gt; (la version à déployer), une variable &lt;strong&gt;environment&lt;/strong&gt; (dev, préprod, prod&amp;#8230;&amp;#8203;), et le timestamp du démarrage du déploiement. J&amp;#8217;utilise ces quatres informations pour identifier précisément un déploiement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bref, il est très facile de pouvoir rendre accessibles certaines variables en enrichissant &lt;strong&gt;self&lt;/strong&gt; lors de l&amp;#8217;exécution des fonctions (l&amp;#8217;objet callback étant toujours le même dans un déploiement). Les autres variables de &lt;strong&gt;self&lt;/strong&gt; sont bien sûr également accessibles si besoin.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;__strong_playbook_on_stats_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on stats&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une autre fonction intéressante est &lt;strong&gt;playbook_on_stats&lt;/strong&gt;. Cette fonction est appelée à la fin du déploiement, et contient le résumé du déploiement. Voici par exemple la façon de récupérer le résumé (contenant les tasks unreachable, skipped, changed&amp;#8230;&amp;#8203;) du déploiement par host :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;def playbook_on_stats(self, stats):
+    hosts = stats.processed.keys()
+    for h in hosts:
+        summary = stats.summarize(h)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je récupère personnellement le résumé du déploiement par host, mais aussi un résumé global en additionnant chaque type de task (ok, skipped&amp;#8230;&amp;#8203;) de chaque host.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;__strong_la_génération_des_logs_strong&quot;&gt;&lt;strong&gt;La génération des logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il ne vous reste plus qu&amp;#8217;à compléter les différentes fonctions du plugin callback pour générer des logs au format souhaité. Voici par exemple un exemple tout bête qui envoie (via http en utilisant le package &lt;strong&gt;requests&lt;/strong&gt;) un log à un web server lorsqu&amp;#8217;une task échoue:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;def runner_on_failed(self, host, res, ignore_errors=False):
+    task = self.task
+    result = {
+        &quot;timestamp&quot;: get_timestamp(),
+        &quot;host&quot;: host,
+        &quot;type&quot;: &quot;task_failed&quot;,
+        &quot;task&quot;: task.name,
+        &quot;role&quot;: task.role_name,
+        &quot;result&quot;: json.dumps(res),
+        &quot;version&quot;: self.version,  # Cette variable et les suivantes sont initialisées comme précédemment
+        &quot;environment&quot;: self.environment,
+        &quot;project&quot;: self.project,
+        &quot;start_timestamp&quot;: self.start_timestamp
+    }
+    requests.post(url_web_server, data=json.dumps(result))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On aura ici accès au timestamp, à l&amp;#8217;host, au type d&amp;#8217;évènement (task_failed), au nom de la task, au rôle associé à la task si il existe, au résultat détaillé de l&amp;#8217;exécution de la task, et enfin aux variables définies plus tôt dans &lt;strong&gt;playbook_on_start&lt;/strong&gt; (ces variables sont communes à tous les logs d&amp;#8217;un même déploiement et permettent ensuite d&amp;#8217;identifier les logs pour un déploiement donné).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il ne reste plus qu&amp;#8217;à écrire un code similaire dans les autres fonctions du plugin callback (en l&amp;#8217;adaptant à chaque fois), et on arrive déjà sans grand effort à collecter des logs très intéressants !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;__strong_collectez_et_stockez_vos_logs_strong&quot;&gt;&lt;strong&gt;Collectez et stockez vos logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les possibilités avec les plugins Ansible sont infinies. J&amp;#8217;ai choisi de les envoyer comme dans l&amp;#8217;exemple précédent dans un service web (9 lignes de Python avec Flask + kafka-python). Ce service ne réalise qu&amp;#8217;une seule chose : après réception d&amp;#8217;un log, il l&amp;#8217;envoie dans Kafka. Un Logstash collecte ensuite les logs de Kafka pour les indexer dans Elasticsearch. J&amp;#8217;ai essayé d&amp;#8217;envoyer directement du plugin dans kafka, mais Ansible semble gérer bizarrement le cycle de vie de ses objets, ce qui posait quelques soucis avec kafka-python.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ansible_log.png&quot; alt=&quot;logs ansible&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous pourriez très bien écrire les logs sur disque, ou les envoyer dans une base de données&amp;#8230;&amp;#8203; Tout dépend de ce que voulez en faire. L&amp;#8217;avantage d&amp;#8217;Elasticsearch est qu&amp;#8217;il est très facile ensuite de réaliser des requêtes complexes/des graphes sur les logs via Kibana/Grafana.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;__strong_exploitation_des_logs_strong&quot;&gt;&lt;strong&gt;Exploitation des logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Rien qu&amp;#8217;avec les informations fournies précédemment par le plugin callback, je peux :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Réaliser des recherches complexes dans Kibana (exemple : récupérer les tasks en échec pour le rôle HAproxy d&amp;#8217;un projet donné ces 90 derniers jours sur la préprod). De plus, tous les logs sont centralisés au même endroit, ça évite d&amp;#8217;avoir à se balader de jobs Jenkins en jobs Jenkins pour visualiser les logs (qui sont souvent illisibles avec l&amp;#8217;option &lt;strong&gt;-vvvv&lt;/strong&gt; d&amp;#8217;Ansible)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dans Grafana, par projet:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Résumé des derniers déploiements (heure de début, environnement, succès ou non, nombre de tasks skipped/changed/unreachable etc&amp;#8230;&amp;#8203;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Liste des déploiements lancés (ceux en cours sont donc lancés mais non terminés).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nombre de déploiements terminés sur une période de temps&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nombre de déploiements lancés sur une période de temps (permet de comparer avec le nombre de déploiements terminés).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nombre de task pour chaque rôle sur une période de temps en fonction du type de la task (skipped, changed&amp;#8230;&amp;#8203;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nombre de fois qu&amp;#8217;un rôle a été en échec.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rôles les moins fiables (le plus souvent en échec).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Temps d&amp;#8217;exécution de chaque rôle rôle (minimum, maximum, moyenne&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dans Grafana, tous les graphes cités précédemment mais de façon globale (donc sans la notion de projet).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ansible_grafana1.png&quot; alt=&quot;Exemple de graphes avec Grafana&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ansible_grafana2.png&quot; alt=&quot;Exemple de graphes avec Grafana&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt;Ces deux images présentent quelques graphes Grafana (anonymisées) générés via les statistiques récoltées par le plugin. Liens vers les images en tailles réelles &lt;a href=&quot;/img/ansible_grafana1.png&quot;&gt;ici&lt;/a&gt; et &lt;a href=&quot;/img/ansible_grafana2.png)&quot;&gt;ici&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le temps par rôle peut être calculé assez simplement. Lors de l&amp;#8217;exécution d&amp;#8217;une task, on a accès dans le plugin au rôle associé à la task. J&amp;#8217;initialise un dictionnaire où la clé est le nom du rôle, et la valeur un tableau de deux élements. Le premier élément est le timestamp de la première task du rôle. Je mets ensuite à jour le second élément (la date de fin du rôle) à chaque nouvelle task.
+J&amp;#8217;envoie ensuite ces statistiques pour chaque rôle (si il n&amp;#8217;y a pas eu de plantage pouvant causer de fausses durées) en fin de déploiement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pensez également à pré-traiter certains logs, comme par exemple les paramètres &lt;strong&gt;res&lt;/strong&gt; des fonctions. Ces paramètres peuvent être trèèèèès longs (des dizaines de milliers de caractères), notamment lors de téléchargements volumineux avec Ansible en mode &lt;strong&gt;-vvvv&lt;/strong&gt;. Je remplace généralement les résultats trop longs par un message de type &lt;strong&gt;résultat trop long&lt;/strong&gt; (ce sont généralement des données inexploitables).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;__strong_ansible_2_strong&quot;&gt;&lt;strong&gt;Ansible 2&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le &lt;a href=&quot;https://docs.ansible.com/ansible/porting_guide_2.0.html&quot;&gt;porting guide&lt;/a&gt; d&amp;#8217;Ansible livre quelques informations pour porter les plugins Callback en Ansible 2. Malheureusement, le fonctionnement interne d&amp;#8217;Ansible ayant bougé, il faudra réadapter le code. En vrac :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Les extra_vars ne sont plus accessibles dans &lt;strong&gt;playbook_on_start&lt;/strong&gt; mais seulement à partir de &lt;strong&gt;v2_playbook_on_play_start&lt;/strong&gt;, et d&amp;#8217;une façon un peu différente :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;extra_vars = play.get_variable_manager().extra_vars&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Le nom du rôle est accessible dans &lt;strong&gt;v2_playbook_on_task_start&lt;/strong&gt;. Pour garder une certaine compatibilité avec du code Ansible 1.X, vous pouvez faire :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;if task._role is not None:  # on verifie si c'est un role ou non
+    task.role_name = task._role._role_name&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;__strong_conclusion_strong&quot;&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les possibilités du plugin callback sont infinies. Je pense sincèrement qu&amp;#8217;en prenant le temps, il est possible de réaliser de nombreuses statistiques sur les déploiements (ainsi que de l&amp;#8217;alerting, de la corrélation avec d&amp;#8217;autres métriques comme des métriques systèmes&amp;#8230;&amp;#8203;), surtout avec des outils puissants comme Kibana/Grafana. Bref, à creuser !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 10 Aug 2016 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2016-04-22-lesspipe/
+</guid>
+<link>
+https://mcorbin.fr/posts/2016-04-22-lesspipe/
+</link>
+<title>
+One day one manpage / Un jour une manpage : lesspipe
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/lesspipe-en&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;em&gt;Le concept de &quot;un jour une manpage&quot; est simple : je choisis une manpage aléatoirement et j&amp;#8217;explore la commande associée.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aujourd&amp;#8217;hui, c&amp;#8217;est la commande &lt;strong&gt;lesspipe&lt;/strong&gt; qui sera passée à la loupe. Tout d&amp;#8217;abord, regardons ce que raconte un &lt;strong&gt;man lesspipe&lt;/strong&gt; :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;lessfile, lesspipe - &quot;input preprocessor&quot; for  less.
+lessfile and lesspipe are programs that can be used to modify the  way  the contents of a file are displayed in less&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette commande permet donc de manipuler le contenu d&amp;#8217;un fichier avant de l&amp;#8217;envoyer à &lt;strong&gt;less&lt;/strong&gt;. Pourquoi faire ? Essayez de lancer &lt;strong&gt;less&lt;/strong&gt; sur une image, un .deb ou un .tar.gz&amp;#8230;&amp;#8203; Vous aurez quelques soucis. Lesspipe permet donc (entre autre) d&amp;#8217;enrichir less pour explorer de nouveaux types de fichier.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour l&amp;#8217;activer, il suffit de lancer (ou de rajouter dans son .bashrc ou équivalent) :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;eval &quot;$(lesspipe)&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_comment_ça_marche&quot;&gt;Comment ça marche ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Lançons juste &lt;strong&gt;lesspipe&lt;/strong&gt; dans un terminal. On obtient :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export LESSOPEN=&quot;| /usr/bin/lesspipe %s&quot;;
+export LESSCLOSE=&quot;/usr/bin/lesspipe %s %s&quot;;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Deux variables sont donc définies: LESSOPEN et LESSCLOSE.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La man page de &lt;strong&gt;less&lt;/strong&gt; indique, dans la partie &lt;strong&gt;INPUT PREPROCESSOR&lt;/strong&gt;, que la variable LESSOPEN sert à activer un préprocesseur pour less. Ce préprocesseur reçoit en paramètre le nom du fichier envoyé à less, crée un fichier temporaire et renvoie en sortie le nom de ce fichier temporaire. Le nom du fichier temporaire sera ensuite utilisé par less.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le préprocesseur peut également envoyer directement à &lt;strong&gt;less&lt;/strong&gt; des informations sans créer de fichiers temporaires. Dans ce cas là, tout ce qui sera envoyé sur la sortie standard du script appelé par LESSOPEN sera transmis à &lt;strong&gt;less&lt;/strong&gt;.
+La man page de &lt;strong&gt;less&lt;/strong&gt; indique à ce sujet:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is also possible to set up an input preprocessor to pipe the file  data  directly to less, rather than putting the data into a replacement file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;[&amp;#8230;&amp;#8203;] To use an input pipe, make the first character in the LESSOPEN environment variable a vertical bar (|) to  signify  that  the  input  pre-processor is an input pipe.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On remarque que lesspipe ne créera pas de fichiers temporaires (le script commence par un &lt;strong&gt;|&lt;/strong&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans notre cas, quand &lt;strong&gt;less&lt;/strong&gt; sera appelée, le script &lt;code&gt;/usr/bin/lesspipe&lt;/code&gt; sera appelé avec comme paramètre le nom du fichier sur lequel less est appelé.
+Essayons d&amp;#8217;appeler &lt;code&gt;/usr/bin/lesspipe&lt;/code&gt; manuellement, par exemple sur une image :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ lesspipe myimage.png
+myimage.png PNG 254x29 1920x1080+12+134 8-bit sRGB 3.69KB 0.000u 0:00.000&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On voit que lesspipe retourne certaines informations sur l&amp;#8217;image. Ces informations seront passées à &lt;strong&gt;less&lt;/strong&gt; et affichées.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour LESSCLOSE, voici une partie intéressante de la man page de less :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+When less closes a file opened in such a way, it will call another program, called  the  input  postprocessor,  which  may perform any desired clean-up action.
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;LESSCLOSE sert donc à faire le nettoyage. Le script référencé par LESSCLOSE reçoit deux paramètres : le nom du fichier original (sur lequel on a appelé &lt;strong&gt;less&lt;/strong&gt;), et le nom du fichier temporaire (généré par le script LESSOPEN).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On peut maintenant utiliser &lt;strong&gt;less&lt;/strong&gt; sur de nombreux types de fichiers. Par exemple, less sur un .zip affichera les fichiers contenus dans cette archive. Même chose pour de nombreux autres formats comme tar, deb, rpm, iso, pdf&amp;#8230;&amp;#8203; Et même des images !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_source_highlight&quot;&gt;source-highlight&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans le même genre, source-highlight permet de rajouter de la coloration syntaxique à less. Pour l&amp;#8217;installer (sur Debian), c&amp;#8217;est simple :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install source-highlight&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On se retrouve ensuite avec un script dans &lt;strong&gt;/usr/share/source-highlight/src-hilite-lesspipe.sh&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De la même façon que pour lesspipe, utilisons ce script comme préprocesseur :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export LESSOPEN=&quot;| /usr/share/source-highlight/src-hilite-lesspipe.sh %s&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;less -R [votre fichier]&lt;/strong&gt; vous ouvrira le fichier avec la coloration syntaxique.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion, grâce aux deux variables d&amp;#8217;environnements (LESSOPEN and LESSCLOSE) vues précédemment, vous pouvez même facilement écrire vos propres scripts pour enrichir less.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Fri, 22 Apr 2016 00:00:00 +0200
+</pubDate>
+</item>
+</channel>
+</rss>
