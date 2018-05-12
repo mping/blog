@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 12 May 2018 17:51:47 +0200
+Sat, 12 May 2018 17:55:20 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -58,7 +58,7 @@ myapp_bind_ip: &quot;127.0.0.1&quot; # good&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;_variables_defined_in_a_role&quot;&gt;Variables defined in a role&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;All variables defined in a role (&lt;code&gt;defaults/main.yml&lt;/code&gt;, &lt;code&gt;vars/main.yml&lt;/code&gt;) should be prefixed with the role name. It prevents collisions between variables but also to instantly know at what role a variable belongs to. For example, a role installing HAProxy will probably need a variable specifying the version in &lt;code&gt;defaults/main.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;All variables defined in a role (&lt;code&gt;defaults/main.yml&lt;/code&gt;, &lt;code&gt;vars/main.yml&lt;/code&gt;) should be prefixed with the role name. It prevents collisions between variables and also allows to instantly know at what role a variable belongs to. For example, a role installing HAProxy will probably need a variable specifying the version in &lt;code&gt;defaults/main.yml&lt;/code&gt;:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -67,7 +67,7 @@ haproxy_version: &quot;1.8&quot; # good&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Sometimes, it&amp;#8217;s tempting to use the same variable name in two roles if the variables should always have the same value (because being overrided somewhere). I think it&amp;#8217;s better to create one variable per role no matter what. For example, if we have &lt;code&gt;role-a&lt;/code&gt; and &lt;code&gt;role-b&lt;/code&gt;, and each one need to know a (common) database name:&lt;/p&gt;
+&lt;p&gt;Sometimes, it&amp;#8217;s tempting to use the same variable name in two roles if the variables should always have the same value (because being overrided somewhere). I think it&amp;#8217;s better to create one variable per role no matter what. For example, if we have &lt;code&gt;role-a&lt;/code&gt; and &lt;code&gt;role-b&lt;/code&gt;, and each one need to know a (common) database name, we could do:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;title&quot;&gt;&lt;code&gt;role-a/defaults/main.yml&lt;/code&gt;&lt;/div&gt;
@@ -155,7 +155,7 @@ host2&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Naming is super important. This will greatly simplify the maintenance of your Ansible projets.&lt;/p&gt;
+&lt;p&gt;Naming is super important. This will greatly simplify the maintenance of your Ansible projects.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

@@ -92,7 +92,7 @@ myapp_bind_ip: "127.0.0.1" # good</code></pre>
 <h2 id="_variables_defined_in_a_role">Variables defined in a role</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All variables defined in a role (<code>defaults/main.yml</code>, <code>vars/main.yml</code>) should be prefixed with the role name. It prevents collisions between variables but also to instantly know at what role a variable belongs to. For example, a role installing HAProxy will probably need a variable specifying the version in <code>defaults/main.yml</code>:</p>
+<p>All variables defined in a role (<code>defaults/main.yml</code>, <code>vars/main.yml</code>) should be prefixed with the role name. It prevents collisions between variables and also allows to instantly know at what role a variable belongs to. For example, a role installing HAProxy will probably need a variable specifying the version in <code>defaults/main.yml</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -101,7 +101,7 @@ haproxy_version: "1.8" # good</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Sometimes, it&#8217;s tempting to use the same variable name in two roles if the variables should always have the same value (because being overrided somewhere). I think it&#8217;s better to create one variable per role no matter what. For example, if we have <code>role-a</code> and <code>role-b</code>, and each one need to know a (common) database name:</p>
+<p>Sometimes, it&#8217;s tempting to use the same variable name in two roles if the variables should always have the same value (because being overrided somewhere). I think it&#8217;s better to create one variable per role no matter what. For example, if we have <code>role-a</code> and <code>role-b</code>, and each one need to know a (common) database name, we could do:</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>role-a/defaults/main.yml</code></div>
@@ -189,7 +189,7 @@ host2</code></pre>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Naming is super important. This will greatly simplify the maintenance of your Ansible projets.</p>
+<p>Naming is super important. This will greatly simplify the maintenance of your Ansible projects.</p>
 </div>
 </div>
 </div>
