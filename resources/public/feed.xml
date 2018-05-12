@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 12 May 2018 10:30:20 +0200
+Sat, 12 May 2018 17:51:47 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Ansible naming conventions
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;When using Ansible, it&amp;#8217;s important to define naming conventions and to apply them in all your roles and playbooks. Here are my naming conventions.&lt;/p&gt;
+&lt;p&gt;When using Ansible, it&amp;#8217;s important to define naming conventions and to apply them for all your roles and playbooks. Here are mine.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_all_variables_should_be_snake_case&quot;&gt;All variables should be snake_case&lt;/h2&gt;
