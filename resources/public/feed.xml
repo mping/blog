@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 12 May 2018 17:55:20 +0200
+Sat, 12 May 2018 18:02:16 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -2115,7 +2115,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/logs-ansible-en&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/logs-ansible-en/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;J&amp;#8217;utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l&amp;#8217;utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.&lt;/p&gt;
@@ -2451,7 +2451,7 @@ One day one manpage / Un jour une manpage : lesspipe
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/lesspipe-en&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/lesspipe-en/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;em&gt;Le concept de &quot;un jour une manpage&quot; est simple : je choisis une manpage aléatoirement et j&amp;#8217;explore la commande associée.&lt;/em&gt;&lt;/p&gt;
