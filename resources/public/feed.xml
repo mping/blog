@@ -12,11 +12,161 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 29 Apr 2018 19:48:34 +0200
+Sat, 12 May 2018 10:30:20 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2018-05-12-ansible-naming/
+</guid>
+<link>
+https://mcorbin.fr/posts/2018-05-12-ansible-naming/
+</link>
+<title>
+Ansible naming conventions
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When using Ansible, it&amp;#8217;s important to define naming conventions and to apply them in all your roles and playbooks. Here are my naming conventions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_all_variables_should_be_snake_case&quot;&gt;All variables should be snake_case&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The easiest rule:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;myappBindIp: &quot;127.0.0.1&quot; # not good
+myapp_bin_Ip: &quot;127.0.0.1&quot; # not good
+myapp_bind_ip: &quot;127.0.0.1&quot; # good&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_roles_and_groups_names&quot;&gt;Roles and groups names&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I use kebab-case for my roles and groups names (&lt;code&gt;haproxy&lt;/code&gt;, &lt;code&gt;kafka-manager&lt;/code&gt;&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_variables_defined_in_a_role&quot;&gt;Variables defined in a role&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All variables defined in a role (&lt;code&gt;defaults/main.yml&lt;/code&gt;, &lt;code&gt;vars/main.yml&lt;/code&gt;) should be prefixed with the role name. It prevents collisions between variables but also to instantly know at what role a variable belongs to. For example, a role installing HAProxy will probably need a variable specifying the version in &lt;code&gt;defaults/main.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;version: &quot;1.8&quot; # not good
+haproxy_version: &quot;1.8&quot; # good&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sometimes, it&amp;#8217;s tempting to use the same variable name in two roles if the variables should always have the same value (because being overrided somewhere). I think it&amp;#8217;s better to create one variable per role no matter what. For example, if we have &lt;code&gt;role-a&lt;/code&gt; and &lt;code&gt;role-b&lt;/code&gt;, and each one need to know a (common) database name:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;role-a/defaults/main.yml&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;role_a_database_name: &quot;foo&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;role-b/defaults/main.yml&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;role_b_database_name: &quot;foo&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;group_vars/app.yml&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;database_name: &quot;foo&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;group_vars/role-a.yml&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;role_a_database_name: &quot;{{ database_name }}&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;group_vars/role-b.yml&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;role_b_database_name: &quot;{{ database_name }}&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;code&gt;inventories/hosts&lt;/code&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-toml&quot; data-lang=&quot;toml&quot;&gt;[app:children]
+role-a
+role-b
+
+[role-a]
+host1
+
+[role-b]
+host2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, each role has a specific variable defined for the database name. If the database name should always be the same, i can define a parent group (&lt;code&gt;app&lt;/code&gt;) and two child groups (one for each role, &lt;code&gt;role-a&lt;/code&gt; and &lt;code&gt;role-b&lt;/code&gt;). I can now share a variable between groups in the &lt;code&gt;group_vars&lt;/code&gt; files.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This approach avoids side effects between roles, and simplify future refactoring.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_registered_variables&quot;&gt;Registered variables&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I usually prefix registered variables by &lt;code&gt;_&amp;lt;rolename&amp;gt;&lt;/code&gt;, to differentiate them from defaults variables.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_handlers_names&quot;&gt;Handlers names&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s also important to name correctly your handlers. My convention is: &lt;code&gt;&amp;lt;target&amp;gt; | &amp;lt;action&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;- name: haproxy | reload
+  become: true
+  service:
+    name: haproxy
+    state: reloaded
+
+- name: apt | update cache
+  become: true
+  apt:
+    update_cache: yes&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Naming is super important. This will greatly simplify the maintenance of your Ansible projets.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 12 May 2018 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2018-02-08-spring-generateur/
@@ -29,7 +179,7 @@ Spring, générateurs, des amis qui vous veulent du bien
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Aujourd&amp;#8217;hui, j&amp;#8217;ai vu passer un tweet qui fut la goutte d&amp;#8217;eau. Il faut que je vous parler de Spring. Spring ? C&amp;#8217;est LE framework web Java. Il faut dire que c&amp;#8217;est tellement simple, surtout avec Spring Boot et un générateur du type JHipster. Simple, rly ?&lt;/p&gt;
+&lt;p&gt;Aujourd&amp;#8217;hui, j&amp;#8217;ai vu passer un tweet qui fut la goutte d&amp;#8217;eau après des mois de frustrations avec Spring. Il faut que je vous parle de Spring. Spring ? C&amp;#8217;est LE framework web Java. Il faut dire que c&amp;#8217;est tellement simple, surtout avec Spring Boot et un générateur du type JHipster. Simple, rly ?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_simple_rly&quot;&gt;Simple, rly ?&lt;/h2&gt;
