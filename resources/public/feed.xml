@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Wed, 23 May 2018 20:59:34 +0200
+Wed, 21 Nov 2018 11:58:02 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -644,7 +644,7 @@ Ces derniers doivent connaître les potentiels problèmes pouvant se produire av
 &lt;p&gt;Et surtout, surtout, &lt;strong&gt;pas&lt;/strong&gt; de transactions entre différents services/outils de storage.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Encore merci au speaker pour ce talk génial, que l&amp;#8217;on devrait diffuser à chaque personne prononçant le mode &lt;strong&gt;NoSQL&lt;/strong&gt; et &lt;strong&gt;microservice&lt;/strong&gt; en entreprise.&lt;/p&gt;
+&lt;p&gt;Encore merci au speaker pour ce talk génial, que l&amp;#8217;on devrait diffuser à chaque personne prononçant les mots &lt;strong&gt;NoSQL&lt;/strong&gt; et &lt;strong&gt;microservice&lt;/strong&gt; en entreprise.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;a href=&quot;../../pdf/velocity_2017/real_world_consistency.pdf&quot;&gt;Slides&lt;/a&gt;.&lt;/p&gt;
@@ -730,7 +730,7 @@ Les solutions de load balancing traditionnelles ne sont pas vraiment prévues po
 &lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/velocity/chien.jpg&quot; alt=&quot;Un restaurant nommé les couilles du chien&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;aimerais conclure par la chose qui m&amp;#8217;a le plus plût durant cette conférence: les gens (speaker comme spectateurs) savaient de quoi ils parlaient et connaissaient les traeoff des différentes technologies qu&amp;#8217;ils ou elles utilisent.&lt;/p&gt;
+&lt;p&gt;J&amp;#8217;aimerais conclure par la chose qui m&amp;#8217;a le plus plût durant cette conférence: les gens (speaker comme spectateurs) savaient de quoi ils parlaient et connaissaient les tradeoff des différentes technologies qu&amp;#8217;ils ou elles utilisent.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Personne ne vendait de solutions miracles, et beaucoup de gens étaient très critiques envers le &lt;strong&gt;buzzword driven development&lt;/strong&gt;. Et ça, ça fait plaisir !&lt;/p&gt;

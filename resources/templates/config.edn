@@ -24,4 +24,6 @@
  :posts-per-page     8
  :blocks-per-preview 1
  :previews?          true
- :clean-urls?        true}
+ :clean-urls?        true
+ :hide-future-posts? false
+ :debug? false}
