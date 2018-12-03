@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 03 Dec 2018 23:43:23 +0100
+Mon, 03 Dec 2018 23:48:53 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -317,7 +317,7 @@ Get https://mcorbin.fr: context canceled&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;code&gt;tomb&lt;/code&gt; est une librairie extrêmement pratique, et est une brique de base pour mes projets Go. N&amp;#8217;hésitez pas à utiliser plusieurs tomb dans vos programmes, rien de nous force à contrôler toutes vos goroutines avec la même tomb (ce qui peut s&amp;#8217;avérer dangereux).&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;espère vous évoir convaincu de l&amp;#8217;utilité de cette librairie ;)&lt;/p&gt;
+&lt;p&gt;J&amp;#8217;espère vous avoir convaincu de l&amp;#8217;utilité de cette librairie ;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
