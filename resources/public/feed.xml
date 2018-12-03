@@ -12,11 +12,320 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Wed, 21 Nov 2018 11:58:02 +0100
+Mon, 03 Dec 2018 23:25:16 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2018-12-03-golang-tomb/
+</guid>
+<link>
+https://mcorbin.fr/posts/2018-12-03-golang-tomb/
+</link>
+<title>
+Golang: gérez l'arrêt de vos systèmes avec Tomb
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On cite souvent Go comme un langage de programmation facilitant la programmation concurrente et parallèle via les goroutines. Les goroutines ne sont pourtant pas si faciles que ça à utiliser correctement. Voyons comment utiliser la librairie &lt;code&gt;tomb&lt;/code&gt; pour les contrôler.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_une_goroutine_réalisant_des_requêtes_http&quot;&gt;Une goroutine réalisant des requêtes HTTP&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Voici un simple programme réalisant plusieurs choses:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Un channel nommé &lt;code&gt;stop&lt;/code&gt; est initialisé.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Une goroutine est démarrée. Cette goroutine va réaliser une requête HTTP sur &lt;code&gt;&lt;a href=&quot;https://mcorbin.fr&quot; class=&quot;bare&quot;&gt;https://mcorbin.fr&lt;/a&gt;&lt;/code&gt; toutes les 2 secondes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Une deuxième goroutine est démarrée. Cette goroutine écoute les signaux &lt;code&gt;SIGTERM&lt;/code&gt; envoyés à l&amp;#8217;application et poussera une valeur dans le channel &lt;code&gt;stop&lt;/code&gt; lors de la réception d&amp;#8217;un signal.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;&amp;#8592;stop&lt;/code&gt; bloquera tant qu&amp;#8217;une valeur n&amp;#8217;aura pas été poussée dans ce channel (ce qui ne se produit qu&amp;#8217;en cas de réception d&amp;#8217;un &lt;code&gt;SIGTERM&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-golang&quot; data-lang=&quot;golang&quot;&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;net/http&quot;
+	&quot;os&quot;
+	&quot;os/signal&quot;
+	&quot;syscall&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	stop := make(chan string)
+	go func() {
+		for {
+			time.Sleep(2 * time.Second)
+
+			r, err := http.Get(&quot;https://mcorbin.fr&quot;)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Printf(&quot;%d\n&quot;, r.StatusCode)
+		}
+	}()
+	go func() {
+		sig := make(chan os.Signal, 1)
+		signal.Notify(sig, syscall.SIGTERM)
+		s := &amp;lt;-sig
+		fmt.Printf(&quot;received signal %s\n&quot;, s)
+		stop &amp;lt;- &quot;done&quot;
+	}()
+	&amp;lt;-stop
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous compilez et lancez ce programme, vous devrez avoir cet output:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./example
+200
+200
+200
+200
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En récupérant le PID du processus (avec &lt;code&gt;ps aux&lt;/code&gt; par exemple), vous pouvez envoyer un signal &lt;code&gt;SIGTERM&lt;/code&gt; avec la commande &lt;code&gt;kill PID&lt;/code&gt;. L&amp;#8217;output de votre programme devrait être:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+200
+received signal terminated&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce programme semble fonctionner comme attendu mais présente un défaut majeur. Ici, la goroutine réalisant les requêtes HTTP sera terminée brutalement lors de l&amp;#8217;arrêt du programme. Ce n&amp;#8217;est pas très grave, mais imaginons que votre goroutine fasse des choses plus importantes. Peut être aimeriez-vous la terminer proprement ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela serait par exemple possible en utilisant un autre channel qui lui contrôlera l&amp;#8217;arrêt de la goroutine. Le programme suivant réalise cela:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;net/http&quot;
+	&quot;os&quot;
+	&quot;os/signal&quot;
+	&quot;syscall&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	stop := make(chan string)
+	done := make(chan string)
+	go func() {
+		for {
+			time.Sleep(2 * time.Second)
+			select {
+			case &amp;lt;-done:
+				fmt.Println(&quot;terminate the goroutine&quot;)
+				stop &amp;lt;- &quot;done&quot;
+				return
+			default:
+				r, err := http.Get(&quot;https://mcorbin.fr&quot;)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Printf(&quot;%d\n&quot;, r.StatusCode)
+			}
+		}
+	}()
+	go func() {
+		sig := make(chan os.Signal, 1)
+		signal.Notify(sig, syscall.SIGTERM)
+		s := &amp;lt;-sig
+		fmt.Printf(&quot;received signal %s\n&quot;, s)
+		done &amp;lt;- &quot;done&quot;
+	}()
+	&amp;lt;-stop
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ici, la goroutine gérant les signaux poussera une valeur dans le channel &lt;code&gt;done&lt;/code&gt; en cas de &lt;code&gt;SIGTERM&lt;/code&gt;. Ce channel est ensuite utilisé dans la première goroutine, qui captera cette valeur, poussera une nouvelle valeur dans le channel &lt;code&gt;stop&lt;/code&gt; ce qui terminera le programme.
+De cette façon, vous avez la garantie que le traitement dans la clause &lt;code&gt;default&lt;/code&gt; du &lt;code&gt;select&lt;/code&gt; se terminera avant l&amp;#8217;arrêt du programme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;inconvénient de ce genre de système est la multiplication des channels, et le manque de gestion d&amp;#8217;erreurs (la goroutine ne peut pas informer si elle s&amp;#8217;est correctement terminée ou non).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_tomb&quot;&gt;Tomb&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://godoc.org/gopkg.in/tomb.v2&quot;&gt;Tomb&lt;/a&gt; est une petite librairie permettant de gérer de façon efficace l&amp;#8217;arrêt de vos goroutines. Voici le programme précédent réécrit en utilisant &lt;code&gt;tomb&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-golang&quot; data-lang=&quot;golang&quot;&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;net/http&quot;
+	&quot;os&quot;
+	&quot;os/signal&quot;
+	&quot;syscall&quot;
+	&quot;time&quot;
+
+	&quot;gopkg.in/tomb.v2&quot;
+)
+
+func main() {
+	var t tomb.Tomb
+	t.Go(func() error {
+		for {
+			time.Sleep(2 * time.Second)
+			select {
+			case &amp;lt;-t.Dying():
+				fmt.Println(&quot;terminate the goroutine&quot;)
+				return nil
+			default:
+				r, err := http.Get(&quot;https://mcorbin.fr&quot;)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Printf(&quot;%d\n&quot;, r.StatusCode)
+			}
+		}
+	})
+	t.Go(func() error {
+		sig := make(chan os.Signal, 1)
+		signal.Notify(sig, syscall.SIGTERM)
+		s := &amp;lt;-sig
+		fmt.Printf(&quot;received signal %s\n&quot;, s)
+		t.Kill(nil)
+		return nil
+	})
+	err := t.Wait()
+	if err != nil {
+		fmt.Println(err)
+	}
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout d&amp;#8217;abord, une variable &lt;code&gt;t tomb.Tomb&lt;/code&gt; est déclarée. Pas besoin de plus pour initialiser une tomb, les valeurs par défaut suffisent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On voit ensuite que les goroutines sont démarrées via &lt;code&gt;t.Go(&amp;#8230;&amp;#8203;)&lt;/code&gt;. Cette fonction est semblable à la fonction &lt;code&gt;go&lt;/code&gt; de Golang, sauf qu&amp;#8217;ici la tomb &quot;controlera&quot; la goroutine. De plus, l&amp;#8217;argument de &lt;code&gt;t.Go(&amp;#8230;&amp;#8203;)&lt;/code&gt; doit forcément être une fonction retournant une erreur.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Autre changement, nous vérifions si notre goroutine se termine en consommant le channel &lt;code&gt;t.Dying()&lt;/code&gt;.&lt;br&gt;
+Ensuite, dans notre goroutine gérant les signaux, la fonction &lt;code&gt;t.Kill(nil)&lt;/code&gt; est appelé en cas de &lt;code&gt;SIGTERM&lt;/code&gt;. Cette fonction placera la tomb dans l&amp;#8217;état &lt;code&gt;dying&lt;/code&gt;, et fermera le channel &lt;code&gt;t.Dying()&lt;/code&gt; (ce qui terminera donc notre première goroutine).&lt;br&gt;
+Le paramètre de la fonction &lt;code&gt;Kill&lt;/code&gt; est la raison de l&amp;#8217;état de l&amp;#8217;arrêt de la goroutine, et doit être une &lt;code&gt;error&lt;/code&gt; ou &lt;code&gt;nil&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_gestion_des_erreurs&quot;&gt;Gestion des erreurs&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La fonction passée en paramètre de &lt;code&gt;t.Go&lt;/code&gt; doi, comme dit précédemment, forcément retourner une erreur. D&amp;#8217;ailleurs, voici ce que la documentation de &lt;code&gt;tomb&lt;/code&gt; indique à son sujet:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;If f returns a non-nil error, t.Kill is called with that error as the death reason parameter.&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il est donc possible de terminer une tomb en retournant une erreur depuis la goroutine, la fonction &lt;code&gt;Kill&lt;/code&gt; n&amp;#8217;a donc pas pas être appelée explicitement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La raison (e.g l&amp;#8217;erreur) de la mort de la goroutine peut donc avoir deux sources: l&amp;#8217;appel manuel à &lt;code&gt;t.Kill&lt;/code&gt; en passant une valeur non &lt;code&gt;nil&lt;/code&gt;, ou bien via une goroutine retournant une erreur.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans mon code précédent, j&amp;#8217;appelle également &lt;code&gt;err := t.Wait()&lt;/code&gt;. La fonction &lt;code&gt;Wait()&lt;/code&gt; va bloquer jusqu&amp;#8217;à ce que la tomb meurt, et que &lt;code&gt;toutes les goroutines&lt;/code&gt; gérées par la tomb soient terminées. La fonction retourne ensuite la raison de la mort de la goroutine.&lt;br&gt;
+Cette fonction a l&amp;#8217;avantage de nous garantir que les goroutines sont bien terminées lorsqu&amp;#8217;elle se &quot;débloque&quot; (mais attention aux deadlocks !).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;autres fonctions existent, comme &lt;code&gt;Alive&lt;/code&gt; ou &lt;code&gt;Dead&lt;/code&gt;, et sont très bien expliquées dans la  &lt;a href=&quot;https://godoc.org/gopkg.in/tomb.v2&quot;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_context&quot;&gt;Context !&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Go, on utilise généralement les &lt;a href=&quot;https://golang.org/pkg/context/&quot;&gt;context&lt;/a&gt; pour annuler/arrêter une requêtes, gérer des timeouts etc&amp;#8230;&amp;#8203; Cet article n&amp;#8217;a pas vocation à présenter les context en détail, mais il est à noter que &lt;code&gt;tomb&lt;/code&gt; supporte les context.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le bloc &lt;code&gt;default&lt;/code&gt; de notre première goroutine pourrait par exemple ressembler à ça:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;ctx := t.Context(nil)
+timeoutCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
+defer cancel()
+req, err := http.NewRequest(&quot;GET&quot;, &quot;https://mcorbin.fr&quot;, nil)
+if err != nil {
+	return err
+}
+req = req.WithContext(timeoutCtx)
+client := http.DefaultClient
+r, err := client.Do(req)
+if err != nil {
+	return err
+}
+fmt.Printf(&quot;%d\n&quot;, r.StatusCode)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ici, nous créons un premier context depuis la tomb, puis un second context (gérant le timeout) depuis le premier context.&lt;br&gt;
+Lorsque la tomb sera tuée, le context sera automatiquement terminé également, ce qui peut s&amp;#8217;avérer utile pour être sûr que certains appels (ici notre appel HTTP) soient terminés le plus vite possible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous pourrez par exemple voir ce genre de messages lorsque vous envoyez un &lt;code&gt;SIGTERM&lt;/code&gt; à l&amp;#8217;application:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./example
+200
+received signal terminated
+Get https://mcorbin.fr: context canceled&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;tomb&lt;/code&gt; est une librairie extrêmement pratique, et est une brique de base pour mes projets Go. N&amp;#8217;hésitez pas à utiliser plusieurs tomb dans vos programmes, rien de nous force à contrôler toutes vos goroutines avec la même tomb (ce qui peut s&amp;#8217;avérer dangereux).&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;espère vous évoir convaincu de l&amp;#8217;utilité de cette librairie ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Mon, 03 Dec 2018 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2018-05-12-ansible-naming/
