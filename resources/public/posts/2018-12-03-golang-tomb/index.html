@@ -295,6 +295,9 @@ Cette fonction a l&#8217;avantage de nous garantir que les goroutines sont bien 
 <div class="paragraph">
 <p>D&#8217;autres fonctions existent, comme <code>Alive</code> ou <code>Dead</code>, et sont très bien expliquées dans la  <a href="https://godoc.org/gopkg.in/tomb.v2">documentation</a>.</p>
 </div>
+<div class="paragraph">
+<p>Petite précision sur <code>Wait()</code>: la fonction bloquera pour toujours si aucune goroutine n&#8217;est managée par la tomb (cf <a href="https://github.com/go-tomb/tomb/issues/17">cette issue</a>).</p>
+</div>
 </div>
 </div>
 <div class="sect1">

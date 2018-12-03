@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 03 Dec 2018 23:25:16 +0100
+Mon, 03 Dec 2018 23:37:21 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -260,6 +260,9 @@ Cette fonction a l&amp;#8217;avantage de nous garantir que les goroutines sont b
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;D&amp;#8217;autres fonctions existent, comme &lt;code&gt;Alive&lt;/code&gt; ou &lt;code&gt;Dead&lt;/code&gt;, et sont très bien expliquées dans la  &lt;a href=&quot;https://godoc.org/gopkg.in/tomb.v2&quot;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Petite précision sur &lt;code&gt;Wait()&lt;/code&gt;: la fonction bloquera pour toujours si aucune goroutine n&amp;#8217;est managée par la tomb (cf &lt;a href=&quot;https://github.com/go-tomb/tomb/issues/17&quot;&gt;cette issue&lt;/a&gt;).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
