@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 15 Feb 2019 20:51:38 +0100
+Fri, 15 Feb 2019 20:53:11 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -231,7 +231,7 @@ Le projet avec une architecture simple et efficace qui devrait demander 5 person
 &lt;p&gt;&lt;em&gt;Les commerciaux de votre société de service quand le client accepte la refonte de son application legacy en microservice.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;la mode dans pas mal de groupes étant de ne plus recruter de profils technique en interne et de tout déléguer aux sociétés de service n&amp;#8217;arrange rien: les entreprises ne sont même plus capable de juger si ce qu&amp;#8217;on leur vend est pertinent ou pas. Ce sujet mériterait d&amp;#8217;ailleurs un article à lui tout seul&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;p&gt;la mode dans pas mal de groupes étant de ne plus recruter de profils technique en interne et de tout déléguer aux sociétés de service n&amp;#8217;arrange rien: les entreprises ne sont même plus capables de juger si ce qu&amp;#8217;on leur vend est pertinent ou pas. Ce sujet mériterait d&amp;#8217;ailleurs un article à lui tout seul&amp;#8230;&amp;#8203;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;En conclusion, ne sautez pas trop vite dans le train Kubernetes. Choisissez vos technologies pour de bonnes raisons.&lt;/p&gt;
