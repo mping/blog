@@ -179,12 +179,12 @@ pre code {
 }
 
 code {
-    color: #1B5C94;
+    color: #14436c;
 }
 
 pre, code, .hljs {
     background-color: ##2b2b2b;
-    font-size: 16px;
+    font-size: 19px;
     font-family: "Open Sans", sans-serif
     white-space: pre-wrap
 }
