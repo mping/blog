@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 15 Feb 2019 20:55:06 +0100
+Fri, 15 Feb 2019 20:56:05 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -154,7 +154,7 @@ Ce &lt;a href=&quot;https://stripe.com/blog/operating-kubernetes&quot;&gt;super 
 &lt;p&gt;La communauté est responsable de cela.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Jamais on ne parle aux conférences de la difficulté de maintenir un cluster Kubernetes en production, des problématiques de monitoring, des problèmes réseaux ou même les problèmes qu&amp;#8217;apportent les systèmes distribués de façon générale&amp;#8230;&amp;#8203;&lt;br&gt;
+&lt;p&gt;Jamais on ne parle aux conférences de la difficulté de maintenir un cluster Kubernetes en production, des problématiques de monitoring, des problèmes réseaux ou même des problèmes qu&amp;#8217;apportent les systèmes distribués de façon générale&amp;#8230;&amp;#8203;&lt;br&gt;
 Non, on veut faire du &quot;Wahoo&quot;, on montre que nous on peut &quot;scaler&quot;, on présente de beaux dashboards&amp;#8230;&amp;#8203; Peut être aussi parce que pas mal de gens présentant Kubernetes ne l&amp;#8217;utilisent en fait pas en production ?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
