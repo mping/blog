@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 15 Feb 2019 20:53:45 +0100
+Fri, 15 Feb 2019 20:55:06 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Kubernetes overdose
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Sur le net, en conférence, en entreprise, tout le monde en parle: Kubernetes est sur toutes les lèvres. Il permet de résoudre tout nos problèmes, réchauffement climatique et faim dans le monde inclus (surtout couplé à une architecture microservice !). Quand est-il vraiment en réalité ? Existe-il des alternatives ?&lt;/p&gt;
+&lt;p&gt;Sur le net, en conférence, en entreprise, tout le monde en parle: Kubernetes est sur toutes les lèvres. Il permet de résoudre tous nos problèmes, réchauffement climatique et faim dans le monde inclus (surtout couplé à une architecture microservice !). Quand est-il vraiment en réalité ? Existe-il des alternatives ?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_docker&quot;&gt;Docker&lt;/h2&gt;
