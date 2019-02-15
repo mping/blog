@@ -12,17 +12,17 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 15 Feb 2019 20:25:39 +0100
+Fri, 15 Feb 2019 20:29:22 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
 <item>
 <guid>
-https://mcorbin.fr/posts/2019-27-01-kubernetes-overdose/
+https://mcorbin.fr/posts/2019-02-15-kubernetes-overdose/
 </guid>
 <link>
-https://mcorbin.fr/posts/2019-27-01-kubernetes-overdose/
+https://mcorbin.fr/posts/2019-02-15-kubernetes-overdose/
 </link>
 <title>
 Kubernetes overdose
@@ -246,7 +246,7 @@ Le projet avec une architecture simple et efficace qui devrait demander 5 person
 
 </enclosure>
 <pubDate>
-Mon, 01 Mar 2021 00:00:00 +0100
+Fri, 15 Feb 2019 00:00:00 +0100
 </pubDate>
 </item>
 <item>
