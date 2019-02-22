@@ -71,7 +71,7 @@
 <h2 id="_ansible_callback_plugins">Ansible callback plugins</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="__strong_general_presentation_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>General presentation</strong></h3>
+<h3 id="_strong_general_presentation_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>General presentation</strong></h3>
 <div class="paragraph">
 <p>Ansible can be "extended" with plugins. I will present here the callback plugin type <a href="http://docs.ansible.com/ansible/developing_plugins.html=callbacks">(documentation)</a>.
 The examples in this post used Ansible 1.X, but the Ansible 2.X callback plugins are almost the same as Ansible 1.X.</p>
@@ -109,7 +109,7 @@ The examples in this post used Ansible 1.X, but the Ansible 2.X callback plugins
 </div>
 </div>
 <div class="sect2">
-<h3 id="__strong_detailed_presentation_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>Detailed presentation</strong></h3>
+<h3 id="_strong_detailed_presentation_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>Detailed presentation</strong></h3>
 <div class="paragraph">
 <p>For example, the <strong>runner_on_failed</strong> function will be called when an Ansible task fails, <strong>runner_on_ok</strong> when an Ansible task is successfull, <strong>runner_on_skipped</strong> when a task is skipped&#8230;&#8203;</p>
 </div>
@@ -185,7 +185,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__strong_playbook_on_start_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>playbook on start</strong></h3>
+<h3 id="_strong_playbook_on_start_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>playbook on start</strong></h3>
 <div class="paragraph">
 <p>The <strong>playbook_on_start</strong> function is called when a playbook is launched. I wanted to initialize some variables on the callback object from extra_vars passed to the <strong>ansible_playbook</strong> command. Here is a basic example (<strong>get_timestamp</strong> is a function returning the current timestamp is second):</p>
 </div>
@@ -207,7 +207,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__strong_playbook_on_stats_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>playbook on stats</strong></h3>
+<h3 id="_strong_playbook_on_stats_strong">&nbsp;&nbsp;&nbsp;&nbsp; <strong>playbook on stats</strong></h3>
 <div class="paragraph">
 <p>The <strong>playbook_on_stats</strong> function is called at the end of a deployment, and makes it possible to get the deployment summary (unreachable, skipped, changed tasks&#8230;&#8203;), by host. Example :</p>
 </div>
@@ -226,7 +226,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect1">
-<h2 id="__strong_log_generation_strong"><strong>Log generation</strong></h2>
+<h2 id="_strong_log_generation_strong"><strong>Log generation</strong></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Now, you just need to write the callback object functions for generating logs to the desired format. Here is a simple example which sends (using the <strong>requests</strong> package) a log to a webserver when a task fails:</p>
@@ -259,7 +259,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect1">
-<h2 id="__strong_collect_and_store_your_logs_strong"><strong>Collect and store your logs</strong></h2>
+<h2 id="_strong_collect_and_store_your_logs_strong"><strong>Collect and store your logs</strong></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Possibilities in callback plugins are endless. I chose to send my logs to a Python web server using Flask. Then, the web server sends the log to Kafka. Logstash collects the logs from Kafka, and push them into Elasticsearch.</p>
@@ -273,7 +273,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect1">
-<h2 id="__strong_exploit_logs_strong"><strong>Exploit logs</strong></h2>
+<h2 id="_strong_exploit_logs_strong"><strong>Exploit logs</strong></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>With informations provided by a simple callback plugin, i can:</p>
@@ -324,7 +324,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect1">
-<h2 id="__strong_ansible_2_strong"><strong>Ansible 2</strong></h2>
+<h2 id="_strong_ansible_2_strong"><strong>Ansible 2</strong></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <a href="https://docs.ansible.com/ansible/porting_guide_2.0.html">porting guide</a> shows how to use the callback plugins in Ansible 2. Unfortunaly, parts of the code must change :</p>
@@ -353,7 +353,7 @@ Of course, each function in the callback plugin will have differents parameters 
 </div>
 </div>
 <div class="sect1">
-<h2 id="__strong_conclusion_strong"><strong>Conclusion</strong></h2>
+<h2 id="_strong_conclusion_strong"><strong>Conclusion</strong></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can do a lot of things with Ansible callback plugins. I think it is possible to build with them a real Ansible control center (with statistics, alerting&#8230;&#8203;).</p>
@@ -374,7 +374,7 @@ Of course, each function in the callback plugin will have differents parameters 
           </div>
         </div>
       </div>
-      <footer>Copyright &copy;  mcorbin</footer>
+      <footer>Copyright &copy; 2019 mcorbin</footer>
     </div>
     <script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>

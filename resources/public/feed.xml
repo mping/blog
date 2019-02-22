@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 15 Feb 2019 20:56:05 +0100
+Fri, 22 Feb 2019 23:23:56 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -244,9 +244,6 @@ Il est également de notre responsabilité de proposer à nos entreprises et cli
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Fri, 15 Feb 2019 00:00:00 +0100
 </pubDate>
@@ -556,9 +553,6 @@ Get https://mcorbin.fr: context canceled&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Mon, 03 Dec 2018 00:00:00 +0100
 </pubDate>
@@ -706,9 +700,6 @@ host2&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Sat, 12 May 2018 00:00:00 +0200
 </pubDate>
@@ -840,9 +831,6 @@ And it is, and I think you really have to ask yourself, you know, are you progra
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Thu, 08 Feb 2018 00:00:00 +0100
 </pubDate>
@@ -935,9 +923,6 @@ templates/
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Fri, 26 Jan 2018 00:00:00 +0100
 </pubDate>
@@ -1284,9 +1269,6 @@ Les solutions de load balancing traditionnelles ne sont pas vraiment prévues po
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Sun, 03 Dec 2017 00:00:00 +0100
 </pubDate>
@@ -1559,9 +1541,6 @@ In the previous example, i used &lt;code&gt;folds/mean&lt;/code&gt; to calculate
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Wed, 09 Aug 2017 00:00:00 +0200
 </pubDate>
@@ -1944,9 +1923,6 @@ And for this, we will use &lt;a href=&quot;http://riemann.io/howto.html#distinct
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Sun, 21 May 2017 00:00:00 +0200
 </pubDate>
@@ -2162,9 +2138,6 @@ Not very useful (just a threshold), but it&amp;#8217;s something :)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Thu, 04 May 2017 00:00:00 +0200
 </pubDate>
@@ -2208,9 +2181,6 @@ On RHEL, it should be on &lt;code&gt;/etc/sysconfig/riemann&lt;/code&gt;.&lt;/p&
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Mon, 10 Apr 2017 00:00:00 +0200
 </pubDate>
@@ -2280,9 +2250,6 @@ I will write unit tests for each use cases.&lt;/p&gt;
 &lt;p&gt;Code &lt;a href=&quot;https://github.com/mcorbin/riemann-configuration-example&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Sun, 09 Apr 2017 00:00:00 +0200
 </pubDate>
@@ -2642,9 +2609,6 @@ La philosophie du langage (immutabilité, manipulation facile de structures de d
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Wed, 05 Apr 2017 00:00:00 +0200
 </pubDate>
@@ -2676,7 +2640,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;h2 id=&quot;_les_callbacks_plugins_d_ansible&quot;&gt;Les callbacks plugins d&amp;#8217;Ansible&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;__strong_présentation_générale_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Présentation générale&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;_strong_présentation_générale_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Présentation générale&lt;/strong&gt;&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Ansible peut être &quot;étendu&quot; avec des plugins. Je vais présenter ici les plugins de type callback &lt;a href=&quot;http://docs.ansible.com/ansible/developing_plugins.html=callbacks&quot;&gt;(documentation)&lt;/a&gt;. Les examples ici concernent Ansible 1.X, mais le fonctionnement est quasiment identique en version 2 et plus.&lt;/p&gt;
 &lt;/div&gt;
@@ -2713,7 +2677,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;__strong_fonctionnement_détaillé_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Fonctionnement détaillé&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;_strong_fonctionnement_détaillé_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Fonctionnement détaillé&lt;/strong&gt;&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Par exemple, la fonction &lt;strong&gt;runner_on_failed&lt;/strong&gt; sera appelé quand une task Ansible échouera. De la même façon, &lt;strong&gt;runner_on_ok&lt;/strong&gt; sera appelé lorsque qu&amp;#8217;une tâche sera en succès, &lt;strong&gt;runner_on_skipped&lt;/strong&gt; lors d&amp;#8217;une tâche ignorée etc&amp;#8230;&amp;#8203;&lt;/p&gt;
 &lt;/div&gt;
@@ -2788,7 +2752,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;__strong_playbook_on_start_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on start&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;_strong_playbook_on_start_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on start&lt;/strong&gt;&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;La méthode &lt;strong&gt;playbook_on_start&lt;/strong&gt; s&amp;#8217;exécute, comme son nom l&amp;#8217;indique, au lancement d&amp;#8217;un playbook. Je voulais initialiser quelques variables à partir d&amp;#8217;extra_vars, j&amp;#8217;ai donc utilisé cette fonction pour le faire. Voici un exemple basique (je considère qu&amp;#8217;une fonction &lt;strong&gt;get_timestamp&lt;/strong&gt; me retourne le timestamp actuel) :&lt;/p&gt;
 &lt;/div&gt;
@@ -2810,7 +2774,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;__strong_playbook_on_stats_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on stats&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;_strong_playbook_on_stats_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;playbook on stats&lt;/strong&gt;&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Une autre fonction intéressante est &lt;strong&gt;playbook_on_stats&lt;/strong&gt;. Cette fonction est appelée à la fin du déploiement, et contient le résumé du déploiement. Voici par exemple la façon de récupérer le résumé (contenant les tasks unreachable, skipped, changed&amp;#8230;&amp;#8203;) du déploiement par host :&lt;/p&gt;
 &lt;/div&gt;
@@ -2829,7 +2793,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;__strong_la_génération_des_logs_strong&quot;&gt;&lt;strong&gt;La génération des logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;_strong_la_génération_des_logs_strong&quot;&gt;&lt;strong&gt;La génération des logs&lt;/strong&gt;&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Il ne vous reste plus qu&amp;#8217;à compléter les différentes fonctions du plugin callback pour générer des logs au format souhaité. Voici par exemple un exemple tout bête qui envoie (via http en utilisant le package &lt;strong&gt;requests&lt;/strong&gt;) un log à un web server lorsqu&amp;#8217;une task échoue:&lt;/p&gt;
@@ -2862,7 +2826,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;__strong_collectez_et_stockez_vos_logs_strong&quot;&gt;&lt;strong&gt;Collectez et stockez vos logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;_strong_collectez_et_stockez_vos_logs_strong&quot;&gt;&lt;strong&gt;Collectez et stockez vos logs&lt;/strong&gt;&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Les possibilités avec les plugins Ansible sont infinies. J&amp;#8217;ai choisi de les envoyer comme dans l&amp;#8217;exemple précédent dans un service web (9 lignes de Python avec Flask + kafka-python). Ce service ne réalise qu&amp;#8217;une seule chose : après réception d&amp;#8217;un log, il l&amp;#8217;envoie dans Kafka. Un Logstash collecte ensuite les logs de Kafka pour les indexer dans Elasticsearch. J&amp;#8217;ai essayé d&amp;#8217;envoyer directement du plugin dans kafka, mais Ansible semble gérer bizarrement le cycle de vie de ses objets, ce qui posait quelques soucis avec kafka-python.&lt;/p&gt;
@@ -2876,7 +2840,7 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;__strong_exploitation_des_logs_strong&quot;&gt;&lt;strong&gt;Exploitation des logs&lt;/strong&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;_strong_exploitation_des_logs_strong&quot;&gt;&lt;strong&gt;Exploitation des logs&lt;/strong&gt;&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Rien qu&amp;#8217;avec les informations fournies précédemment par le plugin callback, je peux :&lt;/p&gt;
@@ -2937,7 +2901,7 @@ J&amp;#8217;envoie ensuite ces statistiques pour chaque rôle (si il n&amp;#8217
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;__strong_ansible_2_strong&quot;&gt;&lt;strong&gt;Ansible 2&lt;/strong&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;_strong_ansible_2_strong&quot;&gt;&lt;strong&gt;Ansible 2&lt;/strong&gt;&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Le &lt;a href=&quot;https://docs.ansible.com/ansible/porting_guide_2.0.html&quot;&gt;porting guide&lt;/a&gt; d&amp;#8217;Ansible livre quelques informations pour porter les plugins Callback en Ansible 2. Malheureusement, le fonctionnement interne d&amp;#8217;Ansible ayant bougé, il faudra réadapter le code. En vrac :&lt;/p&gt;
@@ -2970,7 +2934,7 @@ J&amp;#8217;envoie ensuite ces statistiques pour chaque rôle (si il n&amp;#8217
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;__strong_conclusion_strong&quot;&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;_strong_conclusion_strong&quot;&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Les possibilités du plugin callback sont infinies. Je pense sincèrement qu&amp;#8217;en prenant le temps, il est possible de réaliser de nombreuses statistiques sur les déploiements (ainsi que de l&amp;#8217;alerting, de la corrélation avec d&amp;#8217;autres métriques comme des métriques systèmes&amp;#8230;&amp;#8203;), surtout avec des outils puissants comme Kibana/Grafana. Bref, à creuser !&lt;/p&gt;
@@ -2978,9 +2942,6 @@ J&amp;#8217;envoie ensuite ces statistiques pour chaque rôle (si il n&amp;#8217
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Wed, 10 Aug 2016 00:00:00 +0200
 </pubDate>
@@ -3119,9 +3080,6 @@ When less closes a file opened in such a way, it will call another program, call
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
-<enclosure>
-
-</enclosure>
 <pubDate>
 Fri, 22 Apr 2016 00:00:00 +0200
 </pubDate>

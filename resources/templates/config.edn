@@ -13,8 +13,8 @@
  :rss-filters        ["mcorbin"]
  :recent-posts       15
  :post-date-format   "yyyy-MM-dd"
- :sass-src           nil
- :sass-dest          nil
+ :sass-src           []
+ :sass-dest          "sass"
  :theme              "blue"
  :resources          ["img" "pdf"]
  :keep-files         [".git"]
