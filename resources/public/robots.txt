@@ -1,1 +1,2 @@
-sitemap: https://mcorbin.fr/sitemap.xml
+User-agent: *
+Sitemap: https://mcorbin.fr/sitemap.xml
