@@ -167,7 +167,8 @@ hr {
 }
 
 blockquote {
-    background-color: #f4f4f4
+    background-color: #f4f4f4;
+    font-weight: bold;
 }
 
 pre {
@@ -178,11 +179,13 @@ pre code {
     overflow-wrap: normal;
 }
 
-code {
+p code {
     color: #14436c;
+    font-weight: bold;
 }
 
-pre, code, .hljs {
+
+.hljs {
     background-color: ##2b2b2b;
     font-size: 19px;
     font-family: "Open Sans", sans-serif

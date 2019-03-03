@@ -16,7 +16,7 @@
  :sass-src           []
  :sass-dest          "sass"
  :theme              "blue"
- :resources          ["img" "pdf"]
+ :resources          ["img" "pdf" "static"]
  :keep-files         [".git"]
  :disqus?            false
  :disqus-shortname   ""
