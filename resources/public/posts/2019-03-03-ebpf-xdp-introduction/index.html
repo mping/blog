@@ -63,7 +63,7 @@
 <div>
     
     <div class="paragraph">
-<p>Cela fait un moment que j&#8217;entends parler de eBPF et de XDP (eXpress Data PAth) mais je n&#8217;avais pas vraiment eu l&#8217;occasion de jouer avec. J&#8217;ai donc décidé comme projet de week-end d&#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée.</p>
+<p>Cela fait un moment que j&#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&#8217;avais pas vraiment eu l&#8217;occasion de jouer avec. J&#8217;ai donc décidé comme projet de week-end d&#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée.</p>
 </div>
 <div class="sect1">
 <h2 id="_ebpf_et_xdp">eBPF et XDP</h2>
@@ -150,10 +150,10 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Sur Github, avec la coloration syntaxe:</p>
+<p>Sur Github, avec la coloration syntaxique <a href="https://github.com/mcorbin/blog/tree/master/resources/templates/static/ebpf_xdp">ici</a>.</p>
 </li>
 <li>
-<p>Sur ce site aux url suivantes: <a href="../../static/ebpf_xdp/xdp_ip_filter_kern.c">xdp_ip_filter_kern.c</a> et <a href="../../static/ebpf_xdp/xdp_ip_filter_user.c">xdp_ip_filter_user.c</a></p>
+<p>Sur ce site aux url suivantes: <a href="../../static/ebpf_xdp/xdp_ip_filter_kern.c">xdp_ip_filter_kern.c</a> et <a href="../../static/ebpf_xdp/xdp_ip_filter_user.c">xdp_ip_filter_user.c</a>.</p>
 </li>
 </ul>
 </div>
@@ -235,7 +235,6 @@ int _xdp_ip_filter(struct xdp_md *ctx) {
   u32 key = 0;
   // the ip to filter
   u32 *ip;
-  // number of packets filtered
 
   bpf_printk("starting xdp ip filter\n");
 
@@ -638,7 +637,7 @@ cpu 15, value = 0</code></pre>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>J&#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser.
+<p>J&#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser (surtout pour quelqu&#8217;un n&#8217;ayant pas d&#8217;expérience de développement kernel).
 Certains projets comme <a href="https://github.com/iovisor/bcc">bbc</a> ou <a href="https://github.com/iovisor/bpftrace">bpftrace</a> ont l&#8217;air plus accessibles, mais écrire un peu de C permet de rentrer rapidement dans le vif du sujet.</p>
 </div>
 <div class="paragraph">

@@ -36,7 +36,6 @@ int _xdp_ip_filter(struct xdp_md *ctx) {
   u32 key = 0;
   // the ip to filter
   u32 *ip;
-  // number of packets filtered
 
   bpf_printk("starting xdp ip filter\n");
 

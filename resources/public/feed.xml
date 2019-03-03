@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 03 Mar 2019 17:58:04 +0100
+Sun, 03 Mar 2019 18:02:12 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Une introduction à eBPF et XDP
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data PAth) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée.&lt;/p&gt;
+&lt;p&gt;Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_ebpf_et_xdp&quot;&gt;eBPF et XDP&lt;/h2&gt;
@@ -116,10 +116,10 @@ Une introduction à eBPF et XDP
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Sur Github, avec la coloration syntaxe:&lt;/p&gt;
+&lt;p&gt;Sur Github, avec la coloration syntaxique &lt;a href=&quot;https://github.com/mcorbin/blog/tree/master/resources/templates/static/ebpf_xdp&quot;&gt;ici&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Sur ce site aux url suivantes: &lt;a href=&quot;../../static/ebpf_xdp/xdp_ip_filter_kern.c&quot;&gt;xdp_ip_filter_kern.c&lt;/a&gt; et &lt;a href=&quot;../../static/ebpf_xdp/xdp_ip_filter_user.c&quot;&gt;xdp_ip_filter_user.c&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Sur ce site aux url suivantes: &lt;a href=&quot;../../static/ebpf_xdp/xdp_ip_filter_kern.c&quot;&gt;xdp_ip_filter_kern.c&lt;/a&gt; et &lt;a href=&quot;../../static/ebpf_xdp/xdp_ip_filter_user.c&quot;&gt;xdp_ip_filter_user.c&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -201,7 +201,6 @@ int _xdp_ip_filter(struct xdp_md *ctx) {
   u32 key = 0;
   // the ip to filter
   u32 *ip;
-  // number of packets filtered
 
   bpf_printk(&quot;starting xdp ip filter\n&quot;);
 
@@ -604,7 +603,7 @@ cpu 15, value = 0&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&amp;#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser.
+&lt;p&gt;J&amp;#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&amp;#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser (surtout pour quelqu&amp;#8217;un n&amp;#8217;ayant pas d&amp;#8217;expérience de développement kernel).
 Certains projets comme &lt;a href=&quot;https://github.com/iovisor/bcc&quot;&gt;bbc&lt;/a&gt; ou &lt;a href=&quot;https://github.com/iovisor/bpftrace&quot;&gt;bpftrace&lt;/a&gt; ont l&amp;#8217;air plus accessibles, mais écrire un peu de C permet de rentrer rapidement dans le vif du sujet.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
