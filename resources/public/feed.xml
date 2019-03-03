@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 03 Mar 2019 18:02:12 +0100
+Sun, 03 Mar 2019 18:18:40 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -38,13 +38,13 @@ Une introduction à eBPF et XDP
 &lt;p&gt;Je ne connais pas encore dans le détail ces technologies, donc n&amp;#8217;hésitez pas à me remonter mes eventuelles erreurs.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;eBPF est une technologie du kernel Linux permettant d&amp;#8217;écrire des programmes qui seront compilés en bytecode BPF. Ce bytecode est ensuite vérifié (certaines erreurs comme une lecture sans vérifier si la valeur lue est &lt;code&gt;null&lt;/code&gt; ne sont pas possibles en eBPF) et exécuté dans une machine virtuelle présente dans le kernel.&lt;/p&gt;
+&lt;p&gt;eBPF est une technologie du kernel Linux permettant d&amp;#8217;écrire des programmes qui seront compilés en bytecode BPF. Ce bytecode est ensuite vérifié (certaines erreurs comme une lecture sans vérifier si la valeur lue est &lt;code&gt;null&lt;/code&gt; ne sont pas possibles empêchent la compilation) et exécuté dans une machine virtuelle présente dans le kernel.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;eBPF peut être utilisé pour écrire des outils de monitoring (en attachant le programme pour réagir à des êvénements comme des appels systèmes par exemple). Ici, l&amp;#8217;intêret de eBPF est son faible impact sur les performances du système que l&amp;#8217;on instrumente.&lt;/p&gt;
+&lt;p&gt;eBPF peut être utilisé pour écrire des outils de monitoring (en attachant le programme pour réagir à des événements comme des appels systèmes par exemple). Ici, l&amp;#8217;intêret de eBPF est son faible impact sur les performances du système que l&amp;#8217;on instrumente.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Mais eBPF permet aussi d&amp;#8217;intéragir avec le réseau avec XDP (comme par exemple pour écrire un load balancer ou un firewall). Ici aussi, l&amp;#8217;intêret de XDP est qu&amp;#8217;il s&amp;#8217;exécute au plus prêt du hardware et donc permet d&amp;#8217;atteindre de très bonnes performances.&lt;/p&gt;
+&lt;p&gt;Mais eBPF permet aussi d&amp;#8217;intéragir avec le réseau avec XDP (comme par exemple pour écrire un load balancer ou un firewall). Ici aussi, l&amp;#8217;intêret de XDP est qu&amp;#8217;il s&amp;#8217;exécute au plus prêt du hardware et permet donc d&amp;#8217;atteindre de très bonnes performances.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Voici une collection de liens avec plus d&amp;#8217;informations sur ces sujets:&lt;/p&gt;
@@ -80,7 +80,7 @@ Une introduction à eBPF et XDP
 &lt;p&gt;J&amp;#8217;ai également dû installer sur ma machine (Debian) un certain nombre de paquets. Peut être que vous en aurez d&amp;#8217;autres à installer (vous le saurez à la compilation): &lt;code&gt;apt-get install bison clang flex libelf-dev llvm&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Allez maintenant à la racine du projet Linux, et exécutez &lt;code&gt;make headers_install&lt;/code&gt; puis &lt;code&gt;make menuconfig&lt;/code&gt; (pour cette phrase, j&amp;#8217;ai tout simplement laissé la configuration par défaut).&lt;/p&gt;
+&lt;p&gt;Allez maintenant à la racine du projet Linux, et exécutez &lt;code&gt;make headers_install&lt;/code&gt; puis &lt;code&gt;make menuconfig&lt;/code&gt; (pour cette phase, j&amp;#8217;ai tout simplement laissé la configuration par défaut).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Vous devriez maintenant pouvoir compiler les programmes BPF inclus dans le kernel avec &lt;code&gt;make samples/bpf/&lt;/code&gt; (attention, le &lt;code&gt;/&lt;/code&gt; est important à la fin) sans erreurs.&lt;/p&gt;
@@ -91,7 +91,7 @@ Une introduction à eBPF et XDP
 &lt;h2 id=&quot;_mise_en_place_du_projet&quot;&gt;Mise en place du projet.&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Comme dit précédemment, mon but est d&amp;#8217;écrire un programme permettant de filtrer tous les paquets venant d&amp;#8217;une addresse IP donnée. Le nom de mon programme sera &lt;code&gt;xdp_ip_filter&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Comme dit précédemment, mon but est d&amp;#8217;écrire un programme permettant de filtrer tous les paquets venant d&amp;#8217;une addresse IP donnée sur l&amp;#8217;interface localhost. Le nom de mon programme sera &lt;code&gt;xdp_ip_filter&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
 &lt;h3 id=&quot;_makefile&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Makefile&lt;/h3&gt;
@@ -108,7 +108,7 @@ Une introduction à eBPF et XDP
 &lt;div class=&quot;sect2&quot;&gt;
 &lt;h3 id=&quot;_les_fichiers_du_projet&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Les fichiers du projet&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous allons travailler dans deux fichiers &lt;code&gt;samples/bpf/xdp_ip_filter_kern.c&lt;/code&gt; et &lt;code&gt;samples/bpf/xdp_ip_filter_user.c&lt;/code&gt;. Le fichier &lt;code&gt;kern&lt;/code&gt; contiendra le code qui sera compilé en bytecode BPF, le fichier &lt;code&gt;user&lt;/code&gt; sera notre point d&amp;#8217;entrée pour démarrer le programme. Je me référerais souvent à ces fichiers par les noms abrégés &lt;code&gt;user&lt;/code&gt; ou &lt;code&gt;kern&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Nous allons travailler dans deux fichiers &lt;code&gt;samples/bpf/xdp_ip_filter_kern.c&lt;/code&gt; et &lt;code&gt;samples/bpf/xdp_ip_filter_user.c&lt;/code&gt;. Le fichier &lt;code&gt;kern&lt;/code&gt; contiendra le code qui sera compilé en bytecode BPF, le fichier &lt;code&gt;user&lt;/code&gt; sera notre point d&amp;#8217;entrée pour démarrer ce dernier. Je me référerais souvent à ces fichiers par les noms abrégés &lt;code&gt;user&lt;/code&gt; ou &lt;code&gt;kern&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Le code de ces fichiers est disponible à ces deux emplacements:&lt;/p&gt;
@@ -175,11 +175,11 @@ struct bpf_map_def SEC(&quot;maps&quot;) counter_map = {
 &lt;p&gt;On définit ici deux &lt;code&gt;maps&lt;/code&gt;. Ces maps sont donc des associations clé/valeurs, et c&amp;#8217;est ces maps qui sont utilisées pour intéragir avec l&amp;#8217;extérieur (notre fichier &lt;code&gt;user&lt;/code&gt; que je présenterais tout à l&amp;#8217;heure). Le programme &lt;code&gt;user&lt;/code&gt; pourra lire et écrire dans ces maps, même chose pour le programme &lt;code&gt;kern&lt;/code&gt;. Vous pouvez donc voir les maps comme de la mémoire partagée entre les deux programmes, et c&amp;#8217;est d&amp;#8217;ailleurs à ma connaissance la seule façon de faire communiquer ces programmes entre eux.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La première map &lt;code&gt;ip_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_HASH&lt;/code&gt; (voyez ça comme une map classique), dont les clés et valeurs sont des &lt;code&gt;u32&lt;/code&gt;. Cette map ne peut contenir qu&amp;#8217;une entrée (cf &lt;code&gt;max_entries&lt;/code&gt;).&lt;br&gt;
-Cette map servira au programme &lt;code&gt;user&lt;/code&gt; à transmettre au programme &lt;code&gt;kern&lt;/code&gt; l&amp;#8217;IP à filtrer (et ici, on ne filtre qu&amp;#8217;une IP donc la map n&amp;#8217;aura qu&amp;#8217;une entrée).&lt;/p&gt;
+&lt;p&gt;La première map &lt;code&gt;ip_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_HASH&lt;/code&gt; (voyez ça comme une map classique), dont les clés et valeurs sont des &lt;code&gt;u32&lt;/code&gt; (en effet, une addresse IP v4 peut être représentée sous forme d&amp;#8217;un simple integer). Cette map ne peut contenir qu&amp;#8217;une entrée (cf &lt;code&gt;max_entries&lt;/code&gt;).&lt;br&gt;
+Cette map servira au programme &lt;code&gt;user&lt;/code&gt; à transmettre au programme &lt;code&gt;kern&lt;/code&gt; l&amp;#8217;adresse IP à filtrer (et ici, on ne filtre qu&amp;#8217;une IP donc la map n&amp;#8217;aura qu&amp;#8217;une entrée).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La seconde map nommée &lt;code&gt;counter_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_PERCPU_ARRAY&lt;/code&gt;. Ce type indique que l&amp;#8217;on aura en fait une map par core de notre CPU (si vous avez 8 cores, vous aurez 8 maps). Ces map serviront à compter par core combien de paquets ont été filtrés. Le type &lt;code&gt;ARRAY&lt;/code&gt; indique également que la clé de notre map sera entre &lt;code&gt;0&lt;/code&gt; et &lt;code&gt;max_entries -1&lt;/code&gt; (donc dans notre cas nous n&amp;#8217;aurons qu&amp;#8217;une entrée pour la clé &lt;code&gt;0&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;La seconde map nommée &lt;code&gt;counter_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_PERCPU_ARRAY&lt;/code&gt;. Ce type indique que l&amp;#8217;on aura en fait une map par core de notre CPU (si vous avez 8 cores, vous aurez 8 maps). Ces map serviront à compter par core combien de paquets ont été filtrés. Le type &lt;code&gt;ARRAY&lt;/code&gt; indique également que la clé de notre map sera entre &lt;code&gt;0&lt;/code&gt; et &lt;code&gt;max_entries -1&lt;/code&gt; (donc dans notre cas nous n&amp;#8217;aurons qu&amp;#8217;une entrée pour la clé &lt;code&gt;0&lt;/code&gt;). On aura donc pour chaque core une map dont la valeur pour la clé &lt;code&gt;0&lt;/code&gt; contiendra le nombre de paquets filtrés par de core.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph text-center&quot;&gt;
 &lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ebpf_xdp/ebpf_maps_1.png&quot; alt=&quot;maps xdm et abpf&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -213,7 +213,7 @@ int _xdp_ip_filter(struct xdp_md *ctx) {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La première chose à faire est de récupérer dans la map &lt;code&gt;ip_map&lt;/code&gt; l&amp;#8217;ip addresse que nous voulons filtrer. Pour cela, nous utilisons &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; sur &lt;code&gt;ip_map&lt;/code&gt; avec comme clé &lt;code&gt;0&lt;/code&gt; (rappelez vous, notre map n&amp;#8217;a qu&amp;#8217;un élément). Précision: Ici, l&amp;#8217;IP retournée par &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est sous format &lt;code&gt;u32&lt;/code&gt;(par exemple &quot;192.168.1.78&quot; &amp;#8658; 0xC0A8014E &amp;#8658; on lit à l&amp;#8217;envers &amp;#8658; 0x4E0180C0 &amp;#8658; 1308721344 en base 10).&lt;br&gt;
+&lt;p&gt;La première chose à faire est de récupérer dans la map &lt;code&gt;ip_map&lt;/code&gt; l&amp;#8217;ip addresse que nous voulons filtrer. Pour cela, nous utilisons &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; sur &lt;code&gt;ip_map&lt;/code&gt; avec comme clé &lt;code&gt;0&lt;/code&gt; (rappelez vous, notre map n&amp;#8217;a qu&amp;#8217;un élément). Comme dit précédemment, l&amp;#8217;IP retournée par &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est sous format &lt;code&gt;u32&lt;/code&gt;(par exemple 192.168.1.78 &amp;#8658; 0xC0A8014E en hexa &amp;#8658; on lit à l&amp;#8217;envers &amp;#8658; 0x4E0180C0 &amp;#8658; 1308721344 en base 10).&lt;br&gt;
 Vous pouvez voir également que j&amp;#8217;utilise &lt;code&gt;bpf_printk&lt;/code&gt; comme un logger.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph text-center&quot;&gt;
@@ -223,7 +223,7 @@ Vous pouvez voir également que j&amp;#8217;utilise &lt;code&gt;bpf_printk&lt;/c
 &lt;p&gt;&lt;strong&gt;Récupération de l&amp;#8217;IP source du paquet&lt;/strong&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Maintenant, nous voulons récupérer l&amp;#8217;IP addresse source du paquet.&lt;/p&gt;
+&lt;p&gt;Maintenant, nous voulons récupérer l&amp;#8217;adresse IP source du paquet.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -285,7 +285,7 @@ Vous pouvez voir également que j&amp;#8217;utilise &lt;code&gt;bpf_printk&lt;/c
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, on compare &lt;code&gt;ip_src&lt;/code&gt; avec &lt;code&gt;ip&lt;/code&gt;. Si le paquet source doit être filtré, on incrémente dans la map &lt;code&gt;counter_map&lt;/code&gt; le compteur de paquet filtré (en utilisant encore la clé &lt;code&gt;0&lt;/code&gt;), et on filtre le paquet en retournant &lt;code&gt;XDP_DROP&lt;/code&gt;. Sinon, on retourne &lt;code&gt;XDP_PASS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Ici, on compare &lt;code&gt;ip_src&lt;/code&gt; avec &lt;code&gt;ip&lt;/code&gt;. Si le paquet source doit être filtré, on incrémente dans la map &lt;code&gt;counter_map&lt;/code&gt; le compteur de paquet filtré (en utilisant encore la clé &lt;code&gt;0&lt;/code&gt;) via &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; (qui retourne un pointeur dont on peut donc incrémenter la valeur), et on filtre le paquet en retournant &lt;code&gt;XDP_DROP&lt;/code&gt;. Sinon, on retourne &lt;code&gt;XDP_PASS&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;C&amp;#8217;est tout pour le programme &lt;code&gt;kern&lt;/code&gt; !&lt;/p&gt;
@@ -511,7 +511,7 @@ static void int_exit(int sig) {
 &lt;h2 id=&quot;_tester_le_programme&quot;&gt;Tester le programme&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Lancer &lt;code&gt;make samples/bpf/&lt;/code&gt; devrait compiler sans erreurs votre programme. Vous pouvez maintenant le tester. Par exemple, filtrons tous les paquets venant de l&amp;#8217;IP &lt;code&gt;192.168.1.78&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Lancer &lt;code&gt;make samples/bpf/&lt;/code&gt;, cela devrait compiler sans erreurs votre programme. Vous pouvez maintenant le tester. Par exemple, filtrons tous les paquets venant de l&amp;#8217;IP &lt;code&gt;192.168.1.78&lt;/code&gt;:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -603,7 +603,7 @@ cpu 15, value = 0&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&amp;#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser (surtout pour quelqu&amp;#8217;un n&amp;#8217;ayant pas d&amp;#8217;expérience de développement kernel).
+&lt;p&gt;J&amp;#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&amp;#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser (surtout pour quelqu&amp;#8217;un n&amp;#8217;ayant pas d&amp;#8217;expérience en développement kernel).
 Certains projets comme &lt;a href=&quot;https://github.com/iovisor/bcc&quot;&gt;bbc&lt;/a&gt; ou &lt;a href=&quot;https://github.com/iovisor/bpftrace&quot;&gt;bpftrace&lt;/a&gt; ont l&amp;#8217;air plus accessibles, mais écrire un peu de C permet de rentrer rapidement dans le vif du sujet.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
