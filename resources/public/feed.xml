@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 03 Mar 2019 18:18:40 +0100
+Sun, 03 Mar 2019 19:49:48 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Une introduction à eBPF et XDP
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée.&lt;/p&gt;
+&lt;p&gt;Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée. Je présenterais comment ce programme fonctionne, comment le compiler et l&amp;#8217;exécuter.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_ebpf_et_xdp&quot;&gt;eBPF et XDP&lt;/h2&gt;

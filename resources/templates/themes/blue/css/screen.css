@@ -223,6 +223,9 @@ p code {
         float:left;
         text-align: left;
     }
+    .hljs {
+        font-size: 14px;
+    }
 }
 
 table, th, td {
