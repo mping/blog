@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 03 Mar 2019 19:49:48 +0100
+Sun, 03 Mar 2019 19:59:49 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -491,7 +491,7 @@ static void int_exit(int sig) {
 &lt;p&gt;&lt;strong&gt;Fin du programme&lt;/strong&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;A la fin du programme, on détache le programme de l&amp;#8217;interface bpf.&lt;/p&gt;
+&lt;p&gt;A la fin du programme, on détache le programme de l&amp;#8217;interface localhost.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
