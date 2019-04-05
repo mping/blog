@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sun, 03 Mar 2019 20:00:26 +0100
+Fri, 05 Apr 2019 21:33:36 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -25,11 +25,12 @@ https://mcorbin.fr/posts/2019-03-03-ebpf-xdp-introduction/
 https://mcorbin.fr/posts/2019-03-03-ebpf-xdp-introduction/
 </link>
 <title>
-Une introduction à eBPF et XDP
+Introduction to eBPF and XDP
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée. Je présenterais comment ce programme fonctionne, comment le compiler et l&amp;#8217;exécuter.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/xdp-introduction/&quot;&gt;here&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Cela fait un moment que j&amp;#8217;entends parler de eBPF et de XDP (eXpress Data Path) mais je n&amp;#8217;avais pas vraiment eu l&amp;#8217;occasion de jouer avec. J&amp;#8217;ai donc décidé comme projet de week-end d&amp;#8217;écrire un programme XDP le plus simple possible permettant de filtrer les paquets pour une addresse IP donnée. Je présenterais comment ce programme fonctionne, comment le compiler et l&amp;#8217;exécuter.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_ebpf_et_xdp&quot;&gt;eBPF et XDP&lt;/h2&gt;
@@ -179,7 +180,7 @@ struct bpf_map_def SEC(&quot;maps&quot;) counter_map = {
 Cette map servira au programme &lt;code&gt;user&lt;/code&gt; à transmettre au programme &lt;code&gt;kern&lt;/code&gt; l&amp;#8217;adresse IP à filtrer (et ici, on ne filtre qu&amp;#8217;une IP donc la map n&amp;#8217;aura qu&amp;#8217;une entrée).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La seconde map nommée &lt;code&gt;counter_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_PERCPU_ARRAY&lt;/code&gt;. Ce type indique que l&amp;#8217;on aura en fait une map par core de notre CPU (si vous avez 8 cores, vous aurez 8 maps). Ces map serviront à compter par core combien de paquets ont été filtrés. Le type &lt;code&gt;ARRAY&lt;/code&gt; indique également que la clé de notre map sera entre &lt;code&gt;0&lt;/code&gt; et &lt;code&gt;max_entries -1&lt;/code&gt; (donc dans notre cas nous n&amp;#8217;aurons qu&amp;#8217;une entrée pour la clé &lt;code&gt;0&lt;/code&gt;). On aura donc pour chaque core une map dont la valeur pour la clé &lt;code&gt;0&lt;/code&gt; contiendra le nombre de paquets filtrés par de core.&lt;/p&gt;
+&lt;p&gt;La seconde map nommée &lt;code&gt;counter_map&lt;/code&gt; est une map de type &lt;code&gt;BPF_MAP_TYPE_PERCPU_ARRAY&lt;/code&gt;. Ce type indique que l&amp;#8217;on aura en fait une map par core de notre CPU (si vous avez 8 cores, vous aurez 8 maps). Ces map serviront à compter par core combien de paquets ont été filtrés. Le type &lt;code&gt;ARRAY&lt;/code&gt; indique également que la clé de notre map sera entre &lt;code&gt;0&lt;/code&gt; et &lt;code&gt;max_entries -1&lt;/code&gt; (donc dans notre cas nous n&amp;#8217;aurons qu&amp;#8217;une entrée pour la clé &lt;code&gt;0&lt;/code&gt;). On aura donc pour chaque core une map dont la valeur pour la clé &lt;code&gt;0&lt;/code&gt; contiendra le nombre de paquets filtrés par ce core.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph text-center&quot;&gt;
 &lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ebpf_xdp/ebpf_maps_1.png&quot; alt=&quot;maps xdm et abpf&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -213,7 +214,7 @@ int _xdp_ip_filter(struct xdp_md *ctx) {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La première chose à faire est de récupérer dans la map &lt;code&gt;ip_map&lt;/code&gt; l&amp;#8217;ip addresse que nous voulons filtrer. Pour cela, nous utilisons &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; sur &lt;code&gt;ip_map&lt;/code&gt; avec comme clé &lt;code&gt;0&lt;/code&gt; (rappelez vous, notre map n&amp;#8217;a qu&amp;#8217;un élément). Comme dit précédemment, l&amp;#8217;IP retournée par &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est sous format &lt;code&gt;u32&lt;/code&gt;(par exemple 192.168.1.78 &amp;#8658; 0xC0A8014E en hexa &amp;#8658; on lit à l&amp;#8217;envers &amp;#8658; 0x4E0180C0 &amp;#8658; 1308721344 en base 10).&lt;br&gt;
+&lt;p&gt;La première chose à faire est de récupérer dans la map &lt;code&gt;ip_map&lt;/code&gt; l&amp;#8217;ip addresse que nous voulons filtrer. Pour cela, nous utilisons &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; sur &lt;code&gt;ip_map&lt;/code&gt; avec comme clé &lt;code&gt;0&lt;/code&gt; (rappelez vous, notre map n&amp;#8217;a qu&amp;#8217;un élément). Comme dit précédemment, l&amp;#8217;IP retournée par &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est sous format &lt;code&gt;u32&lt;/code&gt; en &lt;code&gt;little endian&lt;/code&gt; (par exemple 192.168.1.78 &amp;#8658; 0xC0A8014E en hexadécimal &amp;#8658; on lit à l&amp;#8217;envers &amp;#8658; 0x4E0180C0 &amp;#8658; 1308721344 en base 10).&lt;br&gt;
 Vous pouvez voir également que j&amp;#8217;utilise &lt;code&gt;bpf_printk&lt;/code&gt; comme un logger.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph text-center&quot;&gt;
@@ -285,7 +286,7 @@ Vous pouvez voir également que j&amp;#8217;utilise &lt;code&gt;bpf_printk&lt;/c
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, on compare &lt;code&gt;ip_src&lt;/code&gt; avec &lt;code&gt;ip&lt;/code&gt;. Si le paquet source doit être filtré, on incrémente dans la map &lt;code&gt;counter_map&lt;/code&gt; le compteur de paquet filtré (en utilisant encore la clé &lt;code&gt;0&lt;/code&gt;) via &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; (qui retourne un pointeur dont on peut donc incrémenter la valeur), et on filtre le paquet en retournant &lt;code&gt;XDP_DROP&lt;/code&gt;. Sinon, on retourne &lt;code&gt;XDP_PASS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Ici, on compare &lt;code&gt;ip_src&lt;/code&gt; avec &lt;code&gt;ip&lt;/code&gt;. Si le paquet source doit être filtré, on incrémente dans la map &lt;code&gt;counter_map&lt;/code&gt; le compteur de paquet filtré (en utilisant encore la clé &lt;code&gt;0&lt;/code&gt;) via &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; (qui retourne un pointeur dont on peut donc incrémenter la valeur), et on filtre le paquet en retournant &lt;code&gt;XDP_DROP&lt;/code&gt;. Sinon, on retourne &lt;code&gt;XDP_PASS&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;C&amp;#8217;est tout pour le programme &lt;code&gt;kern&lt;/code&gt; !&lt;/p&gt;
@@ -318,7 +319,7 @@ static void int_exit(int sig) {
 &lt;p&gt;On définit ici une variable &lt;code&gt;ifindex&lt;/code&gt; qui est l&amp;#8217;index de l&amp;#8217;interface &lt;code&gt;localhost&lt;/code&gt; (je parlerais plus en détail de cela plus loin), puis &lt;code&gt;xdp_flags&lt;/code&gt; qui vaut zéro.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La fonction &lt;code&gt;int_exit&lt;/code&gt; est une fonction servant à stopper le programme &lt;code&gt;kern&lt;/code&gt; en cas de signal, via &lt;code&gt;bpf_set_link_xdp_fd&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;La fonction &lt;code&gt;int_exit&lt;/code&gt; est une fonction servant à stopper le programme &lt;code&gt;kern&lt;/code&gt; en cas de signal, via &lt;code&gt;bpf_set_link_xdp_fd&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;strong&gt;La fonction main, récupération de l&amp;#8217;IP&lt;/strong&gt;&lt;/p&gt;
@@ -353,7 +354,7 @@ static void int_exit(int sig) {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, on définit quelques variables comme les paramètres attendues à &lt;code&gt;main&lt;/code&gt;, le nom du fichier &lt;code&gt;.o&lt;/code&gt; (xdp_ip_filter_kern.o) qui devra être lancé, et une valeur par défaut pour l&amp;#8217;IP à filtrer (&lt;code&gt;xdp_ip_filter_kern.o&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Ici, on définit quelques variables comme les paramètres attendues à &lt;code&gt;main&lt;/code&gt;, le nom du fichier &lt;code&gt;.o&lt;/code&gt; (xdp_ip_filter_kern.o) qui devra être lancé, et une valeur par défaut pour l&amp;#8217;IP à filtrer (&lt;code&gt;127.0.0.1&lt;/code&gt;).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;On récupère l&amp;#8217;IP à filtrer (qui sera passé via l&amp;#8217;option &lt;code&gt;-i&lt;/code&gt; au programme), et on la convertit en un u32 (par exemple &quot;192.168.1.78&quot; &amp;#8658; 0xC0A8014E &amp;#8658; on lit à l&amp;#8217;envers &amp;#8658; 0x4E0180C0 &amp;#8658; 1308721344 en base 10).&lt;/p&gt;
@@ -396,7 +397,7 @@ static void int_exit(int sig) {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, on charge le &lt;code&gt;xdp_ip_filter_kern.o&lt;/code&gt; (qui contient notre fichier précédent compilé), et on ajoute le handler &lt;code&gt;int_exit&lt;/code&gt; sur les signaux &lt;code&gt;SIGINT&lt;/code&gt; et &lt;code&gt;SIGTERM&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Ici, on charge le fichier  &lt;code&gt;xdp_ip_filter_kern.o&lt;/code&gt; (qui contient notre fichier précédent compilé), et on ajoute le handler &lt;code&gt;int_exit&lt;/code&gt; sur les signaux &lt;code&gt;SIGINT&lt;/code&gt; et &lt;code&gt;SIGTERM&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;strong&gt;Ajout de l&amp;#8217;IP à filtrer dans la map&lt;/strong&gt;&lt;/p&gt;
@@ -415,7 +416,7 @@ static void int_exit(int sig) {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, on met à jour la map avec &lt;code&gt;bpf_map_update_elem&lt;/code&gt;. &lt;code&gt;map_fd[0]&lt;/code&gt; retourne la première map définie dans le fichier &lt;code&gt;kern&lt;/code&gt;, qui est bien notre map &lt;code&gt;ip_map&lt;/code&gt; (l&amp;#8217;ordre de déclaration des maps a donc de l&amp;#8217;importance !). La map contiendra donc maintenant pour la clé &lt;code&gt;0&lt;/code&gt; l&amp;#8217;IP à filtrer (et donc le programme &lt;code&gt;kern&lt;/code&gt; pourra la récupérer comme vu précédemment).&lt;/p&gt;
+&lt;p&gt;Ici, on met à jour la map avec la fonction &lt;code&gt;bpf_map_update_elem&lt;/code&gt;. &lt;code&gt;map_fd[0]&lt;/code&gt; retourne la première map définie dans le fichier &lt;code&gt;kern&lt;/code&gt;, qui est bien notre map &lt;code&gt;ip_map&lt;/code&gt; (l&amp;#8217;ordre de déclaration des maps a donc de l&amp;#8217;importance !). La map contiendra donc maintenant pour la clé &lt;code&gt;0&lt;/code&gt; l&amp;#8217;IP à filtrer (et donc le programme &lt;code&gt;kern&lt;/code&gt; pourra la récupérer comme vu précédemment).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph text-center&quot;&gt;
 &lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ebpf_xdp/ebpf_maps_3.png&quot; alt=&quot;ebpf update map&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -474,10 +475,10 @@ static void int_exit(int sig) {
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Une pour périodiquement récupérer les valeurs de la map, toutes les 2 secondes. &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est appelé sur la map numéro 2 (&lt;code&gt;map_fd[1]&lt;/code&gt;, donc &lt;code&gt;counter_map&lt;/code&gt;), pour la clé &lt;code&gt;0&lt;/code&gt; pour réaliser cela. Les valeurs sont stockées dans le tableau &lt;code&gt;values&lt;/code&gt; (car il y a une valeur par core). On itère ensuite sur ce tableau pour afficher à l&amp;#8217;écrant les statistiques.&lt;/p&gt;
+&lt;p&gt;Une pour périodiquement récupérer les valeurs de la map, toutes les 2 secondes. &lt;code&gt;bpf_map_lookup_elem&lt;/code&gt; est appelé sur la map numéro 2 (&lt;code&gt;map_fd[1]&lt;/code&gt;, donc &lt;code&gt;counter_map&lt;/code&gt;), pour la clé &lt;code&gt;0&lt;/code&gt; pour réaliser cela. Les valeurs sont stockées dans le tableau &lt;code&gt;values&lt;/code&gt; (car il y a une valeur par core).&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Une pour afficher à l&amp;#8217;écran la valeur récupérée pour chaque core.&lt;/p&gt;
+&lt;p&gt;Une qui va intérer sur le tableau &lt;code&gt;values&lt;/code&gt; pour afficher à l&amp;#8217;écran les statistiques pour chaque core.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -569,7 +570,7 @@ sr1(IP(src=&quot;192.168.1.78&quot;, dst=&quot;127.0.0.1&quot;)/ICMP())&lt;/code
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La réponse n&amp;#8217;arrivera jamais, car le paquet a été droppé ! D&amp;#8217;ailleurs, l&amp;#8217;output de votre programme devrait être:&lt;/p&gt;
+&lt;p&gt;La réponse n&amp;#8217;arrivera jamais, car le paquet a été filtré par notre programme ! D&amp;#8217;ailleurs, l&amp;#8217;output de votre programme devrait être:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -592,7 +593,7 @@ cpu 15, value = 0&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ici, mon core numéro 9 a drop le paquet. Réessayez, et vous verrez les compteurs s&amp;#8217;incrémenter !&lt;/p&gt;
+&lt;p&gt;Ici, mon core numéro 9 a filtré le paquet. Réessayez, et vous verrez les compteurs s&amp;#8217;incrémenter !&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Vous pouvez également consulter les logs du program &lt;code&gt;kern&lt;/code&gt; (l&amp;#8217;output de &lt;code&gt;bpf_printk&lt;/code&gt;) en allant lire le fichier &lt;code&gt;/sys/kernel/debug/tracing/trace&lt;/code&gt;, n&amp;#8217;hésitez pas à rajouter plus de logs si besoin.&lt;/p&gt;
@@ -604,7 +605,7 @@ cpu 15, value = 0&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;J&amp;#8217;ai appris beaucoup de choses sur eBPF et XDP en écrivant ce programme. C&amp;#8217;est définitivement une technologie puissante, très intéressante, mais pas forcément évidente à utiliser (surtout pour quelqu&amp;#8217;un n&amp;#8217;ayant pas d&amp;#8217;expérience en développement kernel).
-Certains projets comme &lt;a href=&quot;https://github.com/iovisor/bcc&quot;&gt;bbc&lt;/a&gt; ou &lt;a href=&quot;https://github.com/iovisor/bpftrace&quot;&gt;bpftrace&lt;/a&gt; ont l&amp;#8217;air plus accessibles, mais écrire un peu de C permet de rentrer rapidement dans le vif du sujet.&lt;/p&gt;
+Certains projets comme &lt;a href=&quot;https://github.com/iovisor/bcc&quot;&gt;bcc&lt;/a&gt; ou &lt;a href=&quot;https://github.com/iovisor/bpftrace&quot;&gt;bpftrace&lt;/a&gt; ont l&amp;#8217;air plus accessibles, mais écrire un peu de C permet de rentrer rapidement dans le vif du sujet.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Ce ne sera sûrement pas mon seul article sur le sujet, mon prochain projet sera peut être d&amp;#8217;écrire un petit outil pour collecter une métrique quelconque de mon système par exemple.&lt;/p&gt;
@@ -3224,10 +3225,8 @@ Use your Ansible logs ! / Exploitez vos logs Ansible !
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/logs-ansible-en/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l&amp;#8217;utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/logs-ansible-en/&quot;&gt;here&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+J&amp;#8217;utilise Ansible au quotidien. Tous les jours, mes collègues et moi même l&amp;#8217;utilisons pour configurer nos serveurs et déployer nos applications, sur de nombreux environnements. Nous utilisons Jenkins pour piloter Ansible.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Tout cela génère une &lt;strong&gt;énorme&lt;/strong&gt; quantité de logs, dont nous ne faisons pas grand chose à part une consultation après un déploiement via l&amp;#8217;interface de Jenkins.&lt;/p&gt;
@@ -3557,10 +3556,8 @@ One day one manpage / Un jour une manpage : lesspipe
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/lesspipe-en/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;em&gt;Le concept de &quot;un jour une manpage&quot; est simple : je choisis une manpage aléatoirement et j&amp;#8217;explore la commande associée.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/lesspipe-en/&quot;&gt;here&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;Le concept de &quot;un jour une manpage&quot; est simple : je choisis une manpage aléatoirement et j&amp;#8217;explore la commande associée.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Aujourd&amp;#8217;hui, c&amp;#8217;est la commande &lt;strong&gt;lesspipe&lt;/strong&gt; qui sera passée à la loupe. Tout d&amp;#8217;abord, regardons ce que raconte un &lt;strong&gt;man lesspipe&lt;/strong&gt; :&lt;/p&gt;
