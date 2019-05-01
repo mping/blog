@@ -12,11 +12,126 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 06 Apr 2019 14:21:26 +0200
+Wed, 01 May 2019 23:56:19 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-05-01-meuse-rust-registry/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-05-01-meuse-rust-registry/
+</link>
+<title>
+Meuse, a free Rust private Registry
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/meuse-rust-registry/&quot;&gt;here&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Je m&amp;#8217;étais intéressé à Rust à sa sortie en version 1.0. Après avoir pas mal joué avec, j&amp;#8217;ai un peu mis de côté ce langage pour me consacrer à d&amp;#8217;autres choses. Mais une phrase de la &lt;a href=&quot;https://github.com/rust-lang/rust/blob/master/RELEASES.md#version-1340-2019-04-11&quot;&gt;release note&lt;/a&gt; de la version 1.34 m&amp;#8217;a interpellé: &lt;code&gt;You can now use alternative registries to crates.io.&lt;/code&gt; J&amp;#8217;avais trouvé mon prochain projet: écrire un registry.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_meuse_un_registry_pour_vos_crates&quot;&gt;Meuse, un registry pour vos crates&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;Meuse&lt;/code&gt; est un registry écrit en &lt;a href=&quot;https://clojure.org/&quot;&gt;Clojure&lt;/a&gt;. Mon objectif est de fournir un registry simple à déployer et à administrer. Le code est disponible &lt;a href=&quot;https://github.com/mcorbin/meuse&quot;&gt;sur Github&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le statut du projet est actuellement &lt;code&gt;ça marche sur ma machine&lt;/code&gt;. il reste &lt;code&gt;beaucoup&lt;/code&gt; de travail à faire, le code doit être remanié et beaucoup mieux testé. Toute la partie concernant l&amp;#8217;authentification et la gestion des tokens est manquante.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mon premier objectif était de poser les bases du projet de voir un peu les difficultés que j&amp;#8217;allais rencontrer. Mais j&amp;#8217;ai déjà quelque chose d&amp;#8217;intéressant:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;cargo publish --allow-dirty --registry custom
+    Updating `https://github.com/mcorbin/testregistry.git` index
+warning: manifest has no license, license-file, documentation, homepage or repository.
+See &amp;lt;http://doc.crates.io/manifest.html#package-metadata&amp;gt; for more info.
+   Packaging testpublish v0.1.13 (/home/mathieu/prog/rust/testpublish)
+   Verifying testpublish v0.1.13 (/home/mathieu/prog/rust/testpublish)
+   Compiling testpublish v0.1.13 (/home/mathieu/prog/rust/testpublish/target/package/testpublish-0.1.13)
+
+cargo yank --vers 0.1.13 --registry custom
+    Updating `https://github.com/mcorbin/testregistry.git` index
+        Yank testpublish:0.1.13
+
+cargo yank --undo --vers 0.1.13 --registry custom
+    Updating `https://github.com/mcorbin/testregistry.git` index
+      Unyank testpublish:0.1.13
+
+cargo owner --add user1 --registry custom    Updating `https://github.com/mcorbin/testregistry.git` index
+       Owner added user(s) user1 as owner(s) of crate testpublish
+
+cargo owner --list --registry custom
+    Updating `https://github.com/mcorbin/testregistry.git` index
+user1 (user1)
+
+cargo owner --remove user1 --registry custom
+    Updating `https://github.com/mcorbin/testregistry.git` index
+       Owner removing [&quot;user1&quot;] from crate testpublish
+
+cargo search --registry custom &quot;project&quot; -v
+testpublish = &quot;0.1.13&quot;    # This is a description of my project&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_fonctionnement&quot;&gt;Fonctionnement&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;Meuse&lt;/code&gt; utilise &lt;code&gt;PostgreSQL&lt;/code&gt; comme base de données (crates et versions, categories, utilisateurs&amp;#8230;&amp;#8203;). La recherche (très basique pour l&amp;#8217;instant) est également implémentée grâce au type &lt;code&gt;TSVECTOR&lt;/code&gt; de PostgreSQL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les registries Rust utilisent également un repository Git pour stocker les metadata des crates (versions, est ce qu&amp;#8217;une crate est &lt;code&gt;yanked&lt;/code&gt; ou non&amp;#8230;&amp;#8203; cf la &lt;a href=&quot;https://doc.rust-lang.org/nightly/cargo/reference/registries.html&quot;&gt;documentation&lt;/a&gt;). &lt;code&gt;Meuse&lt;/code&gt; va donc également intéragir avec un repository Git quand une crate est publiée ou &quot;yankée&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enfin, les fichiers crates contenant le code source sont également gérés par &lt;code&gt;Meuse&lt;/code&gt; qui se charge de les sauvegarder sur disque et de les exposer via HTTP (mais je prévois quelques fonctionnalités de ce côté là, comme par exemple le fait de pouvoir pousser les crates sur un object store compatible S3).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Donc si vous avez une instance &lt;code&gt;PostgreSQL&lt;/code&gt;, déployer votre registry ne sera que lancer un &lt;code&gt;java -jar&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_suite&quot;&gt;La suite&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le prochain mois sera consacré à stabiliser le projet, réécrire ce qui doit être réécrit, et ajouter la gestion des tokens,&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En plus de l&amp;#8217;API &lt;code&gt;crate&lt;/code&gt; utilisée par cargo, une autre API (que j&amp;#8217;ai déjà commencé) permettra de gérer les catégories de vos crates, les utilisateurs etc&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je pense également que j&amp;#8217;écrirais une CLI pour intéragir avec le projet. Par contre, je ne ferais pas d&amp;#8217;interface graphique (je suis trop mauvais en front et cela ne m&amp;#8217;intéresse pas vraiment), libre à vous de faire ça de votre côté si vous êtes motivés ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;espère pouvoir sortir une version à peu près fonctionnel avec un peu de documentation pour la fin du mois.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_appendice_pourquoi_clojure&quot;&gt;Appendice: pourquoi Clojure ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme dit précédement, &lt;code&gt;Meuse&lt;/code&gt; est écrit en Clojure. Parmis tous les langages que j&amp;#8217;ai utilisé Clojure est celui où je suis le plus productif.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;écosystème est très riche, avec des librairies de grandes qualitées (comme &lt;a href=&quot;https://github.com/ztellman/aleph&quot;&gt;Aleph&lt;/a&gt; ou &lt;a href=&quot;https://github.com/jkk/honeysql&quot;&gt;HoneySQL&lt;/a&gt;), et la façon de travailler avec le REPL (un &lt;code&gt;reloaded workflow&lt;/code&gt; avec &lt;a href=&quot;https://github.com/tolitius/mount&quot;&gt;Mount&lt;/a&gt; dans mon cas, qui fera d&amp;#8217;ailleurs l&amp;#8217;objet d&amp;#8217;un article un jour ou l&amp;#8217;autre) est géniale.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On rajoute à ça un langage extrêmement bien designé, l&amp;#8217;immutabilité, il y a de quoi être heureux (et non, le typage statique ne me manque pas).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Wed, 01 May 2019 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-03-03-ebpf-xdp-introduction/
