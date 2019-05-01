@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 02 May 2019 00:05:09 +0200
+Thu, 02 May 2019 00:11:37 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -76,6 +76,9 @@ cargo owner --remove user1 --registry custom
 cargo search --registry custom &quot;project&quot; -v
 testpublish = &quot;0.1.13&quot;    # This is a description of my project&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je peux aussi récupérer des dépendances depuis le registry ;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
