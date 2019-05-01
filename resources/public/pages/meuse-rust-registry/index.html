@@ -117,7 +117,7 @@ testpublish = "0.1.13"    # This is a description of my project</code></pre>
 <p><code>Meuse</code> uses <code>PostgreSQL</code> for its database (crates and versions, categories, users&#8230;&#8203;). Search (very basic for now) is also implemented using PostgreSQL (with the <code>TSVECTOR</code> type).</p>
 </div>
 <div class="paragraph">
-<p>The rust registries also use a Git repository to store the crates metadata (versions, is a crate <code>yanked</code> or not&#8230;&#8203; cf the <a href="https://doc.rust-lang.org/nightly/cargo/reference/registries.html">documentation</a>). <code>Meuse</code> also interacts with a Git repository when a crate created is published or yanked.</p>
+<p>The rust registries also use a Git repository to store the crates metadata (versions, is a crate <code>yanked</code> or not&#8230;&#8203; cf the <a href="https://doc.rust-lang.org/nightly/cargo/reference/registries.html">documentation</a>). <code>Meuse</code> also interacts with a Git repository when a crate is published or yanked.</p>
 </div>
 <div class="paragraph">
 <p>Finally, crates files containing the source code are also handled by <code>Meuse</code>, which takes care of writing them on disk and exposing them through HTTP (but I also plan to support an S3-compatible backend).</p>
