@@ -70,7 +70,7 @@
 <p>The current status of the project is <code>it works on my computer</code>. There is still <code>a lot</code> of work to do. The code should be refactored and needs more tests. All the authentication/token management part is also missing.</p>
 </div>
 <div class="paragraph">
-<p>My first goal was to lay the foundation of the project and to discover the difficulties Ithat I could have met. But I aleady have something interesting:</p>
+<p>My first goal was to lay the foundation of the project and to discover the difficulties that I could have met. But I already have something interesting:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -114,7 +114,7 @@ testpublish = "0.1.13"    # This is a description of my project</code></pre>
 <p><code>Meuse</code> uses <code>PostgreSQL</code> for its database (crates and versions, categories, users&#8230;&#8203;). Search (very basic for now) is also implemented using PostgreSQL (with the <code>TSVECTOR</code> type).</p>
 </div>
 <div class="paragraph">
-<p>The rust registries also use a Git repository to store the crate metadata (versions, is a crate <code>yanked</code> or not&#8230;&#8203; cf the <a href="https://doc.rust-lang.org/nightly/cargo/reference/registries.html">documentation</a>). <code>Meuse</code> will also interact with a Git repository when a created is published or yanked.</p>
+<p>The rust registries also use a Git repository to store the crates metadata (versions, is a crate <code>yanked</code> or not&#8230;&#8203; cf the <a href="https://doc.rust-lang.org/nightly/cargo/reference/registries.html">documentation</a>). <code>Meuse</code> also interacts with a Git repository when a crate created is published or yanked.</p>
 </div>
 <div class="paragraph">
 <p>Finally, crates files containing the source code are also handled by <code>Meuse</code>, which takes care of writing them on disk and exposing them through HTTP (but I also plan to support an S3-compatible backend).</p>
@@ -134,7 +134,7 @@ testpublish = "0.1.13"    # This is a description of my project</code></pre>
 <p>In addition of the Cargo API, another API (which I already started) will be created to managed crates categories, users etc&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>I am also thinking of writing a CLI to interact the the project. However, I will not write a graphical interface (I&#8217;m too bad a frontend development and I don&#8217;t like that), it&#8217;s up to you to do it if you want to ;)</p>
+<p>I am also thinking of writing a CLI to interact with the project. However, I will not write a graphical interface (I&#8217;m too bad a frontend development and I don&#8217;t like that), it&#8217;s up to you to do it if you want to ;)</p>
 </div>
 <div class="paragraph">
 <p>I hope I will be able to release a functional version and a bit of documentation at the end of the month.</p>
