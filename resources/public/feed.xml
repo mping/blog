@@ -12,11 +12,182 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 02 May 2019 00:13:25 +0200
+Tue, 28 May 2019 20:04:16 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-05-28-ansible-common/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-05-28-ansible-common/
+</link>
+<title>
+Ansible: common roles considered harmful
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;English version &lt;a href=&quot;https://mcorbin.fr/pages/ansible-common/&quot;&gt;here&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+C&amp;#8217;est un classique des projets Ansible: un rôle appelé &lt;code&gt;common&lt;/code&gt; ou assimilé. Vous savez, ce genre de rôles où l&amp;#8217;angoisse vous saisit quand vous l&amp;#8217;ouvrez. Voyons ensemble les problèmes de ce type de rôle, et parlons de la granularité des rôles Ansible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_rôles_poubelles&quot;&gt;Les rôles poubelles&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce rôle &lt;code&gt;common&lt;/code&gt; est généralement un rôle poubelle. Tout ce que les gens ne savent pas où mettre va dans common. J&amp;#8217;ai travaillé dans plusieurs entreprises faisant du Ansible, et toutes avaient un rôle &lt;code&gt;common&lt;/code&gt;. J&amp;#8217;ai moi même contribué à un rôle common pendant quelque temps lors de ma première mission Ansible avant de le détruire définiivement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela donne généralement un rôle inmaintenable, faisant des tâches diverses et variées mais sans rapport entre elles.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Prenons un rôle &lt;code&gt;common&lt;/code&gt; fictif. Ce rôle ferait peut être&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;La mise à jour de la distribuction Linux (Debian par exemple).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La configuration des clés SSH de la machine.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La configuration de base de syslog.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La configuration de DHCP.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Avec le temps, ce rôle va grossir, de nouvelles choses finiront dedans, et le rôle finit par devenir du gloubi boulga.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/ansible_common/gloubi_boulga.png&quot; alt=&quot;/alt=&amp;quot;gloubi boulga&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;em&gt;Vous ne voulez pas en manger du gloubi boulga ? Vraiment pas ?&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce genre de rôle doit être explosé en plusieurs rôles, cbaque rôle devant faire une action spécifique. Vous pourriez par exemple avoir à la place de ce rôle &lt;code&gt;common&lt;/code&gt; des rôles:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;debian&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ssh&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;syslog&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;dhcp&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce sera beaucoup plus lisible, testable et maintenable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_granularité_des_rôles&quot;&gt;La granularité des rôles&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finalement, tout est une question de granularité. Je suis partisan d&amp;#8217;un découpage fin des rôles Ansible, chaque rôle ayant une petite responsabilité (cette expérience vient de l&amp;#8217;écriture et de la maintenance de &lt;code&gt;centaines&lt;/code&gt; de rôles dans différents contextes).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Beaucoup de gens essayent de faire trop de choses au sein des rôles. Prenons par exemple un rôle installant &lt;code&gt;Kafka&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Vous utilisez Collectd dans votre entreprise. Est ce que ce rôle doit également déployer la configuration Collectd nécessaire pour monitorer Kafka ? La réponse est non. Cela donnerait un rôle inutilisable dans un autre contexte où Collectd n&amp;#8217;est pas utilisé.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Est ce que la remontée des logs doit être gérée dans le rôle ? Là encore, je préfère externaliser (même si ça se discute pour logrotate/syslog), car peut être que j&amp;#8217;utilise syslog-ng, ou bien filebeat, ou logstash. Je ne veux pas lier ces technologies à ce rôle.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les rôles &lt;code&gt;doivent rester simple&lt;/code&gt;, faire une seule chose et la faire bien.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un autre exemple: Vous voulez déployer Kubernetes avec Ansible. A votre avis, c&amp;#8217;est quoi le plus maintenable et le plus réutilisable niveau rôle:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;common&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;master&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;worker&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;ou bien:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;kubelet&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;kube-proxy&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;kube-dns&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ssh&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;etcd&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;calico&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans le second cas, il sera beaucoup plus simple de maintenir de petits rôles. Cela simplifiera aussi les déploiements, et évitera les accidents de type &lt;code&gt;oups, j&amp;#8217;ai redéployé kube-dns mais en fait ça a aussi upgrade etcd&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_playbooks_à_la_rescousse&quot;&gt;Les playbooks à la rescousse&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On a tendance à oublier les playbooks, et à ne les utiliser que pour appeler des rôles. Mais les playbooks sont également un super moyen d&amp;#8217;écrire des scénarios de déploiement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un rolling-upgrade d&amp;#8217;un cluster doit vivre dans un playbook, et non dans le rôle de l&amp;#8217;application par exemple. De même, pour de petites tâches comme lancer un &lt;code&gt;dist-upgrade&lt;/code&gt;, les playbooks font sens (pas la peine d&amp;#8217;utiliser un rôle pour ça).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Gardez des rôles simples, et vous aurez un déploiement simple.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Tue, 28 May 2019 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-05-01-meuse-rust-registry/
