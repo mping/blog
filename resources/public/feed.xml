@@ -12,11 +12,470 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 03 Jun 2019 00:41:02 +0200
+Thu, 13 Jun 2019 00:31:28 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-06-06-one-year-of-go/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-06-06-one-year-of-go/
+</link>
+<title>
+One year of Golang
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela fait maintenant plus d&amp;#8217;un an que j&amp;#8217;ai l&amp;#8217;occasion d&amp;#8217;utiliser Golang professionnellement (bien que j&amp;#8217;en faisais déjà un peu avant cela sur des projets Open Source). je décrirais dans cet article mon ressenti actuel sur le langage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_le_contexte&quot;&gt;Le contexte&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai rejoint en Mai 2018 &lt;a href=&quot;https://www.exoscale.com/&quot;&gt;Exoscale&lt;/a&gt;, où je travaille notamment sur le développement et la maintenance de certains produits.
+Ce n&amp;#8217;est pas un secret, nous sommes à Exoscale de gros utilisateurs de &lt;a href=&quot;https://clojure.org/&quot;&gt;Clojure&lt;/a&gt;, mais nous avons aussi pas mal de Go pour des services orientés &quot;système&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De plus, en tant que cloud provider, il est important de s&amp;#8217;intégrer dans l&amp;#8217;écosystème &quot;cloud&quot; existant. Aujourd&amp;#8217;hui, cet écosystème est en Go. Les outils comme Terraform, Packer, l&amp;#8217;écosystème conteneur et Kubernetes&amp;#8230;&amp;#8203; tout est écrit en Go. Les intégrations avec ces produits sont donc logiquement écrites en Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je suis encore loin d&amp;#8217;être un expert sur Go (n&amp;#8217;hésitez pas à me contacter si vous n&amp;#8217;êtes pas d&amp;#8217;accord avec quelque chose dans cet article), mais je voulais partager mon expérience avec le langage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_trucs_cools&quot;&gt;Les trucs cools&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_l_écosystème_et_la_librairie_standard_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;L&amp;#8217;écosystème et la librairie standard&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le gros plus de Go selon moi est son écosystème. Comme dit précédemment, si vous voulez vous intégrer dans l&amp;#8217;écosystème &quot;cloud&quot;, vous n&amp;#8217;aurez pas vraiment le choix que de partir sur Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous avez besoin d&amp;#8217;écrire des daemons intéragissant avec le système et le réseau, là aussi vous y trouverez votre compte.&lt;br&gt;
+Par exemple, des projets comme &lt;a href=&quot;https://github.com/vishvananda/netlink&quot;&gt;netlink&lt;/a&gt; ou &lt;a href=&quot;https://github.com/google/netstack&quot;&gt;netstack&lt;/a&gt; sont très utiles lorsque vous avez à intéragir avec le réseau. Vous pouvez également vous intégrer avec systemd avec &lt;a href=&quot;https://github.com/coreos/go-systemd&quot;&gt;go-systemd&lt;/a&gt;.&lt;br&gt;
+Il est également simple d&amp;#8217;écrire de petits serveurs TCP, UDP ou HTTP en Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De manière générale, l&amp;#8217;écosystème Go est assez complet. On n&amp;#8217;est plus aujourd&amp;#8217;hui sur un langage de niche.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La librairie standard est également riche et complète.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_gofmt_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;gofmt&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://golang.org/cmd/gofmt/&quot;&gt;gofmt&lt;/a&gt; est le formatter de Go. J&amp;#8217;aime le fait de n&amp;#8217;avoir pas à me poser de questions sur le style à adopter (et l&amp;#8217;outil s&amp;#8217;intègre très bien avec les IDE). Pas grand chose d&amp;#8217;autres à dire sur ce sujet ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_temps_de_compilation_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Temps de compilation&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ça compile vite, c&amp;#8217;est toujours intéressant.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_performances_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Performances&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les performances du langage sont bonnes, et il est possible d&amp;#8217;écrire des services très peu gourmands. C&amp;#8217;est assez plaisant de pouvoir écrire de petits daemons consommant moins de 15MB de RAM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_le_package_time_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;le package time&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;aime comment le temps est géré en Golang. C&amp;#8217;est généralement un point noir pour un certain nombre de langages, mais en Go c&amp;#8217;est facile et assez intuitif. Jetez un oeil à la &lt;a href=&quot;https://golang.org/pkg/time/&quot;&gt;documentation&lt;/a&gt; si ce sujet vous intéresse.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_ok_mais_sans_plus&quot;&gt;OK mais sans plus&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_multithreading_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Multithreading&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On présente souvent Golang comme un langage &lt;code&gt;génial&lt;/code&gt; pour le multithreading. Je ne suis que moyennement d&amp;#8217;accord. Vous avez en gros à votre disposition les &lt;a href=&quot;https://tour.golang.org/concurrency/1&quot;&gt;goroutines&lt;/a&gt;, et c&amp;#8217;est tout.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Parlons tout d&amp;#8217;abord de concurrence. En Go, vous n&amp;#8217;avez pas de structures de données concurrentes, pas de structures de données &lt;code&gt;compare and set&lt;/code&gt; (les &lt;code&gt;atom&lt;/code&gt; en Clojure), pas de software transactional memory&amp;#8230;&amp;#8203; Les programmes Go sont remplis de mutex.
+Cela est assez fâcheux (pas la peine d&amp;#8217;expliquer les problèmes qu&amp;#8217;apportent les locks lors de l&amp;#8217;écriture de programmes conséquents et complexes), mais il n&amp;#8217;y a pas vraiment d&amp;#8217;autres solutions lorsque l&amp;#8217;on a besoin d&amp;#8217;avoir des structures de données partagées entre plusieurs threads en Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bien sûr, tout Gopher digne de ce nom nous dira à se moment que nous ne respectons pas la philosophie de Golang et que nous devons réécrire notre programme pour utiliser des goroutines et des channels. Malheureusement ce n&amp;#8217;est pas simple, et je ne dois pas être le seul à le penser vu la quantité impressionnante de résultats lorsqu&amp;#8217;on recherche l&amp;#8217;utilisation de Mutex dans de gros projets open source Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, parlons des goroutines et des channels. C&amp;#8217;est en effet un outil intéressant, mais il est &lt;code&gt;très&lt;/code&gt; facile en les utilisant de :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Leak des goroutines, c&amp;#8217;est à dire en démarrer mais d&amp;#8217;oublier de les stopper. On se retrouve donc avec de plus en plus de goroutines, jusqu&amp;#8217;au l&amp;#8217;éventuel explosion du programme.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De se faire deadlock. Cela peut facilement arriver lorsque plusieurs goroutines attendent sur des channels. Si vous ratez votre coup, vous pouvez vous retrouver avec toutes les goroutines en attente, et votre programme est bloqué.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il existe des outils pour limiter en partie ces problèmes, comme le &lt;a href=&quot;https://blog.golang.org/race-detector&quot;&gt;race detector&lt;/a&gt; ou encore la librairie tomb, &lt;a href=&quot;https://mcorbin.fr/posts/2018-12-03-golang-tomb/index.html&quot;&gt;sur lequel j'ai déjà écrit un article&lt;/a&gt;. Mais malgré cela, les goroutines ne sont pas si simples que cela.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce qui me surprend toujours, c&amp;#8217;est que le concept de goroutines existe depuis longtemps et est disponible dans de nombreux langages, langages qui fournissent également généralement de nombreux autres moyens pour le multithreading. j&amp;#8217;ai du mal à voir la &quot;révolution&quot; que serait Go dans ce domaine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_courbe_d_apprentissage_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Courbe d&amp;#8217;apprentissage&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Go est simple à apprendre. Le langage est pauvre et sa syntaxe réduite.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Contrairement à beaucoup de monde, je ne vois pas vraiment ça comme une bonne chose: le langage est tellement réduit que ça en devient handicapant.
+Je pense également qu&amp;#8217;il faut du temps pour s&amp;#8217;habituer aux bonnes pratiques et éviter certains pièges. (cf le reste de l&amp;#8217;article).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_défauts_du_langage&quot;&gt;Les défauts du langage&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_le_typesystem_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Le typesystem&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce sujet a déjà été débattu en long, en large et en travers, mais je vais en remettre une couche.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;aime Clojure entre autre parce qu&amp;#8217;il est dynamiquement typé. Quand je code en Clojure, les types ne me manquent pas, et de manière générale je ne pense pas qu&amp;#8217;un typage fort soit nécessaire pour réaliser des programmes corrects (surtout si à côté vous avez l&amp;#8217;immutabilité, des structures de données géniales, la programmation fonctionnelle &amp;#8230;&amp;#8203; Bref, ce que fournit Clojure).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais je sais aussi apprécier les langages fortement typés, comme Ocaml ou Rust. Il y a une certaine beauté dans les types comme &lt;code&gt;Result&lt;/code&gt; ou &lt;code&gt;Option&lt;/code&gt;, les algebraic data types, le pattern matching&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Golang se trouve dans la pire catégorie possible: statiquement typé mais avec un typesystem moisi.
+Les types ne seront pas là pour vous aider, vous lutterez contre le typesystem. Vous n&amp;#8217;aurez pas accès aux generics, pas d&amp;#8217;algebraic data type, pas de pattern matching, pas de type Result/Option&amp;#8230;&amp;#8203; Bref, les types ne vous aideront pas tant que ça. Un exemple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je veux définir un type contenant les jours de la semaine. En Rust (que je n&amp;#8217;ai pas pratiqué depuis longtemps d&amp;#8217;ailleurs), j&amp;#8217;écrirais:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;pub enum Weekday {
+	Monday
+	Tuesday
+	Wednesday
+	Thursday
+	Friday
+	Saturday
+        Sunday
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je pourrais ensuite utiliser par exemple du pattern matching sur une variable de ce type, et j&amp;#8217;aurais la garantie à la compilation que tous les jours possibles sont traités par mon programme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Go (solution venant de la doc officielle), voici comment faire:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;type Weekday int
+
+const (
+	Sunday Weekday = iota
+	Monday
+	Tuesday
+	Wednesday
+	Thursday
+	Friday
+	Saturday
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;iota&lt;/code&gt; indique que ma valeur &lt;code&gt;Sunday&lt;/code&gt; est initialisée à 0, et que les jours suivant vaudront &lt;code&gt;jours précédents + 1&lt;/code&gt; (donc &lt;code&gt;Monday&lt;/code&gt; = 1, &lt;code&gt;Tuesday&lt;/code&gt; = 2&amp;#8230;&amp;#8203;). Bien sûr, il sera facile de se retrouver dans des cas comme ça:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	var day Weekday = 10
+	fmt.Printf(&quot;It compiles ! %d&quot;, day)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il n&amp;#8217;y aura aucune vérification ici que toutes les valeurs possibles de votre type &lt;code&gt;Weekday&lt;/code&gt; (qui n&amp;#8217;est qu&amp;#8217;un alias pour &lt;code&gt;int&lt;/code&gt; finalement) soient traitées. Pour être franc, ma première réaction quand j&amp;#8217;ai vu le système de iota a été:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/one_year_go/wtf_is_this.jpg&quot; alt=&quot;/alt=&amp;quot;wtf is this shit&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_les_valeurs_par_défaut_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Les valeurs par défaut&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Go, chaque type a sa valeur par défaut, et combiné au typesystem décrit précédemment, c&amp;#8217;est horrible. Je vais expliquer cela par un exemple.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mettons que je veuille écrire un client Go pour &lt;a href=&quot;https://riemann.io/&quot;&gt;Riemann&lt;/a&gt;. Un &lt;code&gt;event&lt;/code&gt; Riemann possède un certain nombre de champ, tous optionnels.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Rust, la définition d&amp;#8217;un event donnerait à peu près:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;#[derive(Debug)]
+pub enum Metric {
+    Int64(i64),
+    Double(f64),
+    Float(f32)
+}
+
+type State = String;
+type Service = String;
+type Host = String;
+type Description = String;
+type Tag = String;
+type Tags = Vec&amp;lt;Tag&amp;gt;;
+type Ttl = f32;
+type AttrKey = String;
+type AttrValue = String;
+type Attributes = HashMap&amp;lt;AttrKey, AttrValue&amp;gt;;
+
+#[derive(Debug)]
+pub struct Event {
+    pub time: Option&amp;lt;DateTime&amp;lt;Utc&amp;gt;&amp;gt;,
+    pub state: Option&amp;lt;State&amp;gt;,
+    pub service: Option&amp;lt;Service&amp;gt;,
+    pub host: Option&amp;lt;Host&amp;gt;,
+    pub description: Option&amp;lt;Description&amp;gt;,
+    pub tags: Option&amp;lt;Tags&amp;gt;,
+    pub ttl: Option&amp;lt;Ttl&amp;gt;,
+    pub attributes: Option&amp;lt;Attributes&amp;gt;,
+    pub metric: Option&amp;lt;Metric&amp;gt;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme on peut le voir, la struct &lt;code&gt;Event&lt;/code&gt; a tous ses champs optionnels. J&amp;#8217;utilise également des alias pour représenter chaque champ. Enfin, mon champ &lt;code&gt;Metric&lt;/code&gt; peut avoir différents formats via une enum; &lt;code&gt;Int64&lt;/code&gt;, &lt;code&gt;Float&lt;/code&gt; ou &lt;code&gt;Double&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comment réaliser cela en Go ? On aura probablement une struct &lt;code&gt;Event&lt;/code&gt; contenant des champs:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Event struct {
+// ???
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Prenons par exemple le champ &lt;code&gt;description&lt;/code&gt;. On aura probablement dans notre struct &lt;code&gt;Description string&lt;/code&gt;. Sauf que&amp;#8230;&amp;#8203; la valeur par défaut d&amp;#8217;une &lt;code&gt;string&lt;/code&gt; est une chaîne vide (&lt;code&gt;&quot;&quot;&lt;/code&gt;).&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Lorsque je vais sérialiser mon event (en ce que vous voulez: json, protobuf&amp;#8230;&amp;#8203;), comment puis-je faire la différence entre &lt;code&gt;l&amp;#8217;utilisateur veur que la valeur de la description soit une chaîne vide&lt;/code&gt; et &lt;code&gt;l&amp;#8217;utilisateur n&amp;#8217;a pas défini l&amp;#8217;attribut description, et donc ne veut pas l&amp;#8217;envoyer&lt;/code&gt; ? Et bah vous pouvez pas.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ceci est un &lt;code&gt;ENORME&lt;/code&gt; problème. La première fois que vous le rencontrez, je vous garantis que vous pétez un plomb. Tout ça car le type Option n&amp;#8217;existe pas en Golang.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/one_year_go/flip_go.png&quot; alt=&quot;/alt=&amp;quot;flip go&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai déjà rencontré plusieurs fois ce cas. Par exemple, un appel de mise à jour d&amp;#8217;une API acceptait une liste de valeurs, et cette liste pouvait être vide (et dans ce cas côté serveur la liste était vide aussi).
+Sauf qu&amp;#8217;il était &lt;code&gt;impossible&lt;/code&gt; de faire la distinction côté Golang entre une liste vide assignée par l&amp;#8217;utilisateur, et la liste vide de la valeur par défaut du type liste de Golang.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais revenons à notre client Riemann. On voit dans le type Rust que le champ &lt;code&gt;Metric&lt;/code&gt; peut avoir plusieurs valeurs. La solution naive en Go serait:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-golang&quot; data-lang=&quot;golang&quot;&gt;Metricf float3
+Metricd float64
+Metrici int64&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sauf que là aussi, toutes ces valeurs auront &lt;code&gt;0&lt;/code&gt; par défaut, et là encore aucun moyen de faire la distinction entre ce que veux l&amp;#8217;utilisateur et la valeur par défaut de golang. Donc vous finissez par faire:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;Metricf interface{} // Could be Int, Float32, Float64&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le type &lt;code&gt;interface{}&lt;/code&gt; étant &lt;code&gt;nil&lt;/code&gt; par défaut. Et puis tant qu&amp;#8217;à faire des trucs dégueulasses:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;if event.Metric != nil {
+	switch reflect.TypeOf(event.Metric).Kind() {
+	case reflect.Int, reflect.Int32, reflect.Int64:
+		e.MetricSint64 = pb.Int64(reflect.ValueOf(event.Metric).Int())
+	case reflect.Float32:
+		e.MetricD = pb.Float64(reflect.ValueOf(event.Metric).Float())
+	case reflect.Float64:
+		e.MetricD = pb.Float64(reflect.ValueOf(event.Metric).Float())
+	case reflect.Uint, reflect.Uint32, reflect.Uint64:
+		e.MetricSint64 = pb.Int64(int64(reflect.ValueOf(event.Metric).Uint()))
+	default:
+		return nil, fmt.Errorf(&quot;Metric of invalid type (type %v)&quot;,
+			reflect.TypeOf(event.Metric).Kind())
+	}
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;interface{}&lt;/code&gt; est d&amp;#8217;ailleurs un type largement utilisé en Go (faites quelques recherches sur vos projets Go favoris&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Bref, le typesystem combiné aux valeurs par défaut est un cauchemar. Une solution est parfois d&amp;#8217;utiliser des pointeurs (les pointeurs pouvant être &lt;code&gt;nil&lt;/code&gt;), mais ça fait un peu mal de pourrir sa struct avec des pointeurs juste parce que le langage a été mal pensé.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_les_pointeurs_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;Les pointeurs&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, parlons en des pointeurs. Je cherche encore l&amp;#8217;intérêt d&amp;#8217;avoir des pointeurs dans un langage ayant un garbage collector. Il aurait été selon moi beaucoup plus simple d&amp;#8217;avoir un comportement des struct &quot;à la Java&quot; (passage par référence), et un passage par valeur pour certains types primitifs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Combiné aux problèmes concernant les valeurs par défaut exprimés précédemment (les pointeurs pouvant etre &lt;code&gt;nil&lt;/code&gt;), cela rajoute une difficulté de plus au langage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_la_gestion_des_erreurs_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;La gestion des erreurs&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un programme Go ressemble généralement à ça:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;foo, err := doFoo()
+if err != nil {
+	return nil, err
+}
+bar, err := doBar(foo)
+if err != nil {
+	return nil, err
+}
+baz, err := doBaz(bar)
+if err != nil {
+	return nil, err
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le code est littéralement pollué par la gestion des erreurs. Outre l&amp;#8217;aspect visuel, il est très facile d&amp;#8217;oublier de retourner une erreur, ou bien de se tromper et de retourner &lt;code&gt;nil&lt;/code&gt; où on aurait dû retourner &lt;code&gt;err&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela est dû au fait que Golang, comme dit précédemment, ne dispose pas de type &lt;code&gt;Result&lt;/code&gt; nous permettant de vérifier à la compilation que nous avons géré tous les cas d&amp;#8217;erreurs possibles.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Go n&amp;#8217;a pas non plus d&amp;#8217;exceptions (je ne parlerais pas de &lt;code&gt;panic&lt;/code&gt;&amp;#8230;&amp;#8203;.), même si finalement le package &lt;a href=&quot;https://godoc.org/github.com/pkg/errors&quot;&gt;errors&lt;/a&gt; amène plus ou moins le concept de &quot;stacktraces&quot; à construire manuellement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_la_gestion_des_dépendances_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;La gestion des dépendances&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Après une période chaotique où différents outils se tiraient la bourre (&lt;code&gt;glide&lt;/code&gt;, &lt;code&gt;godep&lt;/code&gt;&amp;#8230;&amp;#8203;), on a maintenant les &lt;a href=&quot;https://blog.golang.org/using-go-modules&quot;&gt;modules&lt;/a&gt;.
+Mais bon, le principe reste le même: on récupère du code depuis Github. Si vous êtes un mainteneur de librairie Go, ne supprimez pas trop vite votre repository Git ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai aussi eu des expériences complètement hallucinantes (avec explosion au runtime) en utilisant la directive &lt;code&gt;replace&lt;/code&gt; dans un &lt;code&gt;go.mod&lt;/code&gt; (cela permet de remplacer une dépendance par un fork par exemple), mais n&amp;#8217;ayant jamais trop réussi à reproduire je n&amp;#8217;irais pas plus loin sur le sujet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_la_surcharge_de_fonction_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;La surcharge de fonction&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il n&amp;#8217;est pas possible de définir une fonction avec plusieurs implémentations, ce qui est assez frustrant (il n&amp;#8217;est par exemple pas possible de définir les fonctions &lt;code&gt;add(i int)&lt;/code&gt; et &lt;code&gt;add(i int, j int&lt;/code&gt;) dans le même programme).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est quelque chose que j&amp;#8217;utilise énormément dans d&amp;#8217;autres langages, et devoir nommer différement des fonctions faisant la même chose donne un code plus difficile à maintenir&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_strong_programmation_fonctionnelle_immutabilité_strong&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;strong&gt;programmation fonctionnelle, immutabilité&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De plus en plus de langages incorporent des éléments fonctionnnels. Mais pas Go.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Pas de fonctions de type &lt;code&gt;map&lt;/code&gt;, &lt;code&gt;reduce&lt;/code&gt;, &lt;code&gt;filter&lt;/code&gt;&amp;#8230;&amp;#8203; on fait de bonnes vieilles loop &lt;code&gt;for&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pas d&amp;#8217;immutabilité, vous vivrez dans un monde d&amp;#8217;effet de bord.&lt;br&gt;
+Une erreur classique que tout le monde fait une fois dans sa vie:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	toto := []int{1, 2, 3, 4, 5}
+	for _, value := range toto {
+		go func() {
+			time.Sleep(1 * time.Second)
+			fmt.Println(value)
+		}()
+	}
+	time.Sleep(3 * time.Second)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le résultat de ce programme est:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5
+5
+5
+5
+5&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En effet, la variable &lt;code&gt;value&lt;/code&gt; est mise à jour à chaque itération de la boucle ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme vous le voyez, j&amp;#8217;ai eu du mal à trouver des choses à dire dans la première section de l&amp;#8217;article.
+Go est loin d&amp;#8217;être mon langage favoris. Pourtant, malgré ces défauts, ses avantages (écosystème, performances&amp;#8230;&amp;#8203;) font que je comprends tout à fait son utilisation aujourd&amp;#8217;hui dans certains contextes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Quid des alternatives ? Si je veux un langage:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Compilant en binaire statique facilement.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Garbage collecté (donc exit Rust, je peux me permettre un garbage collector dans mes projets et j&amp;#8217;ai moyennement envie de gérer des lifetimes et les whatmille types de pointeurs de Rust).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Avec un écosystème correct (malheureusement, exit Ocaml, bien que j&amp;#8217;espère qu&amp;#8217;un jour cela changera.).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Avec des performances correctes et prédictives.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il ne reste pas grand chose à part Go. Mais bon, voyons ce qui arrivera pour Go 2.0, peut être qu&amp;#8217;on aura des surprises.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Thu, 06 Jun 2019 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-05-28-ansible-common/
