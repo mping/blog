@@ -12,17 +12,17 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 13 Jun 2019 00:31:28 +0200
+Thu, 13 Jun 2019 00:44:48 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
 <item>
 <guid>
-https://mcorbin.fr/posts/2019-06-06-one-year-of-go/
+https://mcorbin.fr/posts/2019-06-13-one-year-of-go/
 </guid>
 <link>
-https://mcorbin.fr/posts/2019-06-06-one-year-of-go/
+https://mcorbin.fr/posts/2019-06-13-one-year-of-go/
 </link>
 <title>
 One year of Golang
@@ -473,7 +473,7 @@ Go est loin d&amp;#8217;être mon langage favoris. Pourtant, malgré ces défaut
 &lt;/div&gt;
 </description>
 <pubDate>
-Thu, 06 Jun 2019 00:00:00 +0200
+Thu, 13 Jun 2019 00:00:00 +0200
 </pubDate>
 </item>
 <item>
