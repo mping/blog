@@ -12,11 +12,151 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 13 Jun 2019 00:44:48 +0200
+Fri, 28 Jun 2019 12:39:23 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-06-28-ansible-assemble-config/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-06-28-ansible-assemble-config/
+</link>
+<title>
+Ansible tip: configuration, assemble and idempotence
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il arrive parfois que vous ayez à configurer avec Ansible un logiciel n&amp;#8217;acceptant qu&amp;#8217;un fichier de configuration, et où il est impossible d&amp;#8217;inclure un autre fichier ou dossier depuis ce fichier.
+Je présenterais ici une astuce pour gérer cela avec Ansible et le module &lt;code&gt;assemble&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_le_problème&quot;&gt;Le problème&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Prenons par exemple &lt;code&gt;haproxy&lt;/code&gt;. Il est impossible d&amp;#8217;inclure depuis le fichier de configuration principal d&amp;#8217;autres fichiers ou dossiers (bien qu&amp;#8217;il soit possible de passer plusieurs fichiers de configuration en passant plusieurs fois le paramètre &lt;code&gt;-f`&lt;/code&gt; à la commande de lancement).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il existe une solution élégante avec Ansible permettant de découper cette configuration en plusieurs fichiers dans un dossier, tout en ayant un déploiemnt idempotent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_solution&quot;&gt;La solution&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous allons créer plusieurs fichiers dans un dossier, puis les concaténer pour obtenir le fichier final.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On commence par supprimer ledit dossier, par exemple &lt;code&gt;/etc/haproxy/haproxy.d&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;- name: delete haproxy.d directory
+  become: true
+  file:
+    path: /etc/haproxy/haproxy.d
+    state: absent
+  changed_when: false&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Notez le &lt;code&gt;changed_when: false&lt;/code&gt;: Ansible ne considérera pas qu&amp;#8217;il y a eu un changement si le dossier est effectivement supprimé.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Puis on recrée ce répertoire:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;- name: create haproxy.d directory
+  become: true
+  file:
+    path: /etc/haproxy/haproxy.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  changed_when: false&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Là aussi, on a un &lt;code&gt;changed_when: false&lt;/code&gt;. A cette étape du rôle, on a donc la garantie d&amp;#8217;avoir un dossier &lt;code&gt;/etc/haproxy/haproxy.d&lt;/code&gt; vide.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ensuite, on utilise la directive &lt;code&gt;template&lt;/code&gt; pour déployer dans ce nouveau dossier nos fichiers de configuration. Attention, il faut que les fichiers soient ordonnés par ordre alphabétique. Par exemple, je pourrais préfixer chaque fichier par un numéro:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;haproxy_configuration_templates:
+  - src: haproxy/haproxy.cfg.j2
+    dest: 01_haproxy.cfg
+  - src: haproxy/frontend.j2
+    dest: 02_frontend.cfg
+  - src: haproxy/blog.j2
+    dest: 03_blog.cfg
+  - src: haproxy/meuse.j2
+    dest: 03_meuse.cfg
+  - src: haproxy/tour.j2
+    dest: 03_tour.cfg&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ensuite, je template ces fichiers:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;- name: template haproxy configuration in haproxy.d
+  become: true
+  template:
+    src: &quot;{{ item.src }}&quot;
+    dest: &quot;/etc/haproxy/haproxy.d/{{ item.dest }}&quot;
+    owner: root
+    group: root
+    mode: 0644
+  with_items: &quot;{{ haproxy_configuration_templates }}&quot;
+  changed_when: false&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ici aussi on a un &lt;code&gt;changed_when: false&lt;/code&gt;, ce qui est très important. Cette tâche ne provoquera aucun changement lors de son exécution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ensuite, je concatène tous ces fichiers ensemble en utilisant &lt;code&gt;assemble&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- name: assemble haproxy.d configuration
+  become: true
+  assemble:
+    src: /etc/haproxy/haproxy.d
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+  notify: haproxy | reload&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un handler me permet de reload HAProxy en cas de changement. &lt;code&gt;assemble&lt;/code&gt; ne provoquera un changement que si le résultat de l&amp;#8217;assemblage des fichiers est différent de l&amp;#8217;état existant.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et c&amp;#8217;est fini.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si une configuration identique est déployée, les &lt;code&gt;changed_when: false&lt;/code&gt; feront qu&amp;#8217;Ansible ne détectera pas de changement. Si une configuration différente est déployée, on aura un changement sur la tâche &lt;code&gt;assemble&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le fait de supprimer et recréer le dossier contenant les fichiers est obligatoire pour gérer le cas d&amp;#8217;un fichier template qui serait supprimé de la liste des fichiers à déployer. Dans ce cas, on ne veut pas avoir des fichiers non voulus dans &lt;code&gt;/etc/haproxy/haproxy.d&lt;/code&gt; venant d&amp;#8217;un ancien déploiement (d&amp;#8217;où le nettoyage).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Fri, 28 Jun 2019 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-06-13-one-year-of-go/
