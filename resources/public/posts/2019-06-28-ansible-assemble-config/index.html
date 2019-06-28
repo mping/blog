@@ -70,7 +70,8 @@ Je présenterais ici une astuce pour gérer cela avec Ansible et le module <code
 <h2 id="_le_problème">Le problème</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Prenons par exemple <code>haproxy</code>. Il est impossible d&#8217;inclure depuis le fichier de configuration principal d&#8217;autres fichiers ou dossiers (bien qu&#8217;il soit possible de passer plusieurs fichiers de configuration en passant plusieurs fois le paramètre <code>-f`</code> à la commande de lancement).</p>
+<p>Prenons par exemple <code>haproxy</code>. <span class="line-through">Il est impossible d&#8217;inclure depuis le fichier de configuration principal d&#8217;autres fichiers ou dossiers (bien qu&#8217;il soit possible de passer plusieurs fichiers de configuration en passant plusieurs fois le paramètre <code>-f`</code> à la commande de lancement).</span><br>
+<strong>EDIT</strong>: faux ! Il est en fait possible de passer un répertoire à HAProxy. Mais nous utiliserons quand même HAProxy comme exemple dans cet article ;)</p>
 </div>
 <div class="paragraph">
 <p>Il existe une solution élégante avec Ansible permettant de découper cette configuration en plusieurs fichiers dans un dossier, tout en ayant un déploiemnt idempotent.</p>

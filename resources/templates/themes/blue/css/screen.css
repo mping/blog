@@ -284,3 +284,5 @@ tr:nth-child(odd) {
     padding: 9px;
     background-color: #fffef5;
 }
+
+.line-through{text-decoration:line-through}

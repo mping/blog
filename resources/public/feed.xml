@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 28 Jun 2019 12:39:23 +0200
+Fri, 28 Jun 2019 13:45:09 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -36,7 +36,8 @@ Je présenterais ici une astuce pour gérer cela avec Ansible et le module &lt;c
 &lt;h2 id=&quot;_le_problème&quot;&gt;Le problème&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Prenons par exemple &lt;code&gt;haproxy&lt;/code&gt;. Il est impossible d&amp;#8217;inclure depuis le fichier de configuration principal d&amp;#8217;autres fichiers ou dossiers (bien qu&amp;#8217;il soit possible de passer plusieurs fichiers de configuration en passant plusieurs fois le paramètre &lt;code&gt;-f`&lt;/code&gt; à la commande de lancement).&lt;/p&gt;
+&lt;p&gt;Prenons par exemple &lt;code&gt;haproxy&lt;/code&gt;. &lt;span class=&quot;line-through&quot;&gt;Il est impossible d&amp;#8217;inclure depuis le fichier de configuration principal d&amp;#8217;autres fichiers ou dossiers (bien qu&amp;#8217;il soit possible de passer plusieurs fichiers de configuration en passant plusieurs fois le paramètre &lt;code&gt;-f`&lt;/code&gt; à la commande de lancement).&lt;/span&gt;&lt;br&gt;
+&lt;strong&gt;EDIT&lt;/strong&gt;: faux ! Il est en fait possible de passer un répertoire à HAProxy. Mais nous utiliserons quand même HAProxy comme exemple dans cet article ;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Il existe une solution élégante avec Ansible permettant de découper cette configuration en plusieurs fichiers dans un dossier, tout en ayant un déploiemnt idempotent.&lt;/p&gt;
