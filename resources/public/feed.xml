@@ -12,11 +12,344 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Fri, 28 Jun 2019 13:45:09 +0200
+Tue, 02 Jul 2019 20:49:16 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-07-01-load-balancing-ecmp-haproxy-ipvs/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-07-01-load-balancing-ecmp-haproxy-ipvs/
+</link>
+<title>
+Load balancing: ECMP, IPVS, HAproxy
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il y a un peu plus d&amp;#8217;un an, &lt;a href=&quot;https://vincent.bernat.ch/fr&quot;&gt;Vincent Bernat&lt;/a&gt; publiait un excellent article sur le load balancing appelé &lt;a href=&quot;https://vincent.bernat.ch/fr/blog/2018-repartiteur-charge-multi-niveaux&quot;&gt;Répartiteur de charge à multiples niveaux avec Linux&lt;/a&gt;. Dans cet article, je réimplémenterai la solution proposée dans cet article et montrerai via des tests qu&amp;#8217;elle fonctionne comme prévue&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour une bonne compréhension, Il est conseillé de lire l&amp;#8217;article présenté précédemment avant de commencer la lecture de ce qui suit.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_l_architecture_générale&quot;&gt;L&amp;#8217;architecture générale&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Schema global:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ECMP&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;IPVS&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;HAproxy&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Backend&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cloud Exoscale.
+Installation manuelle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_niveau_1_ecmp&quot;&gt;Niveau 1: ECMP&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_introduction&quot;&gt;Introduction&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le premier étage de notre architecture est le routage ECMP. Ce dernier permet d&amp;#8217;avoir une redondance sur le routage vers une IP montant être montée sur différentes machines.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Lorsque plusieurs routes sont configurées pour une même destination dans un routeur, ce dernier va devoir &quot;choisir&quot; où transmettre les paquets réseaux.&lt;br&gt;
+Il existe plusieurs algorithmes de hashing pour ECMP. Le choix de l&amp;#8217;argorithme est important, car pour des protocoles connectés comme TCP, on ne veut évidemment pas que les paquets d&amp;#8217;une même connexion soient envoyées à différentes destinations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un algorithme de hashing intéressant (et utilisé chez Exoscale) est le &lt;code&gt;5-tuples&lt;/code&gt;. Le choix de la destination se fera sur plusieurs critères:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;L&amp;#8217;adresse source.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;L&amp;#8217;adresse de destination.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Le protocole.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Le port source.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Le port de destination.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cet algorithme a l&amp;#8217;avantage de répartir de façon très équitable les connexions vers les destinations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;lt;schema&amp;gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mise_en_place&quot;&gt;Mise en place&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous commençons par créer une Elastic IP:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;exo -A prod eip create ch-gva-2 --healthcheck-mode tcp --healthcheck-port 8080 --healthcheck-strikes-ok 1
+┼──────────┼────────────────┼──────────────────────────────────────┼
+│   ZONE   │       IP       │                  ID                  │
+┼──────────┼────────────────┼──────────────────────────────────────┼
+│ ch-gva-2 │ 89.145.167.130 │ f63d34e0-c797-49ce-89cd-fb695e3ffd6b │
+┼──────────┼────────────────┼──────────────────────────────────────┼&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Chez Exoscale, il est possible &lt;a href=&quot;https://www.exoscale.com/syslog/releasing-managed-elastic-ip/&quot;&gt;depuis peu&lt;/a&gt; de configurer des healthchecks à réaliser lors de la création d&amp;#8217;une Elastic IP. Le check sera réalisé sur le ou les machines sur lesquels l&amp;#8217;Elastic IP est attachée, et cette dernière sera automatiquement détachée (et donc enlevée du pool ECMP) si le check est en erreur.&lt;br&gt;
+Ici, je configure un check TCP sur le port 8080.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mettons maintenant cette IP de côté, nous l&amp;#8217;utiliserons plus tard.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_création_d_un_réseau_privé&quot;&gt;Création d&amp;#8217;un réseau privé&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mise_en_place_2&quot;&gt;Mise en place&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;$ exo -A prod privnet create --zone ch-gva-2 --description &quot;load balancing article&quot; &quot;my_private_network&quot;
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
+│        NAME        │      DESCRIPTION       │                  ID                  │ DHCP │
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
+│ my_private_network │ load balancing article │ 9b866d82-ace8-4a73-a266-b423697f8a37 │ n/a  │
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_niveau_4_backends_python&quot;&gt;Niveau 4: Backends Python&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous allons démarrer sur deux machines des serveurs HTTP Python tout simples, qui exposeront quelques fichiers. Dans une &quot;vraie&quot; architecture, ces serveurs seraient les serveurs HTTP exposant vos applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mise_en_place_3&quot;&gt;Mise en place&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Créez ces deux machines, et ajoutez les dans votre réseau privé:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;$ exo -A prod vm create --zone ch-gva-2 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; backend-python-1
+
+Deploying &quot;backend-python-1&quot; ⠙                                                  done!
+
+$ exo -A prod vm create --zone ch-gva-2 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; backend-python-2
+
+Deploying &quot;backend-python-2&quot; ⠇                                                  done!&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous allons maintenant configurer deux IP statiques sur l&amp;#8217;interface privée de nos deux machines.
+Connectez-vous dessus via SSH, puis configurez les IP de vos interfaces. Le fichier à créer est &lt;code&gt;/etc/network/interfaces.d/01-privnet.cfg&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Machine backend-python-1
+auto eth1
+iface eth1 inet static
+   address 10.3.3.1/24&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Machine backend-python-2
+auto eth1
+iface eth1 inet static
+   address 10.3.3.2/24&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mettons là aussi ces machines de côté pour l&amp;#8217;instant.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_niveau_3_haproxy&quot;&gt;Niveau 3: HAProxy&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous allons maintenant installer et configurer deux serveurs sur lesquels tournera &lt;a href=&quot;https://www.haproxy.com/&quot;&gt;HAProxy&lt;/a&gt;. Ces serveurs HAProxy feront chacun du load balancing sur les serveurs Python créés précédemment.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous allons dans un premier temps attacher l&amp;#8217;Elastic IP créée précédemment à ces machines HAProxy, Nous aurons donc une architecture sans &quot;Niveau 2&quot; par rapport à l&amp;#8217;architecture présentée au début, et donc ressemblant à ça:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela nous permettra de voir les problèmes de cette architecture, et l&amp;#8217;utilité du &quot;Niveau 2&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mise_en_place_4&quot;&gt;Mise en place&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Security groups&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Créez un security group et configurez le en ouvrant le port 8080:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exo firewall create http
+# ouvre le port 8080 en ingress
+exo firewall add http --port 8080
+# ouvre tous les ports en egress
+exo -A prod firewall add http --egress&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Machines HAProxy&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Créez de nouveau deux machines virtuelles. Ces machines démarreront avec le security group précédemment créé:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;exo -A prod vm create --zone ch-gva-2 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; haproxy-1 --security-group http
+Deploying &quot;haproxy-1&quot; ⠴                                                         done!
+
+exo -A prod vm create --zone ch-gva-2 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; haproxy-2 --security-group http&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Configurez ici aussi les deux IP statiques des machines comme précédemment (les fichiers de configuration sont identiques). Choisissez &lt;code&gt;10.3.3.3&lt;/code&gt; pour la machine &lt;code&gt;haproxy-1&lt;/code&gt;, et &lt;code&gt;10.3.3.4&lt;/code&gt; pour la machine &lt;code&gt;haproxy-2&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il faut maintenant installer sur ces machines. La procédure est identique sur les deux machines. Nous installerons les packages depuis &lt;code&gt;&lt;a href=&quot;https://haproxy.debian.net&quot; class=&quot;bare&quot;&gt;https://haproxy.debian.net&lt;/a&gt;&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;apt-get update
+apt-get install curl
+
+curl https://haproxy.debian.net/bernat.debian.org.gpg | \
+      apt-key add -
+echo deb http://haproxy.debian.net stretch-backports-2.0 main | \
+      tee /etc/apt/sources.list.d/haproxy.list
+
+apt-get update
+apt-get install haproxy=2.0.\*&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Configurons maintenant HAProxy. Sur les deux instances, remplacez le fichier &lt;code&gt;/etc/haproxy/haproxy.cfg&lt;/code&gt; par:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;frontend front1
+  bind :8080
+  default_backend servers
+
+backend servers
+  balance roundrobin
+  server backend1 10.3.3.1:8080
+  server backend2 10.3.3.2:8080&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette configuration est très sommaire (aucun healthcheck n&amp;#8217;est configuré par exemple), mais suffisante pour cet article. Elle permet de distribuer les requêtes sur les deux serveurs Python définis précédemment. Redémarrez ensuite HAProxy avec &lt;code&gt;systemctl restart haproxy&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Elastic IPs&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Attachons maintenant notre Elastic IP créée précédemment à ces deux instances:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exo -A prod eip associate 89.145.167.130 haproxy-1
+exo -A prod eip associate 89.145.167.130 haproxy-2
+`
+
+*Servers Python*
+
+Reprenons nos deux serveurs Python créé précédemment. Sur chaque serveur, créez via `dd` un fichier et exposez le via HTTP:
+
+```shell
+mkdir /tmp/server
+cd /tmp/server
+# Le fichier fera un peu moins d'un GB, si vous avez une petite connexion,
+# modifiez le paramètre count pour créer un fichier plus petit.
+dd if=/dev/zero of=file1 count=1000000 bs=1024
+
+# Exposez le fichier sur le port 8080
+# Lancez le dans un tmux par exemple si vous voulez lancer ce process
+# en background
+python -m SimpleHTTPServer 8080&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous devriez maintenant pouvoir télécharger ces fichiers (ou un fichier &lt;code&gt;index.html&lt;/code&gt; exposé par Python) via par exemple wget:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget 89.145.167.130:8080
+wget 89.145.167.130:8080/file1
+`
+
+Lancez plusieurs fois ces requêtes (par exemple la première pour éviter de télécharger à chaque fois le fichier), et vous verrez dans les logs de `SimpleHTTPServer` que les requêtes sont réparties sur les deux serveurs Python !
+
+== Premier problème
+
+=== Suppression d'un serveur HAProxy
+
+Lancez le téléchargement du gros fichier avec `wget 89.145.167.130:8080/file1`. Au même moment, stoppez (avec `exo vm stop haproxy-1` par exemple) le serveur HAProxy servant le fichier (vous pouvez soit essayer au hasard, soit en installant et lançant tcpdump (`apt-get install tcpdump` puis `tcpdump port 8080`).
+
+Par exemple, en lançant `tcpdump`, je vois que la machine `haproxy-1` sert le fichier. Je stoppe cette machine. Immédiatement, mon téléchargement est bloqué:&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;file1                  25%[===&amp;#8658;                  ] 253,29M  --.-KB/s    tps 17m 39s^
+|&lt;code&gt;`&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_niveau_2_ipvs&quot;&gt;Niveau 2: IPVS&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour pallier à ce problème, nous allons rajouter un niveau à notre architecture:&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_tests&quot;&gt;Les tests&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Mon, 01 Jul 2019 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-06-28-ansible-assemble-config/

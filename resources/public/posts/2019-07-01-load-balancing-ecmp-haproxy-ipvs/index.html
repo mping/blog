@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>(mcorbin.fr): Load balancing: ECMP, IPVS, HAproxy</title>
+    <link rel="canonical" href="https://mcorbin.fr/posts/2019-07-01-load-balancing-ecmp-haproxy-ipvs/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/styles/tomorrow-night.css" rel="stylesheet" type="text/css" />
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+
+  </head>
+  <body><a name="top"></a>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">(mcorbin.fr)</a>
+        </div>
+        <div id="navbar1" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li ><a href="/">Home</a></li>
+            <li
+               ><a href="/archives/">Archives</a></li>
+            
+            <li
+               >
+              <a href="/pages/about/">About</a>
+            </li>
+            
+            <li
+               >
+              <a href="/pages/projects/">Projects</a>
+            </li>
+            
+            <li><a href="/feed.xml">RSS</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="content">
+            
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">1 juillet 2019</div>
+        
+    </div>
+    <h2>Load balancing: ECMP, IPVS, HAproxy</h2>
+</div>
+<div>
+    
+    <div class="paragraph">
+<p>Il y a un peu plus d&#8217;un an, <a href="https://vincent.bernat.ch/fr">Vincent Bernat</a> publiait un excellent article sur le load balancing appelé <a href="https://vincent.bernat.ch/fr/blog/2018-repartiteur-charge-multi-niveaux">Répartiteur de charge à multiples niveaux avec Linux</a>. Dans cet article, je réimplémenterai la solution proposée dans cet article et montrerai via des tests qu&#8217;elle fonctionne comme prévue</p>
+</div>
+<div class="paragraph">
+<p>Pour une bonne compréhension, Il est conseillé de lire l&#8217;article présenté précédemment avant de commencer la lecture de ce qui suit.</p>
+</div>
+<div class="sect1">
+<h2 id="_l_architecture_générale">L&#8217;architecture générale</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Schema global:</p>
+</li>
+<li>
+<p>ECMP</p>
+</li>
+<li>
+<p>IPVS</p>
+</li>
+<li>
+<p>HAproxy</p>
+</li>
+<li>
+<p>Backend</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Cloud Exoscale.
+Installation manuelle.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_niveau_1_ecmp">Niveau 1: ECMP</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_introduction">Introduction</h3>
+<div class="paragraph">
+<p>Le premier étage de notre architecture est le routage ECMP. Ce dernier permet d&#8217;avoir une redondance sur le routage vers une IP montant être montée sur différentes machines.</p>
+</div>
+<div class="paragraph">
+<p>Lorsque plusieurs routes sont configurées pour une même destination dans un routeur, ce dernier va devoir "choisir" où transmettre les paquets réseaux.<br>
+Il existe plusieurs algorithmes de hashing pour ECMP. Le choix de l&#8217;argorithme est important, car pour des protocoles connectés comme TCP, on ne veut évidemment pas que les paquets d&#8217;une même connexion soient envoyées à différentes destinations.</p>
+</div>
+<div class="paragraph">
+<p>Un algorithme de hashing intéressant (et utilisé chez Exoscale) est le <code>5-tuples</code>. Le choix de la destination se fera sur plusieurs critères:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>L&#8217;adresse source.</p>
+</li>
+<li>
+<p>L&#8217;adresse de destination.</p>
+</li>
+<li>
+<p>Le protocole.</p>
+</li>
+<li>
+<p>Le port source.</p>
+</li>
+<li>
+<p>Le port de destination.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Cet algorithme a l&#8217;avantage de répartir de façon très équitable les connexions vers les destinations.</p>
+</div>
+<div class="paragraph">
+<p>&lt;schema&gt;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mise_en_place">Mise en place</h3>
+<div class="paragraph">
+<p>Nous commençons par créer une Elastic IP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod eip create ch-gva-2 --healthcheck-mode tcp --healthcheck-port 8080 --healthcheck-strikes-ok 1
+┼──────────┼────────────────┼──────────────────────────────────────┼
+│   ZONE   │       IP       │                  ID                  │
+┼──────────┼────────────────┼──────────────────────────────────────┼
+│ ch-gva-2 │ 89.145.167.130 │ f63d34e0-c797-49ce-89cd-fb695e3ffd6b │
+┼──────────┼────────────────┼──────────────────────────────────────┼</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Chez Exoscale, il est possible <a href="https://www.exoscale.com/syslog/releasing-managed-elastic-ip/">depuis peu</a> de configurer des healthchecks à réaliser lors de la création d&#8217;une Elastic IP. Le check sera réalisé sur le ou les machines sur lesquels l&#8217;Elastic IP est attachée, et cette dernière sera automatiquement détachée (et donc enlevée du pool ECMP) si le check est en erreur.<br>
+Ici, je configure un check TCP sur le port 8080.</p>
+</div>
+<div class="paragraph">
+<p>Mettons maintenant cette IP de côté, nous l&#8217;utiliserons plus tard.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_création_d_un_réseau_privé">Création d&#8217;un réseau privé</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mise_en_place_2">Mise en place</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod privnet create --zone ch-gva-2 --description "load balancing article" "my_private_network"
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
+│        NAME        │      DESCRIPTION       │                  ID                  │ DHCP │
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
+│ my_private_network │ load balancing article │ 9b866d82-ace8-4a73-a266-b423697f8a37 │ n/a  │
+┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_niveau_4_backends_python">Niveau 4: Backends Python</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nous allons démarrer sur deux machines des serveurs HTTP Python tout simples, qui exposeront quelques fichiers. Dans une "vraie" architecture, ces serveurs seraient les serveurs HTTP exposant vos applications.</p>
+</div>
+<div class="sect2">
+<h3 id="_mise_en_place_3">Mise en place</h3>
+<div class="paragraph">
+<p>Créez ces deux machines, et ajoutez les dans votre réseau privé:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-1
+
+Deploying "backend-python-1" ⠙                                                  done!
+
+$ exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-2
+
+Deploying "backend-python-2" ⠇                                                  done!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nous allons maintenant configurer deux IP statiques sur l&#8217;interface privée de nos deux machines.
+Connectez-vous dessus via SSH, puis configurez les IP de vos interfaces. Le fichier à créer est <code>/etc/network/interfaces.d/01-privnet.cfg</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># Machine backend-python-1
+auto eth1
+iface eth1 inet static
+   address 10.3.3.1/24</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># Machine backend-python-2
+auto eth1
+iface eth1 inet static
+   address 10.3.3.2/24</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Mettons là aussi ces machines de côté pour l&#8217;instant.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_niveau_3_haproxy">Niveau 3: HAProxy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nous allons maintenant installer et configurer deux serveurs sur lesquels tournera <a href="https://www.haproxy.com/">HAProxy</a>. Ces serveurs HAProxy feront chacun du load balancing sur les serveurs Python créés précédemment.</p>
+</div>
+<div class="paragraph">
+<p>Nous allons dans un premier temps attacher l&#8217;Elastic IP créée précédemment à ces machines HAProxy, Nous aurons donc une architecture sans "Niveau 2" par rapport à l&#8217;architecture présentée au début, et donc ressemblant à ça:</p>
+</div>
+<div class="paragraph">
+<p>Cela nous permettra de voir les problèmes de cette architecture, et l&#8217;utilité du "Niveau 2".</p>
+</div>
+<div class="sect2">
+<h3 id="_mise_en_place_4">Mise en place</h3>
+<div class="paragraph">
+<p><strong>Security groups</strong></p>
+</div>
+<div class="paragraph">
+<p>Créez un security group et configurez le en ouvrant le port 8080:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>exo firewall create http
+# ouvre le port 8080 en ingress
+exo firewall add http --port 8080
+# ouvre tous les ports en egress
+exo -A prod firewall add http --egress</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Machines HAProxy</strong></p>
+</div>
+<div class="paragraph">
+<p>Créez de nouveau deux machines virtuelles. Ces machines démarreront avec le security group précédemment créé:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-1 --security-group http
+Deploying "haproxy-1" ⠴                                                         done!
+
+exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-2 --security-group http</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configurez ici aussi les deux IP statiques des machines comme précédemment (les fichiers de configuration sont identiques). Choisissez <code>10.3.3.3</code> pour la machine <code>haproxy-1</code>, et <code>10.3.3.4</code> pour la machine <code>haproxy-2</code>.</p>
+</div>
+<div class="paragraph">
+<p>Il faut maintenant installer sur ces machines. La procédure est identique sur les deux machines. Nous installerons les packages depuis <code><a href="https://haproxy.debian.net" class="bare">https://haproxy.debian.net</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">apt-get update
+apt-get install curl
+
+curl https://haproxy.debian.net/bernat.debian.org.gpg | \
+      apt-key add -
+echo deb http://haproxy.debian.net stretch-backports-2.0 main | \
+      tee /etc/apt/sources.list.d/haproxy.list
+
+apt-get update
+apt-get install haproxy=2.0.\*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configurons maintenant HAProxy. Sur les deux instances, remplacez le fichier <code>/etc/haproxy/haproxy.cfg</code> par:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>frontend front1
+  bind :8080
+  default_backend servers
+
+backend servers
+  balance roundrobin
+  server backend1 10.3.3.1:8080
+  server backend2 10.3.3.2:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Cette configuration est très sommaire (aucun healthcheck n&#8217;est configuré par exemple), mais suffisante pour cet article. Elle permet de distribuer les requêtes sur les deux serveurs Python définis précédemment. Redémarrez ensuite HAProxy avec <code>systemctl restart haproxy</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Elastic IPs</strong></p>
+</div>
+<div class="paragraph">
+<p>Attachons maintenant notre Elastic IP créée précédemment à ces deux instances:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>exo -A prod eip associate 89.145.167.130 haproxy-1
+exo -A prod eip associate 89.145.167.130 haproxy-2
+`
+
+*Servers Python*
+
+Reprenons nos deux serveurs Python créé précédemment. Sur chaque serveur, créez via `dd` un fichier et exposez le via HTTP:
+
+```shell
+mkdir /tmp/server
+cd /tmp/server
+# Le fichier fera un peu moins d'un GB, si vous avez une petite connexion,
+# modifiez le paramètre count pour créer un fichier plus petit.
+dd if=/dev/zero of=file1 count=1000000 bs=1024
+
+# Exposez le fichier sur le port 8080
+# Lancez le dans un tmux par exemple si vous voulez lancer ce process
+# en background
+python -m SimpleHTTPServer 8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vous devriez maintenant pouvoir télécharger ces fichiers (ou un fichier <code>index.html</code> exposé par Python) via par exemple wget:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>wget 89.145.167.130:8080
+wget 89.145.167.130:8080/file1
+`
+
+Lancez plusieurs fois ces requêtes (par exemple la première pour éviter de télécharger à chaque fois le fichier), et vous verrez dans les logs de `SimpleHTTPServer` que les requêtes sont réparties sur les deux serveurs Python !
+
+== Premier problème
+
+=== Suppression d'un serveur HAProxy
+
+Lancez le téléchargement du gros fichier avec `wget 89.145.167.130:8080/file1`. Au même moment, stoppez (avec `exo vm stop haproxy-1` par exemple) le serveur HAProxy servant le fichier (vous pouvez soit essayer au hasard, soit en installant et lançant tcpdump (`apt-get install tcpdump` puis `tcpdump port 8080`).
+
+Par exemple, en lançant `tcpdump`, je vois que la machine `haproxy-1` sert le fichier. Je stoppe cette machine. Immédiatement, mon téléchargement est bloqué:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>file1                  25%[===&#8658;                  ] 253,29M  --.-KB/s    tps 17m 39s^
+|<code>`</code></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_niveau_2_ipvs">Niveau 2: IPVS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pour pallier à ce problème, nous allons rajouter un niveau à notre architecture:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_les_tests">Les tests</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags/devops/">devops</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        
+        <a class="right" href="/posts/2019-06-28-ansible-assemble-config/">Ansible tip: configuration, assemble and idempotence &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+            <a href="#top" class="alink" >Top of page</a>
+          </div>
+        </div>
+      </div>
+      <footer>Copyright &copy; 2019 mcorbin</footer>
+    </div>
+    <script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/js/highlight.pack.js" type="text/javascript"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
