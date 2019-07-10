@@ -144,11 +144,11 @@ Il existe plusieurs algorithmes de hashing pour ECMP. Le choix de l&#8217;argori
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod eip create ch-gva-2 --healthcheck-mode tcp --healthcheck-port 8080 --healthcheck-strikes-ok 1
+<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod eip create de-fra-1 --healthcheck-mode tcp --healthcheck-port 8080 --healthcheck-strikes-ok 1
 ┼──────────┼────────────────┼──────────────────────────────────────┼
 │   ZONE   │       IP       │                  ID                  │
 ┼──────────┼────────────────┼──────────────────────────────────────┼
-│ ch-gva-2 │ 89.145.167.130 │ f63d34e0-c797-49ce-89cd-fb695e3ffd6b │
+│ de-fra-1 │ 89.145.162.111 │ 113bce3d-2635-4527-a7d5-f2fc1c94a9b8 │
 ┼──────────┼────────────────┼──────────────────────────────────────┼</code></pre>
 </div>
 </div>
@@ -169,11 +169,11 @@ Ici, je configure un check TCP sur le port 8080.</p>
 <h3 id="_mise_en_place_2">Mise en place</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod privnet create --zone ch-gva-2 --description "load balancing article" "my_private_network"
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod privnet create --zone de-fra-1 --description "load balancing article" "my_private_network"
 ┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
 │        NAME        │      DESCRIPTION       │                  ID                  │ DHCP │
 ┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
-│ my_private_network │ load balancing article │ 9b866d82-ace8-4a73-a266-b423697f8a37 │ n/a  │
+│ my_private_network │ load balancing article │ 5d5e43aa-e371-4c4a-96c3-802e9fa59144 │ n/a  │
 ┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼</code></pre>
 </div>
 </div>
@@ -193,11 +193,11 @@ Ici, je configure un check TCP sur le port 8080.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-1
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-1
 
 Deploying "backend-python-1" ⠙                                                  done!
 
-$ exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-2
+$ exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" backend-python-2
 
 Deploying "backend-python-2" ⠇                                                  done!</code></pre>
 </div>
@@ -265,10 +265,10 @@ exo -A prod firewall add http --egress</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-1 --security-group http
+<pre class="highlight"><code class="language-shell" data-lang="shell">exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-1 --security-group http,default
 Deploying "haproxy-1" ⠴                                                         done!
 
-exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-2 --security-group http</code></pre>
+exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" haproxy-2 --security-group http,default</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -280,7 +280,7 @@ exo -A prod vm create --zone ch-gva-2 --privnet "my_private_network" --service-o
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-shell" data-lang="shell">apt-get update
-apt-get install curl
+apt-get install -y curl
 
 curl https://haproxy.debian.net/bernat.debian.org.gpg | \
       apt-key add -
@@ -288,7 +288,7 @@ echo deb http://haproxy.debian.net stretch-backports-2.0 main | \
       tee /etc/apt/sources.list.d/haproxy.list
 
 apt-get update
-apt-get install haproxy=2.0.\*</code></pre>
+apt-get install -y haproxy=2.0.\*</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -317,17 +317,20 @@ backend servers
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>exo -A prod eip associate 89.145.167.130 haproxy-1
-exo -A prod eip associate 89.145.167.130 haproxy-2
-`
-
-*Servers Python*
-
-Reprenons nos deux serveurs Python créé précédemment. Sur chaque serveur, créez via `dd` un fichier et exposez le via HTTP:
-
-```shell
-mkdir /tmp/server
-cd /tmp/server
+<pre class="highlight"><code>exo -A prod eip associate 89.145.162.111 haproxy-1
+exo -A prod eip associate 89.145.162.111 haproxy-2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Servers Python</strong></p>
+</div>
+<div class="paragraph">
+<p>Reprenons nos deux serveurs Python créé précédemment. Sur chaque serveur, créez via <code>dd</code> un fichier et exposez le via HTTP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">mkdir /root/server
+cd /root/server
 # Le fichier fera un peu moins d'un GB, si vous avez une petite connexion,
 # modifiez le paramètre count pour créer un fichier plus petit.
 dd if=/dev/zero of=file1 count=1000000 bs=1024
@@ -344,23 +347,82 @@ python -m SimpleHTTPServer 8080</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>wget 89.145.167.130:8080
-wget 89.145.167.130:8080/file1
-`
-
-Lancez plusieurs fois ces requêtes (par exemple la première pour éviter de télécharger à chaque fois le fichier), et vous verrez dans les logs de `SimpleHTTPServer` que les requêtes sont réparties sur les deux serveurs Python !
-
-== Premier problème
-
-=== Suppression d'un serveur HAProxy
-
-Lancez le téléchargement du gros fichier avec `wget 89.145.167.130:8080/file1`. Au même moment, stoppez (avec `exo vm stop haproxy-1` par exemple) le serveur HAProxy servant le fichier (vous pouvez soit essayer au hasard, soit en installant et lançant tcpdump (`apt-get install tcpdump` puis `tcpdump port 8080`).
-
-Par exemple, en lançant `tcpdump`, je vois que la machine `haproxy-1` sert le fichier. Je stoppe cette machine. Immédiatement, mon téléchargement est bloqué:</code></pre>
+wget 89.145.167.130:8080/file1</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>file1                  25%[===&#8658;                  ] 253,29M  --.-KB/s    tps 17m 39s^
-|<code>`</code></p>
+<p>Lancez plusieurs fois ces requêtes (par exemple la première pour éviter de télécharger à chaque fois le fichier), et vous verrez dans les logs de <code>SimpleHTTPServer</code> que les requêtes sont réparties sur les deux serveurs Python !</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_premier_problème">Premier problème</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ajout_ou_suppression_d_un_serveur_haproxy">Ajout ou suppression d&#8217;un serveur haproxy</h3>
+<div class="paragraph">
+<p>L&#8217;ajout d&#8217;un serveur HAProxy pose aussi problème.<br>
+Si vous passez par exemple de 2 à 3 serveurs HAProxy, vous allez également casser vos connexions existantes.</p>
+</div>
+<div class="paragraph">
+<p>En effet, ECMP n&#8217;utilise pas un algorithme de hash consistant. Lors de l&#8217;ajout d&#8217;une nouvelle machine, l&#8217;algorithme de hashing de ECMP va redistribuer les packets sur les serveurs, sans tenir compte des connexions existantes.</p>
+</div>
+<div class="paragraph">
+<p>Nous voyons donc qu&#8217;en cas de changement sur le niveau 3 de notre architecture (que ce soit en ajoutant ou supprimant un serveur), nous avons une des connexions existentes. Nous aurions le même problème lors de la suppression d&#8217;un serveur.</p>
+</div>
+<div class="paragraph">
+<p>Dans la prochaine section <code>mise en place</code>, je montrerais le cas décrit précédemment. Enfin, nous verrons comment régler ce problème.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mise_en_place_5">Mise en place</h3>
+<div class="paragraph">
+<p>Redémarrez la machine <code>haproxy-1</code> si elle est toujours stoppée de l&#8217;étape précédemmente. Préparez également une troisième machine appelée <code>haproxy-3</code>. Vous pouvez la créer de la même manière que les deux autres machines HAproxy. Ajoutez la également au réseau privé, et assignez lui par exemple L&#8217;IP <code>10.3.3.5</code>. Mais pour pour le moment, n&#8217;assignez pas l&#8217;Elastic IP à cette nouvelle machine.</p>
+</div>
+<div class="paragraph">
+<p>Pour mieux comprendre ce qu&#8217;il se passe, vous pouvez lance tcpdump (avec <code>tcpdump port 8080</code>) sur les 3 serveurs HAProxy.</p>
+</div>
+<div class="paragraph">
+<p>Lancez le téléchargement d&#8217;un fichier avec <code>wget 89.145.162.111:8080/file1</code>. Une fois le téléchargement lancé, attachez l&#8217;elastic IP à la machine <code>haproxy-3</code> avec la commande <code>exo -A prod eip associate 89.145.162.111 haproxy-3</code>.</p>
+</div>
+<div class="paragraph">
+<p>Vous verrez que votre téléchargement échouera au bout de quelques secondes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>wget 89.145.162.111:8080/file1
+--2019-07-04 23:28:53--  http://89.145.162.111:8080/file1
+Connexion à 89.145.162.111:8080… connecté.
+requête HTTP transmise, en attente de la réponse… 200 OK
+Taille : 1024000000 (977M) [application/octet-stream]
+Sauvegarde en : « file1.4 »
+
+file1.4                 2%[                       ]  20,88M   778KB/s    ds 18s
+
+2019-07-04 23:29:11 (1,19 MB/s) — Erreur de lecture à l’octet 21895156/1024000000 (Connexion ré-initialisée par le correspondant).Nouvel essai.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dans mon cas, <code>tcpdump</code> m&#8217;indiquait que c&#8217;était la machine <code>haproxy-1</code> qui servait le fichier. Lors de l&#8217;ajout de l&#8217;Elastic IP sur la machine <code>haproxy-3</code>, j&#8217;ai pû voir ces trames:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>21:29:13.728705 IP 89.145.161.90.http-alt &gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 391448 ecr 1151831200], length 1388: HTTP
+21:29:16.192645 IP 89.145.161.90.http-alt &gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 392064 ecr 1151831200], length 1388: HTTP</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>La machine <code>haproxy-2</code> ne recevait aucun traffic. Une fois la machine <code>haproxy-3</code> configurée, ECMP a commencé à router du traffic sur <code>haproxy-2</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>21:29:13.728705 IP 89.145.161.90.http-alt &gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 391448 ecr 1151831200], length 1388: HTTP
+21:29:16.192645 IP 89.145.161.90.http-alt &gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 392064 ecr 1151831200], length 1388: HTTP</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ceci est la preuve qu&#8217;utiliser ECMP avec des architectures mouvantes peut être un problème dans certains cas. Voyons comment régler cela.</p>
 </div>
 </div>
 </div>
@@ -369,14 +431,105 @@ Par exemple, en lançant `tcpdump`, je vois que la machine `haproxy-1` sert le f
 <h2 id="_niveau_2_ipvs">Niveau 2: IPVS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Pour pallier à ce problème, nous allons rajouter un niveau à notre architecture:</p>
+<p>Pour pallier à ce problème, nous allons rajouter un niveau à notre architecture.</p>
 </div>
+<div class="sect2">
+<h3 id="_mise_en_place_6">Mise en place</h3>
+<div class="paragraph">
+<p>Créons deux machines <code>ipvs-1</code> et <code>ipvs-2</code>:</p>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_les_tests">Les tests</h2>
-<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" ipvs-1 --security-group http,default
+Deploying "ipvs-1" ⠙                                                            done!
 
+exo -A prod vm create --zone de-fra-1 --privnet "my_private_network" --service-offering micro --template "Linux Debian 9 64-bit" --keypair "perso" ipvs-2 --security-group http,default
+Deploying "ipvs-2" ⠼                                                            done!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configurez ces deux machines les addresses <code>10.3.3.6</code> et <code>10.3.3.7</code> sur l&#8217;interface <code>eth1</code>.</p>
+</div>
+<div class="paragraph">
+<p>Configurons maintenant IPVS et keepalived.</p>
+</div>
+<div class="paragraph">
+<p>Installez Keepalived. Il faut aussi charger le module <code>ip_vs</code>, puis redémarrez keepalived pour en tenir compte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>apt-get -y install keepalived
+modprobe ip_vs
+service keepalived restart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>J&#8217;ai également eu des logs keepalived de type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Jul  7 11:15:36 ipvs-1 Keepalived_vrrp[2866]: Unable to load ipset library - libipset.so.3: cannot open shared object file: No such file or directory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Un <code>apt-get install ipset</code> semble régler le soucis.</p>
+</div>
+<div class="paragraph">
+<p>Ensuitez, configurez le fichier <code>/etc/keepalived/keepalived.conf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>virtual_server_group VS_GROUP_MH_IPv6 {
+  89.145.162.111 8080
+}
+virtual_server group VS_GROUP_MH_IPv6 {
+   lvs_method TUN
+    lvs_sched sh    # todo: update also
+  sh-port         # Prend en compte les ports TCP
+  protocol TCP
+  delay_loop 5
+  alpha           # Les serveurs sont considérés inaccessibles au démarrage
+
+  # Premier répartiteur de charge L7
+   real_server 10.3.3.3 8080 {
+    weight 1
+       TCP_CHECK {
+    }
+  }
+
+   real_server 10.3.3.4 8080 {
+    weight 1
+       TCP_CHECK {
+    }
+  }
+}
+|```
+
+haproxy:
+
+
+ip tunnel add tunl mode ipip local 10.3.3.2
+ip link set up dev tunl
+ip addr add 89.145.162.167/24 dev tunl
+
+
+
+
+== Les tests
+
+
+
+
+
+
+
+
+
+
+ip addr add 10.3.3.4/32 dev eth0</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
