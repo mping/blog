@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 11 Jul 2019 22:35:38 +0200
+Thu, 11 Jul 2019 23:05:33 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -52,7 +52,7 @@ REPL Driven Development et gestion des états
 &lt;p&gt;Quand je parles du REPL à d&amp;#8217;autres développeurs, j&amp;#8217;ai souvent des réflexions du type &lt;code&gt;mais des interpréteurs il y en a dans tous les langages !&lt;/code&gt;. Effectivement, même Java a maintenant un REPL.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Pourtant, vous vous voyez coder avec le REPL en Java ? Charger vos &lt;a href=&quot;https://mcorbin.fr/posts/2018-02-08-spring-generateur/&quot;&gt;programmes Spring Boot&lt;/a&gt; dans un REPL puis intéragir avec ? Taper du code ultra verbeux dans le REPL ? Ceci est de la science fiction, et n&amp;#8217;arrivera jamais.&lt;/p&gt;
+&lt;p&gt;Pourtant, vous vous voyez coder avec le REPL en Java ? Charger un &lt;a href=&quot;https://mcorbin.fr/posts/2018-02-08-spring-generateur/&quot;&gt;programmes Spring Boot&lt;/a&gt; dans un REPL puis intéragir avec ? Taper du code ultra verbeux dans le REPL ? Ceci est de la science fiction, et n&amp;#8217;arrivera jamais.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
