@@ -1,4 +1,4 @@
-pom.xml
+xpom.xml
 pom.xml.asc
 *jar
 /lib/
@@ -10,3 +10,4 @@ pom.xml.asc
 .lein-plugins/
 .lein-failures
 encours
+.nrepl-port

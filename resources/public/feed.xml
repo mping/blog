@@ -12,495 +12,201 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Wed, 10 Jul 2019 23:07:07 +0200
+Thu, 11 Jul 2019 22:35:38 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
 <item>
 <guid>
-https://mcorbin.fr/posts/2019-07-01-load-balancing-ecmp-haproxy-ipvs/
+https://mcorbin.fr/posts/2019-07-11-repl-driven-development/
 </guid>
 <link>
-https://mcorbin.fr/posts/2019-07-01-load-balancing-ecmp-haproxy-ipvs/
+https://mcorbin.fr/posts/2019-07-11-repl-driven-development/
 </link>
 <title>
-Load balancing: ECMP, IPVS, HAproxy
+REPL Driven Development et gestion des états
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Il y a un peu plus d&amp;#8217;un an, &lt;a href=&quot;https://vincent.bernat.ch/fr&quot;&gt;Vincent Bernat&lt;/a&gt; publiait un excellent article sur le load balancing appelé &lt;a href=&quot;https://vincent.bernat.ch/fr/blog/2018-repartiteur-charge-multi-niveaux&quot;&gt;Répartiteur de charge à multiples niveaux avec Linux&lt;/a&gt;. Dans cet article, je réimplémenterai la solution proposée dans cet article et montrerai via des tests qu&amp;#8217;elle fonctionne comme prévue&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Pour une bonne compréhension, Il est conseillé de lire l&amp;#8217;article présenté précédemment avant de commencer la lecture de ce qui suit.&lt;/p&gt;
+&lt;p&gt;Lorsque l&amp;#8217;on code en Clojure (mais pas que), il y a un outil formidable pour nous accompagner: le REPL. Dans cet article, je parlerais de programmation intéractive et de la gestion des états dans une application&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_l_architecture_générale&quot;&gt;L&amp;#8217;architecture générale&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Schema global:&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;ECMP&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;IPVS&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;HAproxy&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Backend&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cloud Exoscale.
-Installation manuelle.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_niveau_1_ecmp&quot;&gt;Niveau 1: ECMP&lt;/h2&gt;
+&lt;h2 id=&quot;_programmation_intéractive&quot;&gt;Programmation intéractive&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_introduction&quot;&gt;Introduction&lt;/h3&gt;
+&lt;h3 id=&quot;_présentation&quot;&gt;Présentation&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Le premier étage de notre architecture est le routage ECMP. Ce dernier permet d&amp;#8217;avoir une redondance sur le routage vers une IP montant être montée sur différentes machines.&lt;/p&gt;
+&lt;p&gt;En Clojure (et dans les langages de la famille des LISP en général), nous développons avec un REPL. On pourrait définir le REPL comme un interpréteur évolué, en permanence connecté à notre code.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Lorsque plusieurs routes sont configurées pour une même destination dans un routeur, ce dernier va devoir &quot;choisir&quot; où transmettre les paquets réseaux.&lt;br&gt;
-Il existe plusieurs algorithmes de hashing pour ECMP. Le choix de l&amp;#8217;argorithme est important, car pour des protocoles connectés comme TCP, on ne veut évidemment pas que les paquets d&amp;#8217;une même connexion soient envoyées à différentes destinations.&lt;/p&gt;
+&lt;p&gt;Voici par exemple à quoi ressemble mon écran lorsque je code en Clojure (Emacs ftw):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/repl/repl-emacs.png&quot; alt=&quot;/alt=&amp;quot;mon environnement de développement&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Un algorithme de hashing intéressant (et utilisé chez Exoscale) est le &lt;code&gt;5-tuples&lt;/code&gt;. Le choix de la destination se fera sur plusieurs critères:&lt;/p&gt;
+&lt;p&gt;On peut voir ici que j&amp;#8217;ai sur le côté gauche de mon écran mon REPL, et sur le côté droit mon code. Je peux à tout moment intéragir avec mon REPL, comme par exemple &quot;charger&quot; le code de mon projet dans le REPL et exécuter le code. Je peux également définir des fonctions, variables temporaires etc&amp;#8230;&amp;#8203; directement dans le REPL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Quand je parles du REPL à d&amp;#8217;autres développeurs, j&amp;#8217;ai souvent des réflexions du type &lt;code&gt;mais des interpréteurs il y en a dans tous les langages !&lt;/code&gt;. Effectivement, même Java a maintenant un REPL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pourtant, vous vous voyez coder avec le REPL en Java ? Charger vos &lt;a href=&quot;https://mcorbin.fr/posts/2018-02-08-spring-generateur/&quot;&gt;programmes Spring Boot&lt;/a&gt; dans un REPL puis intéragir avec ? Taper du code ultra verbeux dans le REPL ? Ceci est de la science fiction, et n&amp;#8217;arrivera jamais.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mon_workflow&quot;&gt;Mon workflow&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Lorsque je code en Clojure, mon workflow est le suivant:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;L&amp;#8217;adresse source.&lt;/p&gt;
+&lt;p&gt;Je réfléchis à mon problème en écrivant du code et en le chargeant dans le REPL. J&amp;#8217;intéragis avec celui ci via le REPL (j&amp;#8217;appelle les fonctions que j&amp;#8217;écris avec certains paramètres par exemple).&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;L&amp;#8217;adresse de destination.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Le protocole.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Le port source.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Le port de destination.&lt;/p&gt;
+&lt;p&gt;J&amp;#8217;écris des tests, et je fignole, toujours en utilisant le REPL. L&amp;#8217;exécution de mes tests est &lt;code&gt;ultra rapide&lt;/code&gt;, car ma JVM/mon application est déjà démarrée.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cet algorithme a l&amp;#8217;avantage de répartir de façon très équitable les connexions vers les destinations.&lt;/p&gt;
+&lt;p&gt;Intéragir avec son code via le REPL ne remplace donc pas les tests. Par contre, la boucle de feedback sur ce que l&amp;#8217;on fait est ultra rapide. J&amp;#8217;écris une fonction, je peux immédiatement jouer avec.&lt;br&gt;
+Je ne pratique donc pas le TDD lorsque je fais du Clojure, je ne commence pas à écrire mes tests mais j&amp;#8217;utilise le REPL pour définir la structure de mon programme, puis je les écris.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&amp;lt;schema&amp;gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place&quot;&gt;Mise en place&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous commençons par créer une Elastic IP:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;exo -A prod eip create de-fra-1 --healthcheck-mode tcp --healthcheck-port 8080 --healthcheck-strikes-ok 1
-┼──────────┼────────────────┼──────────────────────────────────────┼
-│   ZONE   │       IP       │                  ID                  │
-┼──────────┼────────────────┼──────────────────────────────────────┼
-│ de-fra-1 │ 89.145.162.111 │ 113bce3d-2635-4527-a7d5-f2fc1c94a9b8 │
-┼──────────┼────────────────┼──────────────────────────────────────┼&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;Le fait que Clojure soit un langage où la syntaxe est très concise et où l&amp;#8217;immuabilité est très présente joue aussi. Je n&amp;#8217;aurais pas la même expérience dans un langage verbeux ou pleins d&amp;#8217;états.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Chez Exoscale, il est possible &lt;a href=&quot;https://www.exoscale.com/syslog/releasing-managed-elastic-ip/&quot;&gt;depuis peu&lt;/a&gt; de configurer des healthchecks à réaliser lors de la création d&amp;#8217;une Elastic IP. Le check sera réalisé sur le ou les machines sur lesquels l&amp;#8217;Elastic IP est attachée, et cette dernière sera automatiquement détachée (et donc enlevée du pool ECMP) si le check est en erreur.&lt;br&gt;
-Ici, je configure un check TCP sur le port 8080.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Mettons maintenant cette IP de côté, nous l&amp;#8217;utiliserons plus tard.&lt;/p&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, parlons d&amp;#8217;états.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_création_d_un_réseau_privé&quot;&gt;Création d&amp;#8217;un réseau privé&lt;/h2&gt;
+&lt;h2 id=&quot;_gestion_des_états&quot;&gt;Gestion des états&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place_2&quot;&gt;Mise en place&lt;/h3&gt;
+&lt;h3 id=&quot;_composants&quot;&gt;Composants&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme dit précédemment, en Clojure pratiquement tout est immuable, ce qui est génial.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais dans un programme, j&amp;#8217;ai quand même besoin d&amp;#8217;états (faut bien faire des entrées/sorties un jour ou l&amp;#8217;autre pour intéragir avec). Prenons par exemple &lt;a href=&quot;https://github.com/mcorbin/meuse&quot;&gt;Meuse&lt;/a&gt;, mon projet de registry Rust sur lequel je travaille actuellement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ce projet est une application web classique. Voici les composants devant garder un état/faisant des effets de bords dans cette application:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Le chargement de ma configuration (un fichier yaml).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Un serveur HTTP.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Un threadpool de connexion vers une base de données.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Un composant envoyant des commandes Git, et qui possède un lock.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans d&amp;#8217;autres cas, j&amp;#8217;aurais pû avoir un cache, ou d&amp;#8217;autres threadpools&amp;#8230;&amp;#8203; Mais finalement, il y a peu de composants avec état dans un programme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On remarque facilement que ces états ont des dépendances. Mon composant &lt;code&gt;database&lt;/code&gt; a besoin de sa configuration, le composant &lt;code&gt;http&lt;/code&gt; a aussi besoin de sa configuration mais aussi du composant &lt;code&gt;database&lt;/code&gt; et &lt;code&gt;git&lt;/code&gt;. Le composant &lt;code&gt;git&lt;/code&gt; a lui même besoin d&amp;#8217;une configuration:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/repl/components_repl.png&quot; alt=&quot;/alt=&amp;quot;hiérarchie de composants&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les dépendances de mon application peuvent donc se voir comme un arbre.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Java, c&amp;#8217;est généralement via l&amp;#8217;injection de dépendance que les composants sont instanciés dans le bon ordre, et &quot;stockés&quot; dans un conteneur de façon un peu magique&lt;br&gt;
+En parlant de cela, je trouve dommage que l&amp;#8217;écosystème Java pousse à cette pratique (&lt;code&gt;@inject&lt;/code&gt; moi mes objets et après moi le déluge), là où quelques &lt;code&gt;new&lt;/code&gt; et des constructeurs bien écrits suffiraient à résoudre le problème. Bref.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En Clojure, il est possible de définir ces composants via certaines librairies, comme par exemple &lt;a href=&quot;https://github.com/stuartsierra/component&quot;&gt;component&lt;/a&gt;, &lt;a href=&quot;https://github.com/tolitius/mount&quot;&gt;mount&lt;/a&gt; ou &lt;a href=&quot;https://github.com/weavejester/integrant&quot;&gt;integrant&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sans rentrer dans les détails de chaque librairie, chacune permet à sa manière de définir cette hiérarchie de composant.&lt;br&gt;
+Chaque librairie permet aussi de facilement démarrer votre système (un système étant la somme de vos composants). Démarrer votre système équivant donc à démarrer votre application. Il est également possible de stopper le système, de le démarrer partiellement, et même de remplacer un composant par un mock pour les tests !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et bien sûr, tout cela est faisable via le REPL. Un exemple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Je démarre mon application via le REPL. Mon application est maintenant active. J&amp;#8217;ajoute une nouvelle route dans mon routeur HTTP, &quot;charge&quot; mon code dans le REPL. La route est tout de suite active !&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;J&amp;#8217;implémente le code de ma nouvelle route. A tout moment, je peux recharger mon code, et celui ci sera actif. Je peux également expérimenter facilement via le REPL.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;j&amp;#8217;écris des tests, qui comme dit précédemment s&amp;#8217;exécutent à toute vitesse vu que ma JVM tourne déjà.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il est possible de modifier n&amp;#8217;importe quelle partie de mon programme &lt;code&gt;à chaud&lt;/code&gt; à tout moment. Bref, mon confort de développement est énorme (je n&amp;#8217;ai rien trouvé de semblable en Python/Rust/Go/Java/C etc&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;il est d&amp;#8217;ailleurs même possible d&amp;#8217;avoir un port ouvert avec un REPL pour vos applications même en prod si vous le voulez (bien que cela soit une grosse faille de sécurité). Mais c&amp;#8217;est possible, et là aussi n&amp;#8217;importe quelle fonction pourrait être patchée à chaud. Des gens ont fait des choses formidables comme cela, lisez donc ça par exemple:&lt;/p&gt;
+&lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;$ exo -A prod privnet create --zone de-fra-1 --description &quot;load balancing article&quot; &quot;my_private_network&quot;
-┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
-│        NAME        │      DESCRIPTION       │                  ID                  │ DHCP │
-┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼
-│ my_private_network │ load balancing article │ 5d5e43aa-e371-4c4a-96c3-802e9fa59144 │ n/a  │
-┼────────────────────┼────────────────────────┼──────────────────────────────────────┼──────┼&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;An impressive instance of remote debugging occurred on NASA’s 1998 Deep Space 1 mission. A half year after the space craft launched, a bit of Lisp code was going to control the spacecraft for two days while conducting a sequence of experiments. Unfortunately, a subtle race condition in the code had escaped detection during ground testing and was already in space. When the bug manifested in the wild–100 million miles away from Earth–the team was able to diagnose and fix the running code, allowing the experiments to complete.&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_etat_du_repl&quot;&gt;Etat du REPL&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il me reste un dernier soucis. Le REPL garde son état.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Imaginons que je démarre une application. Je vais pouvoir comme dit précédemment modifier à chaud mon programme, ou définir dans mon REPL des variables ou des fonctions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Problème: il est facile de se perdre, et d&amp;#8217;avoir un doute: est ce que le code dans mon fichier reflète le code qui tourne dans mon REPL ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour cela, il existe des outils comme &lt;a href=&quot;https://github.com/clojure/tools.namespace&quot;&gt;clojure.tools.namespace&lt;/a&gt;. Ces outils, combinés aux librairies de gestion de composants décrites précédemment, permettent de recharger proprement (et quasi instantanément) l&amp;#8217;état de votre application. Une fois rechargé, vous avez la garantie que votre REPL est synchronisé avec votre code.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_niveau_4_backends_python&quot;&gt;Niveau 4: Backends Python&lt;/h2&gt;
+&lt;h2 id=&quot;_arrêt_d_un_système&quot;&gt;Arrêt d&amp;#8217;un système&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous allons démarrer sur deux machines des serveurs HTTP Python tout simples, qui exposeront quelques fichiers. Dans une &quot;vraie&quot; architecture, ces serveurs seraient les serveurs HTTP exposant vos applications.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place_3&quot;&gt;Mise en place&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Créez ces deux machines, et ajoutez les dans votre réseau privé:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;$ exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; backend-python-1
-
-Deploying &quot;backend-python-1&quot; ⠙                                                  done!
-
-$ exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; backend-python-2
-
-Deploying &quot;backend-python-2&quot; ⠇                                                  done!&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;je parle beaucoup de stopper, ou recharger un système. Cela implique une chose: chaque composant stateful doit pouvoir être démarré et stoppé &lt;code&gt;proprement&lt;/code&gt;.&lt;br&gt;
+Il arrive encore trop souvent de voir des programmes ne pouvant pas se stopper de manière propre. Cette approche n&amp;#8217;est pas possible si l&amp;#8217;on veut faire du REPL Driven Development.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous allons maintenant configurer deux IP statiques sur l&amp;#8217;interface privée de nos deux machines.
-Connectez-vous dessus via SSH, puis configurez les IP de vos interfaces. Le fichier à créer est &lt;code&gt;/etc/network/interfaces.d/01-privnet.cfg&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Machine backend-python-1
-auto eth1
-iface eth1 inet static
-   address 10.3.3.1/24&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Machine backend-python-2
-auto eth1
-iface eth1 inet static
-   address 10.3.3.2/24&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Mettons là aussi ces machines de côté pour l&amp;#8217;instant.&lt;/p&gt;
-&lt;/div&gt;
+&lt;p&gt;C&amp;#8217;est d&amp;#8217;ailleurs une difficulté, même en Clojure. &lt;a href=&quot;https://github.com/ztellman/aleph/issues/365&quot;&gt;Certains bugs&lt;/a&gt; peuvent vous empêcher de stopper proprement certains composants. Cela casse donc votre workflow de développement. La bonne chose, c&amp;#8217;est que cela nous force à faire des trucs propres pour que ça marche ;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_niveau_3_haproxy&quot;&gt;Niveau 3: HAProxy&lt;/h2&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous allons maintenant installer et configurer deux serveurs sur lesquels tournera &lt;a href=&quot;https://www.haproxy.com/&quot;&gt;HAProxy&lt;/a&gt;. Ces serveurs HAProxy feront chacun du load balancing sur les serveurs Python créés précédemment.&lt;/p&gt;
+&lt;p&gt;Cette façon de développer a été une des choses qui m&amp;#8217;a fait accrocher à Clojure. Cette architecture sous forme de composants, le fait de toujours pouvoir stopper un système gracieusement&amp;#8230;&amp;#8203; est quelque chose qu&amp;#8217;il est selon moi nécessaire d&amp;#8217;appliquer quel que soit le langage.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous allons dans un premier temps attacher l&amp;#8217;Elastic IP créée précédemment à ces machines HAProxy, Nous aurons donc une architecture sans &quot;Niveau 2&quot; par rapport à l&amp;#8217;architecture présentée au début, et donc ressemblant à ça:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cela nous permettra de voir les problèmes de cette architecture, et l&amp;#8217;utilité du &quot;Niveau 2&quot;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place_4&quot;&gt;Mise en place&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Security groups&lt;/strong&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Créez un security group et configurez le en ouvrant le port 8080:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exo firewall create http
-# ouvre le port 8080 en ingress
-exo firewall add http --port 8080
-# ouvre tous les ports en egress
-exo -A prod firewall add http --egress&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Machines HAProxy&lt;/strong&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Créez de nouveau deux machines virtuelles. Ces machines démarreront avec le security group précédemment créé:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; haproxy-1 --security-group http,default
-Deploying &quot;haproxy-1&quot; ⠴                                                         done!
-
-exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; haproxy-2 --security-group http,default&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Configurez ici aussi les deux IP statiques des machines comme précédemment (les fichiers de configuration sont identiques). Choisissez &lt;code&gt;10.3.3.3&lt;/code&gt; pour la machine &lt;code&gt;haproxy-1&lt;/code&gt;, et &lt;code&gt;10.3.3.4&lt;/code&gt; pour la machine &lt;code&gt;haproxy-2&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Il faut maintenant installer sur ces machines. La procédure est identique sur les deux machines. Nous installerons les packages depuis &lt;code&gt;&lt;a href=&quot;https://haproxy.debian.net&quot; class=&quot;bare&quot;&gt;https://haproxy.debian.net&lt;/a&gt;&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;apt-get update
-apt-get install -y curl
-
-curl https://haproxy.debian.net/bernat.debian.org.gpg | \
-      apt-key add -
-echo deb http://haproxy.debian.net stretch-backports-2.0 main | \
-      tee /etc/apt/sources.list.d/haproxy.list
-
-apt-get update
-apt-get install -y haproxy=2.0.\*&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Configurons maintenant HAProxy. Sur les deux instances, remplacez le fichier &lt;code&gt;/etc/haproxy/haproxy.cfg&lt;/code&gt; par:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;frontend front1
-  bind :8080
-  default_backend servers
-
-backend servers
-  balance roundrobin
-  server backend1 10.3.3.1:8080
-  server backend2 10.3.3.2:8080&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Cette configuration est très sommaire (aucun healthcheck n&amp;#8217;est configuré par exemple), mais suffisante pour cet article. Elle permet de distribuer les requêtes sur les deux serveurs Python définis précédemment. Redémarrez ensuite HAProxy avec &lt;code&gt;systemctl restart haproxy&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Elastic IPs&lt;/strong&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Attachons maintenant notre Elastic IP créée précédemment à ces deux instances:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exo -A prod eip associate 89.145.162.111 haproxy-1
-exo -A prod eip associate 89.145.162.111 haproxy-2&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Servers Python&lt;/strong&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Reprenons nos deux serveurs Python créé précédemment. Sur chaque serveur, créez via &lt;code&gt;dd&lt;/code&gt; un fichier et exposez le via HTTP:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir /root/server
-cd /root/server
-# Le fichier fera un peu moins d'un GB, si vous avez une petite connexion,
-# modifiez le paramètre count pour créer un fichier plus petit.
-dd if=/dev/zero of=file1 count=1000000 bs=1024
-
-# Exposez le fichier sur le port 8080
-# Lancez le dans un tmux par exemple si vous voulez lancer ce process
-# en background
-python -m SimpleHTTPServer 8080&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Vous devriez maintenant pouvoir télécharger ces fichiers (ou un fichier &lt;code&gt;index.html&lt;/code&gt; exposé par Python) via par exemple wget:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget 89.145.167.130:8080
-wget 89.145.167.130:8080/file1&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Lancez plusieurs fois ces requêtes (par exemple la première pour éviter de télécharger à chaque fois le fichier), et vous verrez dans les logs de &lt;code&gt;SimpleHTTPServer&lt;/code&gt; que les requêtes sont réparties sur les deux serveurs Python !&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_premier_problème&quot;&gt;Premier problème&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_ajout_ou_suppression_d_un_serveur_haproxy&quot;&gt;Ajout ou suppression d&amp;#8217;un serveur haproxy&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;L&amp;#8217;ajout d&amp;#8217;un serveur HAProxy pose aussi problème.&lt;br&gt;
-Si vous passez par exemple de 2 à 3 serveurs HAProxy, vous allez également casser vos connexions existantes.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;En effet, ECMP n&amp;#8217;utilise pas un algorithme de hash consistant. Lors de l&amp;#8217;ajout d&amp;#8217;une nouvelle machine, l&amp;#8217;algorithme de hashing de ECMP va redistribuer les packets sur les serveurs, sans tenir compte des connexions existantes.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Nous voyons donc qu&amp;#8217;en cas de changement sur le niveau 3 de notre architecture (que ce soit en ajoutant ou supprimant un serveur), nous avons une des connexions existentes. Nous aurions le même problème lors de la suppression d&amp;#8217;un serveur.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Dans la prochaine section &lt;code&gt;mise en place&lt;/code&gt;, je montrerais le cas décrit précédemment. Enfin, nous verrons comment régler ce problème.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place_5&quot;&gt;Mise en place&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Redémarrez la machine &lt;code&gt;haproxy-1&lt;/code&gt; si elle est toujours stoppée de l&amp;#8217;étape précédemmente. Préparez également une troisième machine appelée &lt;code&gt;haproxy-3&lt;/code&gt;. Vous pouvez la créer de la même manière que les deux autres machines HAproxy. Ajoutez la également au réseau privé, et assignez lui par exemple L&amp;#8217;IP &lt;code&gt;10.3.3.5&lt;/code&gt;. Mais pour pour le moment, n&amp;#8217;assignez pas l&amp;#8217;Elastic IP à cette nouvelle machine.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Pour mieux comprendre ce qu&amp;#8217;il se passe, vous pouvez lance tcpdump (avec &lt;code&gt;tcpdump port 8080&lt;/code&gt;) sur les 3 serveurs HAProxy.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Lancez le téléchargement d&amp;#8217;un fichier avec &lt;code&gt;wget 89.145.162.111:8080/file1&lt;/code&gt;. Une fois le téléchargement lancé, attachez l&amp;#8217;elastic IP à la machine &lt;code&gt;haproxy-3&lt;/code&gt; avec la commande &lt;code&gt;exo -A prod eip associate 89.145.162.111 haproxy-3&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Vous verrez que votre téléchargement échouera au bout de quelques secondes:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget 89.145.162.111:8080/file1
---2019-07-04 23:28:53--  http://89.145.162.111:8080/file1
-Connexion à 89.145.162.111:8080… connecté.
-requête HTTP transmise, en attente de la réponse… 200 OK
-Taille : 1024000000 (977M) [application/octet-stream]
-Sauvegarde en : « file1.4 »
-
-file1.4                 2%[                       ]  20,88M   778KB/s    ds 18s
-
-2019-07-04 23:29:11 (1,19 MB/s) — Erreur de lecture à l’octet 21895156/1024000000 (Connexion ré-initialisée par le correspondant).Nouvel essai.&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Dans mon cas, &lt;code&gt;tcpdump&lt;/code&gt; m&amp;#8217;indiquait que c&amp;#8217;était la machine &lt;code&gt;haproxy-1&lt;/code&gt; qui servait le fichier. Lors de l&amp;#8217;ajout de l&amp;#8217;Elastic IP sur la machine &lt;code&gt;haproxy-3&lt;/code&gt;, j&amp;#8217;ai pû voir ces trames:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;21:29:13.728705 IP 89.145.161.90.http-alt &amp;gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 391448 ecr 1151831200], length 1388: HTTP
-21:29:16.192645 IP 89.145.161.90.http-alt &amp;gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 392064 ecr 1151831200], length 1388: HTTP&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La machine &lt;code&gt;haproxy-2&lt;/code&gt; ne recevait aucun traffic. Une fois la machine &lt;code&gt;haproxy-3&lt;/code&gt; configurée, ECMP a commencé à router du traffic sur &lt;code&gt;haproxy-2&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;21:29:13.728705 IP 89.145.161.90.http-alt &amp;gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 391448 ecr 1151831200], length 1388: HTTP
-21:29:16.192645 IP 89.145.161.90.http-alt &amp;gt; 80.12.37.183.53802: Flags [.], seq 21844009:21845397, ack 152, win 470, options [nop,nop,TS val 392064 ecr 1151831200], length 1388: HTTP&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ceci est la preuve qu&amp;#8217;utiliser ECMP avec des architectures mouvantes peut être un problème dans certains cas. Voyons comment régler cela.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_niveau_2_ipvs&quot;&gt;Niveau 2: IPVS&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Pour pallier à ce problème, nous allons rajouter un niveau à notre architecture.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;_mise_en_place_6&quot;&gt;Mise en place&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Créons deux machines &lt;code&gt;ipvs-1&lt;/code&gt; et &lt;code&gt;ipvs-2&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; ipvs-1 --security-group http,default
-Deploying &quot;ipvs-1&quot; ⠙                                                            done!
-
-exo -A prod vm create --zone de-fra-1 --privnet &quot;my_private_network&quot; --service-offering micro --template &quot;Linux Debian 9 64-bit&quot; --keypair &quot;perso&quot; ipvs-2 --security-group http,default
-Deploying &quot;ipvs-2&quot; ⠼                                                            done!&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Configurez ces deux machines les addresses &lt;code&gt;10.3.3.6&lt;/code&gt; et &lt;code&gt;10.3.3.7&lt;/code&gt; sur l&amp;#8217;interface &lt;code&gt;eth1&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Configurons maintenant IPVS et keepalived.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Installez Keepalived. Il faut aussi charger le module &lt;code&gt;ip_vs&lt;/code&gt;, puis redémarrez keepalived pour en tenir compte:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt-get -y install keepalived
-modprobe ip_vs
-service keepalived restart&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;ai également eu des logs keepalived de type:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Jul  7 11:15:36 ipvs-1 Keepalived_vrrp[2866]: Unable to load ipset library - libipset.so.3: cannot open shared object file: No such file or directory&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Un &lt;code&gt;apt-get install ipset&lt;/code&gt; semble régler le soucis.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ensuitez, configurez le fichier &lt;code&gt;/etc/keepalived/keepalived.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;virtual_server_group VS_GROUP_MH_IPv6 {
-  89.145.162.111 8080
-}
-virtual_server group VS_GROUP_MH_IPv6 {
-   lvs_method TUN
-    lvs_sched sh    # todo: update also
-  sh-port         # Prend en compte les ports TCP
-  protocol TCP
-  delay_loop 5
-  alpha           # Les serveurs sont considérés inaccessibles au démarrage
-
-  # Premier répartiteur de charge L7
-   real_server 10.3.3.3 8080 {
-    weight 1
-       TCP_CHECK {
-    }
-  }
-
-   real_server 10.3.3.4 8080 {
-    weight 1
-       TCP_CHECK {
-    }
-  }
-}
-|```
-
-haproxy:
-
-
-ip tunnel add tunl mode ipip local 10.3.3.2
-ip link set up dev tunl
-ip addr add 89.145.162.167/24 dev tunl
-
-
-
-
-== Les tests
-
-
-
-
-
-
-
-
-
-
-ip addr add 10.3.3.4/32 dev eth0&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+&lt;p&gt;Si Clojure vous intéresse, allez donc faire un tour sur &lt;a href=&quot;https://tour.mcorbin.fr/&quot;&gt;https://tour.mcorbin.fr/&lt;/a&gt; :)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
 <pubDate>
-Mon, 01 Jul 2019 00:00:00 +0200
+Thu, 11 Jul 2019 00:00:00 +0200
 </pubDate>
 </item>
 <item>
