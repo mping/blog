@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 11 Jul 2019 23:05:33 +0200
+Thu, 11 Jul 2019 23:18:59 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -158,10 +158,8 @@ Chaque librairie permet aussi de facilement démarrer votre système (un systèm
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;il est d&amp;#8217;ailleurs même possible d&amp;#8217;avoir un port ouvert avec un REPL pour vos applications même en prod si vous le voulez (bien que cela soit une grosse faille de sécurité). Mais c&amp;#8217;est possible, et là aussi n&amp;#8217;importe quelle fonction pourrait être patchée à chaud. Des gens ont fait des choses formidables comme cela, lisez donc ça par exemple:&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;An impressive instance of remote debugging occurred on NASA’s 1998 Deep Space 1 mission. A half year after the space craft launched, a bit of Lisp code was going to control the spacecraft for two days while conducting a sequence of experiments. Unfortunately, a subtle race condition in the code had escaped detection during ground testing and was already in space. When the bug manifested in the wild–100 million miles away from Earth–the team was able to diagnose and fix the running code, allowing the experiments to complete.&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;em&gt;An impressive instance of remote debugging occurred on NASA’s 1998 Deep Space 1 mission. A half year after the space craft launched, a bit of Lisp code was going to control the spacecraft for two days while conducting a sequence of experiments. Unfortunately, a subtle race condition in the code had escaped detection during ground testing and was already in space. When the bug manifested in the wild–100 million miles away from Earth–the team was able to diagnose and fix the running code, allowing the experiments to complete.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
