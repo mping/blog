@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Tue, 10 Sep 2019 23:13:32 +0200
+Tue, 10 Sep 2019 23:15:53 +0200
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Slides: Gérez les images de vos machines virtuelles
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;J&amp;#8217;ai récemment donné un talk au Café Devops de Lyon à propos de la gestion des images pour machines virtuelles. Vous pouvez retrouver les slides &lt;a href=&quot;http://localhost:3000/pdf/slides/virtual_machines.pdf&quot;&gt;ici&lt;/a&gt; ;)&lt;/p&gt;
+&lt;p&gt;J&amp;#8217;ai récemment donné un talk au Café Devops de Lyon à propos de la gestion des images pour machines virtuelles. Vous pouvez retrouver les slides &lt;a href=&quot;https://mcorbin.fr/pdf/slides/virtual_machines.pdf&quot;&gt;ici&lt;/a&gt; ;)&lt;/p&gt;
 &lt;/div&gt;
 </description>
 <pubDate>
