@@ -12,11 +12,131 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Tue, 10 Sep 2019 23:15:53 +0200
+Mon, 11 Nov 2019 23:36:51 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-11-11-meuse-0.2.0/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-11-11-meuse-0.2.0/
+</link>
+<title>
+What's new in Meuse 0.2.0
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I released today the version 0.2.0 of &lt;a href=&quot;https://github.com/mcorbin/meuse&quot;&gt;Meuse&lt;/a&gt;, an alternative registry for the Rust programming language. A lot of improvements has been made, and new features (in beta :p) are availables in this release: S3 backend for crates binary files, and &lt;code&gt;crates.io&lt;/code&gt; mirroring.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_new_things_in_this_release&quot;&gt;New things in this release&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_refactoring_and_bugfixes&quot;&gt;Refactoring and bugfixes&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I did a lot of refactoring in the project internals. It&amp;#8217;s not finished yet, but the code looks better now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I also fixed a couple of bugs, and also made a few improvements (for example in error handling).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_monitoring&quot;&gt;Monitoring&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Meuse exposes a Prometheus endpoint since the release &lt;code&gt;0.1.0&lt;/code&gt;. This release adds more metrics: JVM metrics and the database connection pool metrics.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_multiple_backends_for_the_crates_binary_files&quot;&gt;Multiple backends for the crates binary files&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I refactored the project to be able to easily add more backends for crates binary files, and added a S3 backend. This will allow you to store your crates binary files on any S3-compatible storage (I made my tests with SOS, the S3-compatible storage provided by &lt;a href=&quot;https://www.exoscale.com/&quot;&gt;Exoscale&lt;/a&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_crates_io_mirroring&quot;&gt;crates.io mirroring&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Meuse is now able to mirror &lt;code&gt;crates.io&lt;/code&gt;, and will also cache crates binary files downloaded from &lt;code&gt;crates.io&lt;/code&gt; on its own store (so on its filesystem or on S3).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Using Meuse alongside crates.io&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It was already possible to use &lt;code&gt;Meuse&lt;/code&gt; alongside &lt;code&gt;crates.io&lt;/code&gt;. You could for example upload private crates on Meuse, and these crates could have dependencies on crates stored on &lt;code&gt;crates.io&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To do that, you should configure the &lt;code&gt;allowed-registries&lt;/code&gt; parameter of your private registry index (cf &lt;a href=&quot;https://github.com/rust-lang/rfcs/blob/master/text/2141-alternative-registries.md#registry-index-format-specification&quot;&gt;the alternative registry RFC&lt;/a&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But we can do better.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;crates.io mirroring&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Meuse can download crates files from &lt;code&gt;crates.io&lt;/code&gt;, and then cache them on its own store. The next time you download this crate, &lt;code&gt;crates.io&lt;/code&gt; will not be contacted at all, Meuse will serve the crate from its store directly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you store your crates files on the &lt;code&gt;filesystem&lt;/code&gt;, Meuse will write the cached crates in a directory named &lt;code&gt;.crates.io&lt;/code&gt;, which will be automatically created at the root of the store directory. If the crates are stored in a S3-compatible storage, the file path will be prefixed by &lt;code&gt;.crates.io&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/meuse_020/cargo_mirror1.jpg&quot; alt=&quot;/alt=&amp;quot;cargo mirror explanation&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To find how to create a &lt;code&gt;crates.io&lt;/code&gt; mirror, please check the &lt;a href=&quot;https://meuse.mcorbin.fr/installation/mirroring/&quot;&gt;Meuse documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the next Meuse release, I will add an endpoint to force the caching of a crate. Like that, you will be able to cache crates from &lt;code&gt;crates.io&lt;/code&gt; in Meuse even if you don&amp;#8217;t run &lt;code&gt;cargo build&lt;/code&gt; for your project.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_auth_issues&quot;&gt;Auth issues&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;cargo&lt;/code&gt; does not pass the authentication token for the &lt;code&gt;cargo search&lt;/code&gt; command, and when a crate is downloaded. This means that I cannot authenticate the user for these actions in Meuse (cf &lt;a href=&quot;https://github.com/rust-lang/cargo/issues/7091&quot;&gt;this issue&lt;/a&gt;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The next steps for Meuse are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;More refactoring: there are several things that I don&amp;#8217;t like in the codebase.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;New features around &lt;code&gt;crates.io&lt;/code&gt; mirroring.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;More metrics (especially for the S3 client).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Better documentation (in the code and in the documentation website).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A CLI.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A read-only frontend.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Also, don&amp;#8217;t hesitate to test the project, report issues, and give me feedbacks. It would be very helpful for me.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Mon, 11 Nov 2019 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-09-10-machines-virtuelles/
