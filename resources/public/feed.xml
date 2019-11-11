@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 11 Nov 2019 23:36:51 +0100
+Tue, 12 Nov 2019 00:08:35 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ What's new in Meuse 0.2.0
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I released today the version 0.2.0 of &lt;a href=&quot;https://github.com/mcorbin/meuse&quot;&gt;Meuse&lt;/a&gt;, an alternative registry for the Rust programming language. A lot of improvements has been made, and new features (in beta :p) are availables in this release: S3 backend for crates binary files, and &lt;code&gt;crates.io&lt;/code&gt; mirroring.&lt;/p&gt;
+&lt;p&gt;I released today the version 0.2.0 of &lt;a href=&quot;https://github.com/mcorbin/meuse&quot;&gt;Meuse&lt;/a&gt;, an alternative registry for the Rust programming language. A lot of improvements have been made, and new features (in beta :p) are availables in this release: S3 backend for crates binary files, and &lt;code&gt;crates.io&lt;/code&gt; mirroring.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;_new_things_in_this_release&quot;&gt;New things in this release&lt;/h2&gt;
