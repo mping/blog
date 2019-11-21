@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 21 Nov 2019 12:24:21 +0100
+Thu, 21 Nov 2019 12:33:09 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -423,7 +423,7 @@ Un exemple d'infrastructure automatisée et scalable
 &lt;h2 id=&quot;_et_ce_sera_déployé_où&quot;&gt;Et ce sera déployé où ?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Docker et Kubernetes ne seront pas utilisés dans cette série d&amp;#8217;article (à part éventuellement pour la partie intégration continue pour Docker), mon but est aussi de montrer qu&amp;#8217;il est possible de faire des trucs cools sans conteneurs.&lt;/p&gt;
+&lt;p&gt;Docker et Kubernetes ne seront pas utilisés dans les premières parties de cette série d&amp;#8217;article (à part éventuellement pour la partie intégration continue pour Docker), mon but est aussi de montrer qu&amp;#8217;il est possible de faire des trucs cools sans conteneurs.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Kubernetes n&amp;#8217;est pas une mauvaise technologie en soit, mais je pense que ce n&amp;#8217;est pas la solution miracle à tout. Les solutions alternatives ne sont même plus étudiées, et c&amp;#8217;est bien dommage.&lt;/p&gt;
@@ -441,7 +441,7 @@ Un exemple d'infrastructure automatisée et scalable
 &lt;p&gt;Les articles peuvent également s&amp;#8217;appliquer à d&amp;#8217;autres cloud en changeant quelques configurations dans certains outils, car je veillerais à rester général (et pour beaucoup d&amp;#8217;articles, le choix du cloud provider ne sera pas du tout important).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Vous pouvez retrouver dès à présent le premier article de cette série, qui concerne la gestion des images de nos futures machines virtuelles !&lt;/p&gt;
+&lt;p&gt;Vous pouvez retrouver dès à présent &lt;a href=&quot;https://mcorbin.fr/posts/2019-11-21-exemple-infra-vm-image/&quot;&gt;le premier article de cette série&lt;/a&gt;, qui concerne la gestion des images de nos futures machines virtuelles !&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
