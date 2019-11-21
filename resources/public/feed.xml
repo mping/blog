@@ -12,11 +12,444 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Tue, 12 Nov 2019 00:08:35 +0100
+Thu, 21 Nov 2019 12:24:21 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-11-21-exemple-infra-vm-image/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-11-21-exemple-infra-vm-image/
+</link>
+<title>
+Un exemple d'infrastructure: gestion des images
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans cet article, je montrerais comment construire les images qui seront utilisées pour créer nos machines virtuelles.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_machine_virtuelle_la_base_de_tout&quot;&gt;La machine virtuelle, la base de tout.&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Toutes nos applications tourneront sur des machines virtuelles. Ces machines virtuelles auront comme système d&amp;#8217;exploitation &lt;code&gt;Debian 10&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais je veux pouvoir gérer les images de ces machines. En effet, beaucoup de gens utilisent les images de base fournies par leur cloud provider, et passent ensuite du Ansible/Puppet&amp;#8230;&amp;#8203; pour faire les mises à jour du système d&amp;#8217;exploitation et pour installer un certain nombre d&amp;#8217;outils &quot;de base&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pourtant, il est beaucoup plus efficace de construire en amont une image pour sa machine virtuelle, avec les mises à jour déjà appliquées, et les outils déjà installés. Cela permet:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;De déployer chez un cloud provider des distributions Linux ou des systèmes d&amp;#8217;exploitations non disponibles par défaut.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De gagner du temps et pas de perdre 5 minutes lors du déploiement de chaque nouvelle machine virtuelle pour installer toujours la même chose.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De pouvoir facilement livrer une nouvelle image contenant par exemple des mises à jour de sécurité ou un nouveau outil: de cette façon, on a la garantie que toutes les nouvelles machines créées seront à jour.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De savoir &quot;où on en est&quot; sur notre infrastructure: en mettant par exemple la date de construction de l&amp;#8217;image dans le nom de cette dernière, on peut facilement savoir quelle machine reconstruire (le but étant d&amp;#8217;avoir l&amp;#8217;infrastructure la plus immutable possible, je dirais qu&amp;#8217;il faut toujours se méfier des machines trop vieilles).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De configurer notre image comme on le veut, comme par exemple avoir un partitionnement spécifique.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pourquoi pas même d&amp;#8217;installer vos applications directement sur l&amp;#8217;image, et donc de vous servir des images comme outil de packaging ?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour construire nos images, on utilisera &lt;a href=&quot;https://www.packer.io/intro/&quot;&gt;Packer&lt;/a&gt; de Hashicorp. J&amp;#8217;avais d&amp;#8217;ailleurs réalisé un talk sur Packer dont vous pouvez retrouver les slides &lt;a href=&quot;https://mcorbin.fr/posts/2019-09-10-machines-virtuelles/&quot;&gt;ici&lt;/a&gt;. Je vous conseille de les dérouler car elles contiennent pas mal d&amp;#8217;infos intéressantes, notamment sur les les différentes stratégies de construction d&amp;#8217;images. je parle notamment dans les slides de la construction d&amp;#8217;images:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;En partant d&amp;#8217;images de base &lt;code&gt;cloud&lt;/code&gt; fournies par les distributions (Debian, Ubuntu, RedHat&amp;#8230;&amp;#8203;): c&amp;#8217;est ce que nous allons faire dans la suite de cet article.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;En répondant intéractivement aux questions d&amp;#8217;un installer, avec Packer qui simule le clavier.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Via des fichiers de description d&amp;#8217;installations, comme par exemple les fichiers &lt;code&gt;kickstart&lt;/code&gt; de RedHat.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_packer&quot;&gt;Packer&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Packer est donc un outil servant à automatiser la création d&amp;#8217;images pour machines virtuelles. Il a plusieurs avantages:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Il est simple à installer et à utiliser.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La recette des images est écrite en json, et donc se versionne très bien dans Git.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Packer permet de construire et de déployer les images sur de nombreux cloud, ou bien de les construire avec des outils comme &lt;code&gt;qemu&lt;/code&gt; ou &lt;code&gt;vagrant&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous pouvez trouver les fichiers de configurations utilisés dans cet article &lt;a href=&quot;https://github.com/mcorbin/exemple-infra/tree/master/packer&quot;&gt;sur Github&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La configuration de packer se décompose en plusieurs sections:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;variables: on peut déclare des variables dans cette section. Elles pourront être réutilisées ensuite dans le reste de la configuration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;builders: cette section sert à configure le &quot;quoi&quot; qui démarrera notre machine virtuelle sur laquelle nous appliquerons des modifications&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;provisioners: cette section sert à configurer les actions à exécuter sur la machine virtuelle, comme par exemple exécuter des scripts shell.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;post-processors: cette section sert à exécuter des actions &lt;code&gt;après&lt;/code&gt; la construction d&amp;#8217;une machine virtuelle, comme par exemple la pousser sur un cloud provider pour utilisation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_construire_notre_image_debian_10&quot;&gt;Construire notre image Debian 10&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On va faire les choses assez simplement:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Nous utiliserons le builder &lt;code&gt;qemu&lt;/code&gt; (avec l&amp;#8217;accélération &lt;code&gt;kvm&lt;/code&gt;, Packer utilisera kvm par défaut si disponible sur la machine) pour construire notre image. Cela nous permet de dissocier la construction de l&amp;#8217;image du cloud provider où elle sera utilisée, et il sera donc plus facile de faire du multi cloud si cela s&amp;#8217;avère un jour nécessaire.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nous nous contenterons de faire les mises à jour et d&amp;#8217;installer quelques packages sur l&amp;#8217;image.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;L&amp;#8217;image sera ensuite poussée sur le cloud Exoscale.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_recette_packer&quot;&gt;La recette Packer&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme dit précédemment, la configuration est &lt;a href=&quot;https://github.com/mcorbin/exemple-infra/blob/master/packer/debian.json&quot;&gt;trouvable sur Github&lt;/a&gt;.&lt;br&gt;
+Je ne vais pas détailler tout le fichier de configuration &lt;code&gt;json&lt;/code&gt; de Packer (la doc Packer le fait très bien), mais il est quand même important d&amp;#8217;expliquer comment la création de l&amp;#8217;image est réalisée, et de ce qui se passe quand une machine démarre chez un cloud provider.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je vais partir d&amp;#8217;une autre image de base pour réaliser mon image. Cette image est l&amp;#8217;image &lt;code&gt;Cloud&lt;/code&gt; fournie par Debian, et est trouvable &lt;a href=&quot;https://cdimage.debian.org/cdimage/openstack/current-10/&quot;&gt;ici&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ces images sont des images ayant déjà &lt;a href=&quot;https://cloudinit.readthedocs.io/en/latest/&quot;&gt;Cloud Init&lt;/a&gt; d&amp;#8217;installé, et sont donc généralement utilisables telles quelles sur n&amp;#8217;importe quel cloud provider.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous ne savez pas ce qu&amp;#8217;est Cloud Init, voici un petit résumé: c&amp;#8217;est une collection de scripts Python qui se lancent lors du démarrage de la machine. Ces scripts Python vont faire plusieurs choses:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Chaque cloud provider expose une &lt;code&gt;datasource&lt;/code&gt;, qui est en fait un serveur HTTP exposant des informations sur la machine (zone, offering, ID de la machine, configuration réseau&amp;#8230;&amp;#8203;). Cloud Init se connecte à ce serveur lorsque la machine démarre, va chercher ces informations, et configure la machine en fonction de ce qu&amp;#8217;il a reçu.&lt;br&gt;
+Par exemple, c&amp;#8217;est comme cela que les cloud providers déploiement vos clés SSH sur les machines: sans Cloud Init, vous ne pourriez pas vous connecter sur vos machines virtuelles.&lt;br&gt;
+C&amp;#8217;est aussi Cloud Init qui gère généralement le redimensionnement d&amp;#8217;un disque lorsqu&amp;#8217;on l&amp;#8217;agrandit.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Il est également possible de passer à Cloud Init un fichier &lt;code&gt;yaml&lt;/code&gt; décrivant des actions à exécuter au démarrage de la machine. De nombreuses choses sont possibles: configuration des utilisateurs, commandes shell à exécuter, écriture de fichiers&amp;#8230;&amp;#8203; Vous pouvez trouver quelques exemples &lt;a href=&quot;https://cloudinit.readthedocs.io/en/latest/topics/examples.html&quot;&gt;ici&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Packer démarrera donc avec &lt;code&gt;qemu&lt;/code&gt; une machine virtuelle Debian contenant Cloud Init. Une fois démarrée, Packer se connectera dessus via SSH et exécutera des actions (dans notre cas, il exécutera seulement un script shell).&lt;br&gt;
+Mais nous ne sommes pas sur un Cloud Provider, donc comment pouvons nous passer notre clé publique à la machine pour que Packer se connecte ? C&amp;#8217;est là qu&amp;#8217;intervient la &lt;a href=&quot;https://cloudinit.readthedocs.io/en/latest/topics/datasources/nocloud.html&quot;&gt;datasource NoCloud&lt;/a&gt;. Nous allons passer à la machine un disque qui contiendra un fichier &lt;code&gt;user-data&lt;/code&gt;. Ce fichier configurera une clé publique sur la machine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Voici par exemple le contenu du fichier &lt;code&gt;user-data&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;#cloud-config
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWhO7XUDYZDzKi+3TDrmwAsx3r+xtiz1uUoBP69z7cKEHiehXuORdQxi4o9/mA9Nz+fRWm3Wy2aAvm4ZjCpSTx77wTICaJ3mlbRpYfQHqCRiV2Qgeo94GErTpR6xPsn699bJKIu+N/dEzg6l3SV5XWslFZ/7asRc+iS+ZRu3dm2thOWnPwKNcIx9q/VjafdMqzwmV9HIPhfVOhB4MxQcQe0vOf1788cT0ef/5sOyVeYkcNjMvFfX/qb3M/VjvdrCPTzW01c53elptWBp6EVjQG3PQIh2qmhgx594jE3b/ZfHVgfqdkabIsFgF7f+xU1HVchMh5Q4iCDiypZkR3GoBcbW56GMayPoZ7duiCKnLyJJ9VDkZexMuR5suOxrFf5FqLvHW7alxvbmEHofk/nwCniF/OCeq9++MAPJp28wDeM748Im6I/NXk0wRV7I6AXbFLAgkEdU4C/GZ2EinNkRDJJ39ISV03VssYAKCZlYfuK+JvNZbg3smEOQgDa0sJvyN81CCKDl48hk963uUZK7iKy/Vch/abz9eT1t5PABB/7pW+sui0ohpCBYoKQXW6JCXNjE0i7K8uhF9kYXj4PINQd0+ikzbzwmippTJAWlfZMSh4+bpyNQfAZNz9rmXp8PFV51wJRsTPH2Bqzayy4MwXWIV6X4xd2pKptb6J0aZDZQ== packer&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Générons ensuite un disque contenant ce fichier:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cloud-localds seed.img user-data&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le fichier &lt;code&gt;seed.img&lt;/code&gt; sera à passer à Packer, et Cloud Init exécutera automatiquement le contenu du fichier (et donc configurera notre clé publique).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est ce bloc dans la configuration &lt;code&gt;json&lt;/code&gt; de Packer qui permettra de passer ce disque à la machine virtuelle:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&quot;qemuargs&quot;: [
+    [&quot;-cpu&quot;, &quot;qemu64,rdrand=on&quot;],
+    [&quot;-drive&quot;, &quot;file=output-qemu/debian-buster.qcow2,format=qcow2,if=virtio&quot;],
+    [&quot;-drive&quot;, &quot;file=seed.img,format=raw,if=virtio&quot;]
+],&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On voit que l&amp;#8217;on passe ici plusieurs paramètres à qemu:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Le premier concerne la génération de nombre aléatoire, chose importante sur une machine virtuelle. Si je sujet vous intéresse, &lt;a href=&quot;https://www.exoscale.com/syslog/random-numbers-generation-in-virtual-machines/&quot;&gt;allez ici&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Le deuxième spécifie le chemin vers l&amp;#8217;image qui sera créée par Packer (c&amp;#8217;est cette image qui sera envoyée sur le cloud provider).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Le troisième est notre fichier &lt;code&gt;seed.img&lt;/code&gt; qui contient donc notre fichier yaml.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il nous reste une dernière chose à configurer pour se connecter sur la machine: la clée privée à utiliser par Packer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela se configure dans le builder qemu, via l&amp;#8217;option &lt;code&gt;ssh_private_key_file&lt;/code&gt;. Nous allons passer le chemin vers notre clé privé (qui doit être la clé associée à la clé publique présente dans le fichier &lt;code&gt;seed.img&lt;/code&gt;) via une variable d&amp;#8217;environnement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans la section &lt;code&gt;variables&lt;/code&gt; du fichier Packer, vous pouvez voir:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;ssh_private_key_file&quot;: &quot;{{env `PACKER_PRIVATE_KEY`}}&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ensuite, dans la section &lt;code&gt;builders&lt;/code&gt;, vous trouverez:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;ssh_private_key_file&quot;: &quot;{{user `ssh_private_key_file`}}&quot;,&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous n&amp;#8217;aurons donc qu&amp;#8217;à configurer la variable d&amp;#8217;environnement &lt;code&gt;PACKER_PRIVATE_KEY&lt;/code&gt; pour pouvoir se connecter sur la machine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme dit précédemment, je n&amp;#8217;exécuterais qu&amp;#8217;un script shell sur notre machine qui installera quelques packages, mettra Cloud Init à jour (de façon assez sale, en téléchargeant le paquet via wget :D) et configurera la datasource Exoscale.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_un_premier_essai&quot;&gt;Un premier essai&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous devriez maintenant pouvoir construire votre image. Commentez toute la partie &lt;code&gt;post-processors&lt;/code&gt; du fichier &lt;code&gt;debian.json&lt;/code&gt; et lancez:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;PACKER_PRIVATE_KEY=/home/mathieu/.ssh/infra/id_rsa packer build debian.json&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En modifiant bien sûr la valeur de &lt;code&gt;PACKER_PRIVATE_KEY&lt;/code&gt;, et votre image devrait se construire !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si tout se passe bien, vous devriez voir les logs d&amp;#8217;exécution de Packer et à la fin un message indiquant &lt;code&gt;=&amp;#8658; Builds finished. The artifacts of successful builds are: -&amp;#8594; qemu: VM files in directory: output-qemu&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En effet, l&amp;#8217;image finale devrait être dans &lt;code&gt;output-qemu/debian-buster.qcow2&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous avez un problème, vous pouvez regarder les logs ou utiliser un client &lt;code&gt;vnc&lt;/code&gt; (comme &lt;code&gt;remmina&lt;/code&gt;) sur Linux pour vous connecter sur la machine en cours de construction si besoin (le port &lt;code&gt;vnc&lt;/code&gt; est défini comme étant &lt;code&gt;6000&lt;/code&gt; dans mon exemple).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_changer_la_taille_de_l_image&quot;&gt;Changer la taille de l&amp;#8217;image&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La taille virtuelle d&amp;#8217;une image sur le cloud Exoscale doit être de 10G au minimum. Il faut donc mettre à jour la taille de notre image. Pour cela, nous utilisons un &lt;code&gt;post-processors&lt;/code&gt; de type &lt;code&gt;shell-local&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;{
+    &quot;type&quot;: &quot;shell-local&quot;,
+    &quot;inline&quot;: [&quot;qemu-img resize output-qemu/debian-buster.qcow2 10G&quot;]
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La taille virtuelle de notre image sera maintenant de 10G. Cela se vérifie facilement:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;qemu-img info output-qemu/debian-buster.qcow2
+image: output-qemu/debian-buster.qcow2
+file format: qcow2
+virtual size: 10G (10737418240 bytes)
+disk size: 522M
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    lazy refcounts: false
+    refcount bits: 16
+    corrupt: false
+
+du -sh output-qemu/debian-buster.qcow2
+523M	output-qemu/debian-buster.qcow2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La taille de notre image sur le disque est de 523M, mais la taille virtuelle est bien de 10G.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_pousser_l_image_sur_exoscale&quot;&gt;Pousser l&amp;#8217;image sur Exoscale&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le post processor &lt;a href=&quot;https://www.packer.io/docs/post-processors/exoscale-import.html&quot;&gt;exoscale-import&lt;/a&gt; nous permet d&amp;#8217;importer sur le Cloud Exoscale notre image fraîchement construite. Sa configuration est très simple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+    &quot;type&quot;: &quot;exoscale-import&quot;,
+    &quot;api_key&quot;: &quot;{{user `exoscale_api_key`}}&quot;,
+    &quot;api_secret&quot;: &quot;{{user `exoscale_api_secret`}}&quot;,
+    &quot;image_bucket&quot;: &quot;mcorbin.fr.images&quot;,
+    &quot;template_name&quot;: &quot;Debian 10 {{timestamp}}&quot;,
+    &quot;template_description&quot;: &quot;Debian 10 template&quot;,
+    &quot;template_username&quot;: &quot;debian&quot;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les variables d&amp;#8217;environnements &lt;code&gt;EXOSCALE_API_KEY&lt;/code&gt; et &lt;code&gt;EXOSCALE_API_SECRET&lt;/code&gt; serviront à configurer les credentials nécessaires au post processor. On spécifie aussi le bucket sur lequel sera poussée l&amp;#8217;image (en effet, les images sont d&amp;#8217;abord poussées sur l&amp;#8217;object store compatible S3 d&amp;#8217;Exoscale avant d&amp;#8217;être enregistrées).&lt;br&gt;
+Le nom de l&amp;#8217;image contiendra le timestamp de la date de création.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous relancez le build en configurant les nouvelles variables d&amp;#8217;environnements et en utilisant un bucket vous appartenant dans &lt;code&gt;image_bucket&lt;/code&gt;, l&amp;#8217;image devrait être maintenant visible sur Exoscale !&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/exemple-infra/packer/debian-template.png&quot; alt=&quot;/alt=&amp;quot;image debian sur Exoscale&amp;quot;&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour information, le temps entre le lancement du build Packer sur mon ordinateur portable et le moment où l&amp;#8217;image est disponible sur le Cloud Exoscale est de 3 minutes 30.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_aller_plus_loin&quot;&gt;Aller plus loin&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout cela peut se faire dans une &lt;code&gt;plateforme d&amp;#8217;intégration continue&lt;/code&gt; type Jenkins. Le but est vraiment que vous puissiez livrer à tout moment une nouvelle image.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Il est également très important de &lt;code&gt;tester ses images&lt;/code&gt;.&lt;br&gt;
+Avant de les pousser en prod, exécutez des tests dessus: est ce que l&amp;#8217;image boot correctement, est ce que les services dessus sont bien démarrés, est ce qu&amp;#8217;il n&amp;#8217;y a pas de problèmes de sécurité sur l&amp;#8217;image&amp;#8230;&amp;#8203; Ces tests doivent aussi se lancer sur votre plateforme d&amp;#8217;intégration continue.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous avons utilisé dans cet article la datasource Cloud Init &lt;code&gt;nocloud&lt;/code&gt;. Il existe une autre datasource, appelée &lt;code&gt;nocloud-net&lt;/code&gt; qui permet de faire presque la même chose: avec &lt;code&gt;nocloud-net&lt;/code&gt;, on ne passe pas un disque à Cloud Init, Packer exposera via HTTP un répertoire contenant le fichier &lt;code&gt;user-data&lt;/code&gt;. Ce dernier sera récupéré par Cloud Init lors du démarrage de la machine virtuelle.&lt;br&gt;
+Attention, &lt;code&gt;nocloud-net&lt;/code&gt; n&amp;#8217;est pas supportée sur toutes les versions de Cloud Init.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_suite&quot;&gt;La suite&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous avons vu dans cet article comment construire des images. Dans le prochain article, nous créerons notre infrastructure (machines virtuelles, réseau&amp;#8230;&amp;#8203;) avec &lt;a href=&quot;https://www.terraform.io/&quot;&gt;Terraform&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Thu, 21 Nov 2019 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+https://mcorbin.fr/posts/2019-11-20-un-exemple-infra-intro/
+</guid>
+<link>
+https://mcorbin.fr/posts/2019-11-20-un-exemple-infra-intro/
+</link>
+<title>
+Un exemple d'infrastructure automatisée et scalable
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela faisait longtemps que je voulais écrire une série d&amp;#8217;articles sur le déploiement d&amp;#8217;une infrastructure et la gestion des applications qui tournent dessus, le tout répondant à certains critères:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Déploiement automatisé, que ce soit pour l&amp;#8217;infrastructure en elle même ou bien pour les applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pouvant monter en charge si besoin.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Utilisant un certain nombre d&amp;#8217;outils qui se combinent bien ensemble.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Chaque article sera consacré à une partie de l&amp;#8217;infrastructure ou à un sujet plus &quot;applicatif&quot;: gestion de machines virtuelles, déploiement de l&amp;#8217;infrastructure, intégration continue, packaging et déploiement des applications, load balancing, monitoring, métriques&amp;#8230;&amp;#8203; j&amp;#8217;essayerais aussi de justifier mes choix, en pesant le pour et le contre par rapport à d&amp;#8217;autres produits que ceux présentés.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tout cela va probablement prendre pas mal de temps. Je prendrais peut être parfois quelques raccourcis si je vois qu&amp;#8217;une section me prend trop de temps.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_et_ce_sera_déployé_où&quot;&gt;Et ce sera déployé où ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Docker et Kubernetes ne seront pas utilisés dans cette série d&amp;#8217;article (à part éventuellement pour la partie intégration continue pour Docker), mon but est aussi de montrer qu&amp;#8217;il est possible de faire des trucs cools sans conteneurs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Kubernetes n&amp;#8217;est pas une mauvaise technologie en soit, mais je pense que ce n&amp;#8217;est pas la solution miracle à tout. Les solutions alternatives ne sont même plus étudiées, et c&amp;#8217;est bien dommage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous déploierons l&amp;#8217;infrastructure chez un cloud provider.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Toute l&amp;#8217;infrastructure sera déployée sur &lt;a href=&quot;https://www.exoscale.com/&quot;&gt;Exoscale&lt;/a&gt;, qui est aussi mon employeur (vous allez dire que je prêche pour ma paroisse).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, si vous recherchez un cloud provider européen avec du bon tooling, un catalogue produit sympa, un support très réactif (car géré par l&amp;#8217;équipe tech), jetez un coup d&amp;#8217;oeil (et on a plusieurs nouveaux produits qui arrivent très prochainement, et une grosse roadmap pour 2020 :p).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les articles peuvent également s&amp;#8217;appliquer à d&amp;#8217;autres cloud en changeant quelques configurations dans certains outils, car je veillerais à rester général (et pour beaucoup d&amp;#8217;articles, le choix du cloud provider ne sera pas du tout important).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous pouvez retrouver dès à présent le premier article de cette série, qui concerne la gestion des images de nos futures machines virtuelles !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Wed, 20 Nov 2019 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2019-11-11-meuse-0.2.0/
