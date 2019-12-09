@@ -1,7 +1,11 @@
 * Kubernetes the Exoscale way
+** Prerequisites
 
-** creating the infrastructure
+- exo CLI
+- cs
+- jq
 
+** Creating the infrastructure
 *** Private network
 
 exo -A prod privnet create --startip 10.240.0.1 --endip 10.240.0.253 --netmask 255.255.255.0 --zone ch-gva-2 kubernetes-the-hard-way
@@ -45,3 +49,114 @@ Add them in the privnet, and set a static IP for each of them:
 exo -A prod privnet associate kubernetes-the-hard-way worker-0 10.240.0.20
 exo -A prod privnet associate kubernetes-the-hard-way worker-1 10.240.0.21
 exo -A prod privnet associate kubernetes-the-hard-way worker-2 10.240.0.22
+** Certificate authority
+*** The Kubelet Client Certificates
+
+Generate a certificate and private key for each Kubernetes worker node:
+
+#+BEGIN_SRC
+
+for instance in worker-0 worker-1 worker-2; do
+cat > ${instance}-csr.json <<EOF
+{
+  "CN": "system:node:${instance}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+NETWORK_ID=$(exo -A prod privnet show kubernetes-the-hard-way --output-format text --output-template '{{.ID}}')
+
+VIRTUALMACHINE_ID=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.ID}}')
+
+INTERNAL_IP=$(cs --region=prod listNics virtualmachineid=${VIRTUALMACHINE_ID} networkid=${NETWORK_ID} | jq .nic[0].ipaddress | tr -d '"')
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=${instance},${EXTERNAL_IP},${INTERNAL_IP} \
+  -profile=kubernetes \
+  ${instance}-csr.json | cfssljson -bare ${instance}
+done
+
+#+END_SRC
+*** The Kubernetes API Server Certificate
+Generate the Kubernetes API Server certificate and private key:
+
+#+BEGIN_SRC
+
+KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} .{{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+
+KUBERNETES_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
+
+cat > kubernetes-csr.json <<EOF
+{
+  "CN": "kubernetes",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "Kubernetes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,${KUBERNETES_HOSTNAMES} \
+  -profile=kubernetes \
+  kubernetes-csr.json | cfssljson -bare kubernetes
+
+#+END_SRC
+
+*** Distribute the Client and Server Certificates
+
+Copy the appropriate certificates and private keys to each worker instance:
+
+#+BEGIN_SRC
+
+for instance in worker-0 worker-1 worker-2; do
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+scp ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${EXTERNAL_IP}:~/
+done
+
+#+END_SRC
+
+Copy the appropriate certificates and private keys to each controller instance:
+
+#+BEGIN_SRC
+
+for instance in controller-0 controller-1 controller-2; do
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem service-account.pem ubuntu@${EXTERNAL_IP}:~/
+
+done
+
+#+END_SRC
