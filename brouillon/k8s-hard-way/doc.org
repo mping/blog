@@ -1,0 +1,47 @@
+* Kubernetes the Exoscale way
+
+** creating the infrastructure
+
+*** Private network
+
+exo -A prod privnet create --startip 10.240.0.1 --endip 10.240.0.253 --netmask 255.255.255.0 --zone ch-gva-2 kubernetes-the-hard-way
+
+*** Creating the external firewall rules
+
+exo -A prod firewall create kubernetes-the-hard-way-allow-external
+
+exo -A prod firewall add kubernetes-the-hard-way-allow-external --port 22 --protocol tcp --cidr 0.0.0.0/0
+exo -A prod firewall add kubernetes-the-hard-way-allow-external --port 6443 --protocol tcp --cidr 0.0.0.0/0
+exo -A prod firewall add kubernetes-the-hard-way-allow-external --protocol icmp --cidr 0.0.0.0/0
+
+*** Create an eip
+
+This EIP will be used for the load balancer:
+
+exo -A prod eip create ch-gva-2 --description kubernetes-the-hard-way
+
+*** Compute instances
+
+**** controllers
+
+Create the 3 controllers instances:
+
+exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 200 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 controller-0 controller-1 controller-2
+
+Add them in the privnet, and set a static IP for each of them:
+
+exo -A prod privnet associate kubernetes-the-hard-way controller-0 10.240.0.10
+exo -A prod privnet associate kubernetes-the-hard-way controller-1 10.240.0.11
+exo -A prod privnet associate kubernetes-the-hard-way controller-2 10.240.0.12
+
+**** workers
+
+Create the 3 workers instances:
+
+exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 200 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 worker-0 worker-1 worker-2
+
+Add them in the privnet, and set a static IP for each of them:
+
+exo -A prod privnet associate kubernetes-the-hard-way worker-0 10.240.0.20
+exo -A prod privnet associate kubernetes-the-hard-way worker-1 10.240.0.21
+exo -A prod privnet associate kubernetes-the-hard-way worker-2 10.240.0.22
