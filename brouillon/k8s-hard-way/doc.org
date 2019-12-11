@@ -160,3 +160,74 @@ scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem 
 done
 
 #+END_SRC
+** Generating Kubernetes Configuration Files for Authentication
+*** The kubelet Kubernetes Configuration File
+
+It includes retrieving the EIP (Kubernetes Public IP Address)
+
+#+BEGIN_SRC
+KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} .{{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+
+for instance in worker-0 worker-1 worker-2; do
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config set-credentials system:node:${instance} \
+    --client-certificate=${instance}.pem \
+    --client-key=${instance}-key.pem \
+    --embed-certs=true \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:node:${instance} \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config use-context default --kubeconfig=${instance}.kubeconfig
+done
+#+END_SRC
+
+*** Distribute the Kubernetes Configuration Files
+Copy the appropriate kubelet and kube-proxy kubeconfig files to each worker instance:
+
+#+BEGIN_SRC
+
+for instance in worker-0 worker-1 worker-2; do
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+scp ${instance}.kubeconfig kube-proxy.kubeconfig ubuntu@${EXTERNAL_IP}:~/
+done
+
+#+END_SRC
+
+Copy the appropriate kube-controller-manager and kube-scheduler kubeconfig files to each controller instance:
+
+#+BEGIN_SRC
+
+for instance in controller-0 controller-1 controller-2; do
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ubuntu@${EXTERNAL_IP}:~/
+
+done
+
+#+END_SRC
+** Generating the Data Encryption Config and Key
+Copy the encryption-config.yaml encryption config file to each controller instance:
+
+#+BEGIN_SRC
+
+for instance in controller-0 controller-1 controller-2; do
+
+EXTERNAL_IP=$(exo -A prod vm show ${instance} --output-format text --output-template '{{.IPAddress}}')
+
+scp encryption-config.yaml ubuntu@${EXTERNAL_IP}:~/
+
+done
+
+#+END_SRC
