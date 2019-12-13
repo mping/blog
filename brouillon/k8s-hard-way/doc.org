@@ -25,7 +25,6 @@ This EIP will be used for the load balancer:
 exo -A prod eip create ch-gva-2 --description kubernetes-the-hard-way
 
 *** Compute instances
-
 **** controllers
 
 Create the 3 controllers instances:
@@ -99,7 +98,7 @@ Generate the Kubernetes API Server certificate and private key:
 
 #+BEGIN_SRC
 
-KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} .{{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} {{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
 
 KUBERNETES_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
 
@@ -230,4 +229,94 @@ scp encryption-config.yaml ubuntu@${EXTERNAL_IP}:~/
 
 done
 
+#+END_SRC
+* Bootstrapping the etcd Cluster
+** Configure the etcd Server
+I've done it manually for the INTERNAL_IP variable. The INTERNAL_IP variable should be set to your eth1 ip.
+
+* Bootstrapping the Kubernetes Control Plane
+** The Kubernetes Frontend Load Balancer
+custom section for exoscale
+*** Create the infrastructure
+Retrieve the EIP ID, create a new VM which will be our load balancer, update the EIP to be managed, attach the EIP to the LB host.
+
+#+BEGIN_SRC
+
+KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} {{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+
+KUBERNETES_PUBLIC_ADDRESS_ID=$(exo -A prod eip list --output-format text --output-template '{{.ID}} {{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+
+exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 100 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 lb-k8s
+
+exo -A prod privnet associate kubernetes-the-hard-way lb-k8s 10.240.0.30
+
+exo -A prod eip update --healthcheck-interval 10 --healthcheck-mode tcp --healthcheck-port 6443 ${KUBERNETES_PUBLIC_ADDRESS_ID}
+
+exo -A prod eip associate ${KUBERNETES_PUBLIC_ADDRESS} lb-k8s
+
+#+END_SRC
+
+*** install and configure haproxy on the LB node
+
+#+BEGIN_SRC
+exo -A prod ssh lb-k8s
+
+sudo su -
+
+apt-get update
+
+apt-get -y install haproxy
+
+#+END_SRC
+
+Add this configuration at the end of the `/etc/haproxy/haproxy.cfg` file:
+
+#+BEGIN_SRC
+
+frontend frontend_k8s
+  bind :6443
+  mode tcp
+  default_backend k8s_backend
+
+backend k8s_backend
+   balance roundrobin
+   mode tcp
+
+   option redispatch
+   server controller-0 10.240.0.10:6443 check
+   server controller-1 10.240.0.11:6443 check
+   server controller-1 10.240.0.12:6443 check
+
+#+END_SRC
+
+* Bootstrapping the Kubernetes Worker Nodes
+
+** Configure CNI Networking
+Retrieve the Pod CIDR range for the current compute instance:
+
+The POD_CIDR is 10.200.${i}.0/24, i beingyour worker-{i} number.
+* Configuring kubectl for Remote Access
+
+Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability the IP address assigned to the external load balancer fronting the Kubernetes API Servers will be used.
+
+Generate a kubeconfig file suitable for authenticating as the admin user:
+
+#+BEGIN_SRC
+
+KUBERNETES_PUBLIC_ADDRESS=$(exo -A prod eip list --output-format text --output-template '{{.IPAddress}} {{.Description}}' | grep "kubernetes-the-hard-way" | awk '{print $1}')
+
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443
+
+  kubectl config set-credentials admin \
+    --client-certificate=admin.pem \
+    --client-key=admin-key.pem
+
+  kubectl config set-context kubernetes-the-hard-way \
+    --cluster=kubernetes-the-hard-way \
+    --user=admin
+
+  kubectl config use-context kubernetes-the-hard-way
 #+END_SRC
