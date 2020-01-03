@@ -29,7 +29,7 @@ exo -A prod eip create ch-gva-2 --description kubernetes-the-hard-way
 
 Create the 3 controllers instances:
 
-exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 200 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 controller-0 controller-1 controller-2
+exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 25 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 controller-0 controller-1 controller-2
 
 Add them in the privnet, and set a static IP for each of them:
 
@@ -41,7 +41,7 @@ exo -A prod privnet associate kubernetes-the-hard-way controller-2 10.240.0.12
 
 Create the 3 workers instances:
 
-exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 200 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 worker-0 worker-1 worker-2
+exo -A prod vm create --security-group kubernetes-the-hard-way-allow-external --keypair "perso" --service-offering small --disk 25 --template "Linux Ubuntu 18.04 LTS 64-bit" --zone ch-gva-2 worker-0 worker-1 worker-2
 
 Add them in the privnet, and set a static IP for each of them:
 
@@ -230,14 +230,18 @@ scp encryption-config.yaml ubuntu@${EXTERNAL_IP}:~/
 done
 
 #+END_SRC
-* Bootstrapping the etcd Cluster
-** Configure the etcd Server
+** Bootstrapping the etcd Cluster
+*** Configure the etcd Server
 I've done it manually for the INTERNAL_IP variable. The INTERNAL_IP variable should be set to your eth1 ip.
 
-* Bootstrapping the Kubernetes Control Plane
-** The Kubernetes Frontend Load Balancer
+** Bootstrapping the Kubernetes Control Plane
+INTERNAL_IP=$(cs --region=prod listNics virtualmachineid=${VIRTUALMACHINE_ID} networkid=${NETWORK_ID} | jq .nic[0].ipaddress | tr -d '"')
+
+the nginx part (Enable HTTP Health Checks) is useless
+
+*** The Kubernetes Frontend Load Balancer
 custom section for exoscale
-*** Create the infrastructure
+**** Create the infrastructure
 Retrieve the EIP ID, create a new VM which will be our load balancer, update the EIP to be managed, attach the EIP to the LB host.
 
 #+BEGIN_SRC
@@ -256,12 +260,14 @@ exo -A prod eip associate ${KUBERNETES_PUBLIC_ADDRESS} lb-k8s
 
 #+END_SRC
 
-*** install and configure haproxy on the LB node
+**** install and configure haproxy on the LB node
 
 #+BEGIN_SRC
 exo -A prod ssh lb-k8s
 
 sudo su -
+
+dhclient eth1
 
 apt-get update
 
@@ -289,13 +295,17 @@ backend k8s_backend
 
 #+END_SRC
 
-* Bootstrapping the Kubernetes Worker Nodes
+Restart the haproxy service, you should now be able to curl the api with:
 
-** Configure CNI Networking
+curl --cacert ca.pem https://${KUBERNETES_PUBLIC_ADDRESS}:6443/version
+
+
+** Bootstrapping the Kubernetes Worker Nodes
+*** Configure CNI Networking
 Retrieve the Pod CIDR range for the current compute instance:
 
-The POD_CIDR is 10.200.${i}.0/24, i beingyour worker-{i} number.
-* Configuring kubectl for Remote Access
+The POD_CIDR is 10.200.${i}.0/24, i being your worker-{i} number.
+*** Configuring kubectl for Remote Access
 
 Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability the IP address assigned to the external load balancer fronting the Kubernetes API Servers will be used.
 
