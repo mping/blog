@@ -1,8 +1,6 @@
 (defproject cryogen "0.1.0"
   :description "My personal blog"
   :url "https://mcorbin.fr"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [ring/ring-devel "1.7.1"]
                  [compojure "1.6.1"]

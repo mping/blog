@@ -12,11 +12,95 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Wed, 01 Jan 2020 12:25:21 +0100
+Mon, 06 Jan 2020 20:33:58 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2020-01-03-plateforme-execution/
+</guid>
+<link>
+https://mcorbin.fr/posts/2020-01-03-plateforme-execution/
+</link>
+<title>
+Développement d'applications, conteneurs et plateforme d'exécution
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;De plus en plus d&amp;#8217;applications tournent dans des conteneurs, et de plus en plus de conteneurs tournent sur des plateformes types Kubernetes. Devons nous changer nos habitudes lorsque nous développons des applications conteneurisées ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_plateforme_d_exécution_n_est_pas_importante&quot;&gt;La plateforme d&amp;#8217;exécution n&amp;#8217;est pas importante&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;je pense qu&amp;#8217;il faut dissocier l&amp;#8217;application en elle même (et donc son développement) de la plateforme d&amp;#8217;exécution (où l&amp;#8217;application tournera). En effet, une application aura toujours besoin:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;D&amp;#8217;exposer un endpoint de &lt;code&gt;health&lt;/code&gt; indiquant si l&amp;#8217;application fonctionne correctement et est prête à fonctionner (et donc prête à recevoir du trafic pour une application web par exemple).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;D&amp;#8217;exposer des métriques (au format Prometheus par exemple), ou alors de les générer dans votre format préféré (Graphite, InfluxDB&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De générer des logs correctes, avec une manière de controller la verbosité des logs etc&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela n&amp;#8217;a &lt;strong&gt;aucun&lt;/strong&gt; rapport avec la plateforme d&amp;#8217;exécution de l&amp;#8217;application. Par exemple, mon endpoint de &lt;code&gt;health&lt;/code&gt; peut aussi bien être utilisé par un load balancer comme HAProxy, par un agent comme Consul, ou bien par Kubernetes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une application devrait pouvoir passer très facilement d&amp;#8217;une plateforme d&amp;#8217;exécution à une autre, comme par exemple d&amp;#8217;un déploiement sur machines virtuelles classiques, sans conteneurs, à un déploiement dans Kubernetes. Si cela n&amp;#8217;est pas possible, cela veut dire qu&amp;#8217;on a lié l&amp;#8217;application à sa plateforme, et ce couplage fort rend la possibilité de changement beaucoup plus difficile.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En effet, on parle beaucoup aujourd&amp;#8217;hui de Kubernetes, mais comme je le dis toujours, ce n&amp;#8217;est pas la plateforme miracle. Même si vous déployez vos applications sur Kubernetes aujourd&amp;#8217;hui, rien ne dit que vous ne voudrez pas les &quot;sortir&quot; de Kubernetes l&amp;#8217;année prochaine pour une raison ou une autre.&lt;br&gt;
+De la même façon, il devrait être facile de passer d&amp;#8217;une application hébergée sur une machine virtuelle à une application tournant sur Kubernetes. L&amp;#8217;outillage autour de l&amp;#8217;application va changer, mais pas l&amp;#8217;application en elle même.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_l_impact_des_conteneurs_lors_du_dev&quot;&gt;L&amp;#8217;impact des conteneurs lors du dev&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A part &lt;code&gt;docker-compose&lt;/code&gt; qui est je trouve intéressant pour démarrer facilement des dépendances comme des bases de données, je ne vois pas pourquoi on devrait parler de conteneurs lors de la phase de développement. Comme dit dans le paragraphe précédemment, c&amp;#8217;est beaucoup trop tôt.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le développeur doit pouvoir développer sans se soucier de la plateforme d&amp;#8217;exécution. Ce sera dans la plateforme d&amp;#8217;intégration continue que la plateforme d&amp;#8217;exécution aura un impact (pour construire un conteneur, un package&amp;#8230;&amp;#8203; à partir du projet).&lt;br&gt;
+Bien sûr, il y aura toujours dans le dépôt Git du projet quelques fichiers en lien avec cela (Dockerfile par exemple), mais cela n&amp;#8217;a aucun impact sur le développement de l&amp;#8217;application elle même.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et surtout, quand je développe, je ne veux surtout pas à avoir à construire des conteneurs, installer un minikube ou avoir à déployer sur des clusters Kubernetes depuis mon poste de dev.&lt;br&gt;
+Pour moi, cela doit être le job de la plateforme d&amp;#8217;intégration continue. Je pousse mon travail, et je peux d&amp;#8217;une façon ou une autre déployer mon application sur ma plateforme. Cela permet également une certaine tracabilité.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En local, je veux travailler en isolation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je pense sincèrement qu&amp;#8217;il faut pouvoir s&amp;#8217;abstraire de la plateforme d&amp;#8217;exécution lors du développement.&lt;br&gt;
+Les développeurs perdront un temps fou à configurer leurs postes, seront frustrés, à chaque montée de version plus rien ne fonctionnera etc&amp;#8230;&amp;#8203; si développer demande trop de dépendances.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;En conclusion: Evitez de faire fuiter votre infrastructure sur vos postes de développement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Fri, 03 Jan 2020 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2020-01-01-exemple-infra-terraform/
