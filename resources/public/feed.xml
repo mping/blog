@@ -12,17 +12,17 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 06 Jan 2020 20:33:58 +0100
+Mon, 13 Jan 2020 20:39:54 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
 <item>
 <guid>
-https://mcorbin.fr/posts/2020-01-03-plateforme-execution/
+https://mcorbin.fr/posts/2020-01-06-plateforme-execution/
 </guid>
 <link>
-https://mcorbin.fr/posts/2020-01-03-plateforme-execution/
+https://mcorbin.fr/posts/2020-01-06-plateforme-execution/
 </link>
 <title>
 Développement d'applications, conteneurs et plateforme d'exécution
@@ -46,7 +46,7 @@ Développement d'applications, conteneurs et plateforme d'exécution
 &lt;p&gt;D&amp;#8217;exposer des métriques (au format Prometheus par exemple), ou alors de les générer dans votre format préféré (Graphite, InfluxDB&amp;#8230;&amp;#8203;).&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;De générer des logs correctes, avec une manière de controller la verbosité des logs etc&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;p&gt;De générer des logs corrects, avec une manière de contrôler la verbosité des logs etc&amp;#8230;&amp;#8203;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&amp;#8230;&amp;#8203;&lt;/p&gt;
@@ -98,7 +98,7 @@ Les développeurs perdront un temps fou à configurer leurs postes, seront frust
 &lt;/div&gt;
 </description>
 <pubDate>
-Fri, 03 Jan 2020 00:00:00 +0100
+Mon, 06 Jan 2020 00:00:00 +0100
 </pubDate>
 </item>
 <item>
