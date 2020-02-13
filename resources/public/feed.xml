@@ -12,11 +12,129 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Mon, 13 Jan 2020 20:39:54 +0100
+Thu, 13 Feb 2020 19:03:04 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2020-02-13-informatique-coeur-metier/
+</guid>
+<link>
+https://mcorbin.fr/posts/2020-02-13-informatique-coeur-metier/
+</link>
+<title>
+L'informatique, c'est pas notre coeur de métier !
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;informatique, c&amp;#8217;est pas notre coeur de métier ! On a tous déjà entendu cette phrase, et je ne sais pas vous, mais cette phrase m&amp;#8217;a toujours donné des sueurs froides.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aux premiers abords, la phrase peut sembler valide.
+En effet, une entreprise dont le métier est par exemple de distribuer de l&amp;#8217;énergie, ou de transporter des personnes d&amp;#8217;un point A à un point B&amp;#8230;&amp;#8203; Son coeur de métier, ce n&amp;#8217;est pas l&amp;#8217;informatique.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le gros problème avec cette phrase est qu&amp;#8217;elle est généralement utilisée pour justifier des mauvaises pratiques, un manque de moyen, un système d&amp;#8217;information dans un état déplorable&amp;#8230;&amp;#8203; Bref, &quot;l&amp;#8217;informatique, c&amp;#8217;est pas notre coeur de métier&quot;, c&amp;#8217;est la phrase que vous entendez généralement quand vous pointez un problème et que personne ne veut faire l&amp;#8217;effort de réfléchir à une solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_l_informatique_en_partie_votre_coeur_de_métier&quot;&gt;L&amp;#8217;informatique, (en partie) votre coeur de métier ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Prenons l&amp;#8217;exemple du leader de la distribution d&amp;#8217;électricité en France. Son coeur de métier, c&amp;#8217;est tout simplement de distribuer de l&amp;#8217;électricité. Mais on parle quand même d&amp;#8217;une entreprise qui:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Pose 35 millions de compteurs &quot;connectés&quot; sur le territoire Français.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Où les clients font de plus en plus de choses via Internet (ouverture et fermeture de lignes, gestion des factures&amp;#8230;&amp;#8203;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Où un tas de logiciels internes servent à faire tourner la boîte.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Est ce que l&amp;#8217;informatique n&amp;#8217;est pas devenu de facto un domaine essentiel de l&amp;#8217;entreprise, sans lequel elle le pourrait pas fonctionner ? Cela pourrait rapidement se tester: coupez les serveurs pendant une heure et on verra ce qu&amp;#8217;il se passera ;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pourtant, la tendance en France depuis de nombreuses années est d&amp;#8217;externaliser complètement tout ce qui touche à l&amp;#8217;informatique, par exemple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Plus aucun de recrutement &quot;technique&quot;, on recrute éventuellement des profils &quot;chef de projets&quot;, &quot;fonctionnels&quot; (choisissez le nom que vous voulez) mais surtout pas un tech.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Les équipes projets sont composées à 100 % de prestataires, souvent avec un turn-over important.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_l_impact_de_l_externalisation&quot;&gt;L&amp;#8217;impact de l&amp;#8217;externalisation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;externalisation de la technique a selon moi plusieurs effets. Le premier est bien sûr la perte de compétences en interne.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La dépendance aux sociétés de services devient donc totale. Sauf qu&amp;#8217;il y a un problème: les entreprises veulent un système d&amp;#8217;information et des applications répondant à leurs besoins, alors que les sociétés de services veulent faire de l&amp;#8217;argent. Il est donc dans l&amp;#8217;intêret des sociétés de services que les projets durent et demandent une main d&amp;#8217;oeuvre importante.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est là que ça devient intéressant: les entreprises clientes ne sont même plus capables de juger ce que les sociétés de services vendent, et deviennent des vaches à lait qui signeront n&amp;#8217;importe quoi.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Parlez en à votre entourage hors tech: je suis sûr que vous avez des amis, ou de la famille dans différents domaines qui auront des discours de type &quot;Ah oui nos logiciels, ils sont faits par &amp;lt;grosse SSII&amp;gt;, ils nous coûtent 2 millions par an, ça fonctionne pas, à chaque fois qu&amp;#8217;on demande une modification ça coûte 50 000 € et ça met un an à apparaître&amp;#8230;&amp;#8203; D&amp;#8217;ailleurs, on va lancer bientôt un nouveau appel d&amp;#8217;offre pour tout réécrire&quot;.&lt;br&gt;
+Ce genre d&amp;#8217;arnaques (oui, le terme est bien choisi) est très courant, et certaines sociétés se gavent en profitant que l&amp;#8217;informatique et ses métiers soient encore mal compris dans beaucoup d&amp;#8217;endroits.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans le même genre, on a sûrement tous vu des projets simples type CRUD mais où des archis (avec des gros TJM tant qu&amp;#8217;à faire) débarquent en mode &quot;Si si je vous promets vous avez absolument besoin de microservices pour votre projet, ça tombe bien je suis un expert sur le sujet&quot;.&lt;br&gt;
+Le décideur de l&amp;#8217;entreprise a en effet vaguement entendu parler de microservices, il parait qu&amp;#8217;il faut absolument faire ça maintenant.&lt;br&gt;
+Et sans trop comprendre comment l&amp;#8217;application se transforme en un système distribué à 5000 jours hommes, 40 développeurs, 15 ops et 10 agilistes. Jackpot pour les SSII ! Et de toute façon, vu le turn-over dans 6 mois l&amp;#8217;équipe actuelle ne sera plus là, autant se faire plaisir sur les technos en attendant non ? En plus, le manager est content, son équipe est maintenant la plus grosse du bâtiment, elle doit sûrement faire des choses très importantes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_et_le_management_dans_tout_ça&quot;&gt;Et le management dans tout ça ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le problème apparait aussi dans la hiérarchie. Plus personne ne comprenant la technique, il n&amp;#8217;y a &lt;code&gt;aucune&lt;/code&gt; vision sur la stratégie long terme de la boite. la &quot;DSI&quot; n&amp;#8217;en porte que le nom.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous entendrez des phrases du type &quot;Nous allons digitaliser l&amp;#8217;entreprise grâce à l&amp;#8217;intelligence artificielle et la blockchain&quot;, mais ça n&amp;#8217;ira pas plus loin.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ou pire: quelqu&amp;#8217;un signera pendant un bon repas d&amp;#8217;affaire un deal avec IBM ou autre et il faudra tout migrer sur des outils moisis.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_un_équilibre_à_trouver&quot;&gt;Un équilibre à trouver&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Faire appel à des prestataires externes peut avoir son intérêt. Je comprends tout à fait qu&amp;#8217;il soit difficile de se passer totalement de prestataires quand on a plusieurs projets qui se lancent et se terminent en parallèle.&lt;br&gt;
+Mais dans beaucoup de boites, il y a bien assez de travail pour avoir au moins une partie des effectifs en interne. On ne me fera pas croire que des boîtes qui ont des sites avec 500 prestas dans le bâtiment depuis toujours ne trouveraient pas de quoi occuper des gens en interne.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je suis persuadé que le recours massif à la prestation en France est en partie responsable du retard que nous avons par rapport à certains de nos voisins.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cela cause des soucis aux entreprises (perte de compétences, gouffre financier, dépendance totale aux prestataires pour des projets pourtant stratégiques&amp;#8230;&amp;#8203;), mais aussi aux prestataires eux même (turn over, manque de reconnaissance, de moyens, remarques non écoutées, impression que le seul but de votre hiérarchie dans la vie est de vous empêcher de travailler correctement&amp;#8230;&amp;#8203;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;espère que dans le futur, on remettra en valeur les profils techniques (ce n&amp;#8217;est pas le sujet de cet article, mais la dévalorisation des profils techniques et le &quot;plafond de verre&quot; qu&amp;#8217;ils atteignent en France est également un problème. La technique c&amp;#8217;est sale, donc on délègue et on écoute surtout pas les remarques des équipes tech), que de vrais CTO et de vrais DSI pilotent la vision technique des entreprises, et que l&amp;#8217;excellence technique revienne au coeur des préoccupations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Thu, 13 Feb 2020 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2020-01-06-plateforme-execution/
