@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Thu, 13 Feb 2020 19:03:04 +0100
+Tue, 18 Feb 2020 22:40:37 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -42,7 +42,9 @@ En effet, une entreprise dont le métier est par exemple de distribuer de l&amp;
 &lt;h2 id=&quot;_l_informatique_en_partie_votre_coeur_de_métier&quot;&gt;L&amp;#8217;informatique, (en partie) votre coeur de métier ?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Prenons l&amp;#8217;exemple du leader de la distribution d&amp;#8217;électricité en France. Son coeur de métier, c&amp;#8217;est tout simplement de distribuer de l&amp;#8217;électricité. Mais on parle quand même d&amp;#8217;une entreprise qui:&lt;/p&gt;
+&lt;p&gt;Prenons l&amp;#8217;exemple du leader de la distribution d&amp;#8217;électricité en France.
+Son coeur de métier, c&amp;#8217;est tout simplement de distribuer de l&amp;#8217;électricité.
+Mais on parle quand même d&amp;#8217;une entreprise qui :&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
@@ -58,10 +60,10 @@ En effet, une entreprise dont le métier est par exemple de distribuer de l&amp;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Est ce que l&amp;#8217;informatique n&amp;#8217;est pas devenu de facto un domaine essentiel de l&amp;#8217;entreprise, sans lequel elle le pourrait pas fonctionner ? Cela pourrait rapidement se tester: coupez les serveurs pendant une heure et on verra ce qu&amp;#8217;il se passera ;)&lt;/p&gt;
+&lt;p&gt;Est-ce que l&amp;#8217;informatique n&amp;#8217;est pas devenu de facto un domaine essentiel de l&amp;#8217;entreprise, sans lequel elle ne pourrait pas fonctionner ? Cela pourrait rapidement se tester: coupez les serveurs pendant une heure et on verra ce qu&amp;#8217;il se passera ;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Pourtant, la tendance en France depuis de nombreuses années est d&amp;#8217;externaliser complètement tout ce qui touche à l&amp;#8217;informatique, par exemple:&lt;/p&gt;
+&lt;p&gt;Pourtant, la tendance en France depuis de nombreuses années est d&amp;#8217;externaliser complètement tout ce qui touche à l&amp;#8217;informatique, par exemple :&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
@@ -82,13 +84,14 @@ En effet, une entreprise dont le métier est par exemple de distribuer de l&amp;
 &lt;p&gt;L&amp;#8217;externalisation de la technique a selon moi plusieurs effets. Le premier est bien sûr la perte de compétences en interne.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;La dépendance aux sociétés de services devient donc totale. Sauf qu&amp;#8217;il y a un problème: les entreprises veulent un système d&amp;#8217;information et des applications répondant à leurs besoins, alors que les sociétés de services veulent faire de l&amp;#8217;argent. Il est donc dans l&amp;#8217;intêret des sociétés de services que les projets durent et demandent une main d&amp;#8217;oeuvre importante.&lt;/p&gt;
+&lt;p&gt;La dépendance aux sociétés de services devient donc totale. Sauf qu&amp;#8217;il y a un problème: les entreprises veulent un système d&amp;#8217;information et des applications répondant à leurs besoins, alors que les sociétés de services veulent faire de l&amp;#8217;argent.
+Il est donc dans l&amp;#8217;intêret des sociétés de services que les projets durent et demandent une main d&amp;#8217;oeuvre importante.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;C&amp;#8217;est là que ça devient intéressant: les entreprises clientes ne sont même plus capables de juger ce que les sociétés de services vendent, et deviennent des vaches à lait qui signeront n&amp;#8217;importe quoi.&lt;/p&gt;
+&lt;p&gt;C&amp;#8217;est là que ça devient intéressant : les entreprises clientes ne sont même plus capables de juger ce que les sociétés de services vendent, et deviennent des vaches à lait qui signeront n&amp;#8217;importe quoi.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Parlez en à votre entourage hors tech: je suis sûr que vous avez des amis, ou de la famille dans différents domaines qui auront des discours de type &quot;Ah oui nos logiciels, ils sont faits par &amp;lt;grosse SSII&amp;gt;, ils nous coûtent 2 millions par an, ça fonctionne pas, à chaque fois qu&amp;#8217;on demande une modification ça coûte 50 000 € et ça met un an à apparaître&amp;#8230;&amp;#8203; D&amp;#8217;ailleurs, on va lancer bientôt un nouveau appel d&amp;#8217;offre pour tout réécrire&quot;.&lt;br&gt;
+&lt;p&gt;Parlez-en à votre entourage hors tech, je suis sûr que vous avez des amis, ou de la famille dans différents domaines qui auront des discours de type : &quot;Ah oui nos logiciels, ils sont faits par &amp;lt;grosse SSII&amp;gt;, ils nous coûtent 2 millions par an, ça fonctionne pas, à chaque fois qu&amp;#8217;on demande une modification ça coûte 50 000 € et ça met un an à apparaître&amp;#8230;&amp;#8203; d&amp;#8217;ailleurs, on va lancer bientôt un nouveau appel d&amp;#8217;offre pour tout réécrire&quot;.&lt;br&gt;
 Ce genre d&amp;#8217;arnaques (oui, le terme est bien choisi) est très courant, et certaines sociétés se gavent en profitant que l&amp;#8217;informatique et ses métiers soient encore mal compris dans beaucoup d&amp;#8217;endroits.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -102,13 +105,14 @@ Et sans trop comprendre comment l&amp;#8217;application se transforme en un syst
 &lt;h2 id=&quot;_et_le_management_dans_tout_ça&quot;&gt;Et le management dans tout ça ?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Le problème apparait aussi dans la hiérarchie. Plus personne ne comprenant la technique, il n&amp;#8217;y a &lt;code&gt;aucune&lt;/code&gt; vision sur la stratégie long terme de la boite. la &quot;DSI&quot; n&amp;#8217;en porte que le nom.&lt;/p&gt;
+&lt;p&gt;Le problème apparait aussi dans la hiérarchie.
+Plus personne ne comprenant la technique, il n&amp;#8217;y a &lt;em&gt;aucune&lt;/em&gt; vision sur la stratégie long terme de la boite. la &quot;DSI&quot; n&amp;#8217;en porte que le nom.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Vous entendrez des phrases du type &quot;Nous allons digitaliser l&amp;#8217;entreprise grâce à l&amp;#8217;intelligence artificielle et la blockchain&quot;, mais ça n&amp;#8217;ira pas plus loin.&lt;/p&gt;
+&lt;p&gt;Vous entendrez des phrases du type : &quot;Nous allons digitaliser l&amp;#8217;entreprise grâce à l&amp;#8217;intelligence artificielle et la blockchain&quot;, mais ça n&amp;#8217;ira pas plus loin.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Ou pire: quelqu&amp;#8217;un signera pendant un bon repas d&amp;#8217;affaire un deal avec IBM ou autre et il faudra tout migrer sur des outils moisis.&lt;/p&gt;
+&lt;p&gt;Ou pire, quelqu&amp;#8217;un signera pendant un bon repas d&amp;#8217;affaire un deal avec IBM ou autre et il faudra tout migrer sur des outils moisis.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -116,7 +120,8 @@ Et sans trop comprendre comment l&amp;#8217;application se transforme en un syst
 &lt;h2 id=&quot;_un_équilibre_à_trouver&quot;&gt;Un équilibre à trouver&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Faire appel à des prestataires externes peut avoir son intérêt. Je comprends tout à fait qu&amp;#8217;il soit difficile de se passer totalement de prestataires quand on a plusieurs projets qui se lancent et se terminent en parallèle.&lt;br&gt;
+&lt;p&gt;Faire appel à des prestataires externes peut avoir son intérêt.
+Je comprends tout à fait qu&amp;#8217;il soit difficile de se passer totalement de prestataires quand on a plusieurs projets qui se lancent et se terminent en parallèle.&lt;br&gt;
 Mais dans beaucoup de boites, il y a bien assez de travail pour avoir au moins une partie des effectifs en interne. On ne me fera pas croire que des boîtes qui ont des sites avec 500 prestas dans le bâtiment depuis toujours ne trouveraient pas de quoi occuper des gens en interne.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
