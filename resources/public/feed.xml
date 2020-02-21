@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 22 Feb 2020 00:10:51 +0100
+Sat, 22 Feb 2020 00:12:32 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -247,7 +247,7 @@ Bien sûr, comme dit précédemment utiliser &lt;code&gt;new&lt;/code&gt; est in
 &lt;p&gt;Malgré cette complexité &lt;strong&gt;ENORME&lt;/strong&gt;, il ne faut surtout pas changer ! Incompréhensible.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Tu passes 2 semaines sur un bug Ribbon, tu mets 1 mois à monter de version Spring, tu mets 3 jours à monter de version ton pom parent, ton &quot;microservice&quot; avec 10 endpoints REST a 60 classes, 10 000 de code et a un pom de 3000 lignes&amp;#8230;&amp;#8203; Mais tout le monde est content et continue dans sa lancée !&amp;gt;&lt;/p&gt;
+&lt;p&gt;Tu passes 2 semaines sur un bug Ribbon, tu mets 1 mois à monter de version Spring, tu mets 3 jours à monter de version ton pom parent, ton &quot;microservice&quot; avec 10 endpoints REST a 60 classes, 10 000 de code et a un pom de 3000 lignes&amp;#8230;&amp;#8203; Mais tout le monde est content et continue dans sa lancée !&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Sur un des projets où je suis intervenu, quelques développeurs (généralement ceux qui avaient codés avec autre chose que Java dans leurs carrières) voulaient lancer un microservice avec &lt;code&gt;Vert.x&lt;/code&gt; pour tester (certains l&amp;#8217;avaient déjà utilisés en prod, d&amp;#8217;ailleurs j&amp;#8217;en ai également entendu de bons retours).&lt;br&gt;
