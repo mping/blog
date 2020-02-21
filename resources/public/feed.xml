@@ -12,11 +12,266 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Tue, 18 Feb 2020 22:40:37 +0100
+Sat, 22 Feb 2020 00:03:55 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://mcorbin.fr/posts/2020-02-22-jvm-ecosysteme/
+</guid>
+<link>
+https://mcorbin.fr/posts/2020-02-22-jvm-ecosysteme/
+</link>
+<title>
+la JVM, Java, ses haters, son écosystème
+</title>
+<description>
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comme beaucoup de monde, j&amp;#8217;ai eu l&amp;#8217;occasion de travailler professionnellement avec Java (et je continue de le faire ponctuellement aujourd&amp;#8217;hui). Dans cet article, je parlerais de la JVM, de Java, et de la (mauvaise) réputation que ce langage se traîne. Mais cette dernière est-elle vraiment justifiée ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_la_jvm&quot;&gt;la JVM&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je pense que la JVM est probablement la plateforme la plus mature pour développer des applications aujourd&amp;#8217;hui. Elle a en effet plusieurs avantages:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;De très très bonnes performances.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Un écosystème énorme. Il existe des clients écrits en Java pour à peu près toutes les bases de données, broker de messages etc&amp;#8230;&amp;#8203; disponibles sur le marché. Ces clients sont de plus généralement des clients officiels maintenus par les développeurs du produit. La librairie standard est également très riche.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De nombreux langages disponibles (Java, Clojure, Scala, Kotlin, Groovy&amp;#8230;&amp;#8203;), tous bénéficiant de l&amp;#8217;écosystème et des performances de la JVM.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Il est très facile aujourd&amp;#8217;hui de déployer des applications sur la JVM. Généralement installer la JVM puis lancer un &lt;code&gt;java -jar app.jar&lt;/code&gt; suffit, des outils comme &lt;code&gt;jlink&lt;/code&gt; permettent même d&amp;#8217;optimiser cela.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;De nombreuses innovations apparaissent sur la JVM ou danss on écosystème, comme par exemple &lt;code&gt;GraalVM&lt;/code&gt;, les différents types de garbage collector etc&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je développe depuis plusieurs années sur la JVM (en Clojure majoritairement aujourd&amp;#8217;hui), et j&amp;#8217;en ai toujours été très content.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et pourtant&amp;#8230;&amp;#8203; Quand je présente un de mes projets open source écrit en Clojure, j&amp;#8217;ai régulièrement droit à des:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Pourquoi ça tourne sur la JVM ?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Jamais je ne déployerais des application sur la JVM de nouveau, c&amp;#8217;est l&amp;#8217;enfer à gérer !&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mon expérience de la JVM a toujours été désastreuse !&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tourner sur la JVM n&amp;#8217;est pas un avantage.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est aussi quelque chose qu&amp;#8217;on voit souvent sur les réseaux sociaux. La JVM serait lente, consommerait beaucoup de ram, les applications seraient difficiles à maintenir&amp;#8230;&amp;#8203;&lt;br&gt;
+Pourtant, comme dit précédemment, il est facile de faire des applications très performantes consommant quelques centaines de Mo de RAM. On voit d&amp;#8217;ailleurs bien que la JVM est performante vu la quantité d&amp;#8217;outils &quot;Big Data&quot; tournant dessus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais alors, comment en est-on arrivé là ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_le_langage_java&quot;&gt;Le langage Java&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Certains diront que la faute revient à Java. Ce langage serait lourd, verbeux, et ce serait un calvaire de développer des applications en Java.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;C&amp;#8217;est vrai, Java a des inconvénients mais ce n&amp;#8217;est pas le pire langage du monde. De plus, le langage s&amp;#8217;améliore (certes lentement), mais ça va dans le bon sens.&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le langage n&amp;#8217;a pas un système de type digne des langages fortements typés comme Ocaml ou Rust, le &quot;tout objet&quot; du langage est parfois lourd, l&amp;#8217;immuabilité n&amp;#8217;est pas vraiment encouragé, la programmation fonctionnelle est limitée&amp;#8230;&amp;#8203; Mais on peut largement travailler avec.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, la critique de Java est encore plus savoureuse quand elle vient de développeurs Golang (je développe aussi en Golang, vous pouvez retrouver mon avis sur le langage &lt;a href=&quot;https://mcorbin.fr/posts/2019-06-13-one-year-of-go/&quot;&gt;ici&lt;/a&gt;). Java n&amp;#8217;a rien à envier à Golang en terme de fonctionnalité.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais alors, quel est le problème ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_serveurs_d_applications&quot;&gt;Les serveurs d&amp;#8217;applications&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une génération complète de développeurs et de sysadmin ont été traumatisé par les Glassfish, JBoss et autres Websphere.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai eu la chance de commencer ma carrière vers la fin de leurs utilisations (bon il y en a toujours qui tournent en prod aujourd&amp;#8217;hui mais ça se voit moins on va dire), et en effet j&amp;#8217;ai quelques souvenirs de fichiers &lt;code&gt;domain.xml&lt;/code&gt; bien violents (le tout branché sur de l&amp;#8217;Oracle sur AIX histoire de bien faire les choses).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais comme dit précédemment, aujourd&amp;#8217;hui un &lt;code&gt;java -jar&lt;/code&gt; suffit généralement pour lancer une application. Mais cette époque a fait du dégât, généralement les remarques du type &quot;OMG Java en prod plus jamais!&quot; viennent de gens ayant connu cette époque.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_frameworks_java&quot;&gt;Les frameworks Java&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour moi, la mauvaise réputation de Java aujourd&amp;#8217;hui vient principalement de ses frameworks (et non du langage, j&amp;#8217;insiste sur ce point).&lt;br&gt;
+Il y a une culture de l&amp;#8217;usine à gaz difficile à comprendre dans la communauté Java, et c&amp;#8217;est quelque chose que je n&amp;#8217;ai jamais vu dans d&amp;#8217;autres langages ou communautés. L&amp;#8217;expression &lt;code&gt;pourquoi faire simple quand on peut faire compliqué&lt;/code&gt; prend ici tout son sens. L&amp;#8217;exemple type de cette culture étant Spring.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_c_est_quoi_le_problème_avec_spring&quot;&gt;C&amp;#8217;est quoi le problème avec Spring ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai eu l&amp;#8217;occasion de travailler professionnellement sur des projets Spring dans plusieurs contextes. Je parle ici de projets avec du Spring &quot;modernes&quot;: Spring Boot, Spring Cloud, &quot;microservices&quot;&amp;#8230;&amp;#8203; Et c&amp;#8217;était à peu près ma réaction quand je suis arrivé sur les projets:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/jvm-ecosysteme/wtf.gif&quot; alt=&quot;what the fuck&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On me disait &lt;em&gt;tu verras, c&amp;#8217;est des stacks modernes !&lt;/em&gt; Quel naïf j&amp;#8217;étais ! Essayons de résumer un projet Java/Spring comme ils sont faits aujourd&amp;#8217;hui:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_génération_du_projet&quot;&gt;Génération du projet&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Les développeurs adorent générer les projets via des archetypes Maven, ou si vous n&amp;#8217;avez pas de chance avec &lt;a href=&quot;https://mcorbin.fr/posts/2018-02-08-spring-generateur/&quot;&gt;JHipster&lt;/a&gt;.&lt;br&gt;
+Vous avez pas commencé à coder, mais vous avez déjà 25 classes et un pom.xml de 2000 lignes. Soyons franc, la seule chose à faire après ça devrait être &lt;code&gt;rm -rf *&lt;/code&gt; et repartir sur des bases saines, mais bon, c&amp;#8217;est comme ça qu&amp;#8217;il faut faire il paraît.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_annotation&quot;&gt;Annotation&lt;/h3&gt;
+&lt;div class=&quot;paragraph text-center&quot;&gt;
+&lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/jvm-ecosysteme/annotation.jpg&quot; alt=&quot;tout doit être annoté&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Le projet devient un jeu où le but est simple: le mot-clé &lt;code&gt;new&lt;/code&gt; est interdit. Plus il y a de magie, plus il y a d&amp;#8217;annotations, mieux c&amp;#8217;est.&lt;br&gt;
+Métriques ? Annotations. Mocks ? Annotations. Dépendances ? Annotations. Getters ? Annotation (coucou lombok). Routes HTTP ? Annotations. Cache de la DB ? Annotation. Mapping entre objets ? Annotations. Je pourrais continuer comme ça longtemps.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La plupart des projets pourraient avoir une class Main qui serait plus ou moins:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;Cache cache = new cache(cacheConfig)
+Database database = new Database(databaseConfig);
+HTTPServer server = new HTTPServer(cache, database);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Où database et cache implémentent une interface (pour écrire facilement un mock).&lt;br&gt;
+Bien sûr, comme dit précédemment utiliser &lt;code&gt;new&lt;/code&gt; est interdit, donc vous ne verrez jamais ça. J&amp;#8217;ai eu des discussions hallucinantes où les devs ne pouvaient même pas envisager ne pas utiliser &lt;code&gt;@inject&lt;/code&gt;, comme si on leur demandait de coder avec &lt;code&gt;ed&lt;/code&gt; à la place de leur IDE.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On préfère avoir une mega usine à gaz qui explose au runtime (bah oui, c&amp;#8217;est super utile d&amp;#8217;avoir du typage statique quand derrière on a du &lt;code&gt;bean not found&lt;/code&gt; au démarrage du projet, démarrage qui met 2 plombes au passage généralement).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_utilisez_les_libs_les_plus_bloated_de_l_écosystème&quot;&gt;Utilisez les libs les plus bloated de l&amp;#8217;écosystème&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Rule 34: &lt;code&gt;IF IT EXISTS, THERE IS A SPRING STARTER FOR IT&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous ne pensiez quand même pas pouvoir utiliser les clients officiels Kafka, Elasticsearch etc&amp;#8230;&amp;#8203; quand même ?&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Non, il faut utiliser Spring Kafka, Spring Data Elasticsearch, &amp;#8230;&amp;#8203; Ces libs cachent les implémentations officiels, sont très peu flexibles, et sont surtout totalement inutiles (bah oui, faire &lt;code&gt;kafkaConsumer consumer = new KafkaConsumer(config)&lt;/code&gt; c&amp;#8217;est trop compliqué). Mais bon, le but de ces frameworks est de cocher des cases, pour pouvoir dire &quot;Oui c&amp;#8217;est supporté !!&quot; dès qu&amp;#8217;une techno est mentionnée en réunion.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;JPA, AspectJ, Hibernate&amp;#8230;&amp;#8203; Il y aurait tellement de choses à dire sur ces technos sorties de l&amp;#8217;enfer.&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Spring Data ? True story: j&amp;#8217;arrive sur un projet (gnagna microservices, gnagna stack moderne on est les big boss de Lyon etc&amp;#8230;&amp;#8203;), j&amp;#8217;ouvre un fichier, je tombe sur une tonne de fonctions ressemblant à:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;findByLibelleIgnoreCaseContainingOrOuvrageIgnoreCaseContainingOrCreatedByIgnoreCaseContaining&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;WTF&lt;/code&gt;&lt;/strong&gt; ? C&amp;#8217;est un vrai nom de fonction hein, que j&amp;#8217;ai conservé précieusement pour la ressortir. C&amp;#8217;est un peu à ce moment où je me suis dis que je devais soit repasser sysadmin, soit trouver une boîte qui ne fait pas du Java (j&amp;#8217;ai fait l&amp;#8217;un puis l&amp;#8217;autre d&amp;#8217;ailleurs). Et ces fonctions ne choquaient &lt;strong&gt;PERSONNE&lt;/strong&gt; sur le projet, c&amp;#8217;était business as usual.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_design_pattern&quot;&gt;Design pattern&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Une classe &lt;strong&gt;==&lt;/strong&gt; une interface, c&amp;#8217;est la règle ! Chaque requête HTTP faisant un accès à une base de données devra aussi au moins créer: un DAO, un DTO, un VO. Pourquoi ? Car ça fait 20 ans qu&amp;#8217;on cargo cult le Gang of Four.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_hiérarchie_de_pom_complexe&quot;&gt;Hiérarchie de pom complexe&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Avec les starters Spring et compagnie, votre pom.xml fait maintenant 3500 lignes. Sauf qu&amp;#8217;en fait le pom a aussi un pom &quot;parent&quot;, un &quot;BOM&quot;&amp;#8230;&amp;#8203; Chaque montée de version d&amp;#8217;un de ces trucs vous coûtera des jours de travail.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_montées_de_versions&quot;&gt;Montées de versions&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;D&amp;#8217;ailleurs, parlons en des montées de versions. Chaque montée de version de Spring et de ses starters amènera son lot de bugs bien louches, et beaucoup de projets/libs n&amp;#8217;ont même pas de changelog donc amusez vous bien lors du débugging.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_faites_ch_er_les_ops_au_maximum&quot;&gt;Faites ch*er les ops au maximum&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La stack Spring Cloud Netflix (Ribbon &amp;amp; co) est un enfer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Votre projet est maintenant un load balancer bugué, pas flexible, exposant très difficilement ses métriques. C&amp;#8217;est toujours cool quand on on se rend compte que N % des requêtes partent dans les limbes sans avoir aucune métrique et aucun moyen de débuguer le truc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_de_toute_façon_personne_ne_comprend_comment_ça_marche&quot;&gt;De toute façon, personne ne comprend comment ça marche&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;ai travaillé avec de très bons développeurs Java, certains &quot;connus&quot;. Des devs qui en font depuis &lt;code&gt;199X&lt;/code&gt;. Des gens qui font du Spring depuis le tout début. Même eux ne pourront pas vous aider, le framework est juste trop complexe. Et quand ton annotation marche pas car un truc rentre en conflit avec un autre, va trouver la source du problème&amp;#8230;&amp;#8203;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Je me rappelle d&amp;#8217;une montée de version de Spring où mon CTO avait tweeté &lt;em&gt;Quelle douleur les montées de version spring et ces dépendances. A la limite de l&amp;#8217;abandon mais toujours en cours&lt;/em&gt;. Oui, les montées de versions étaient &lt;strong&gt;dingues&lt;/strong&gt;, de mémoire celle là commençait à se compter en mois.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_mais_pourtant&quot;&gt;Mais pourtant&amp;#8230;&amp;#8203;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Malgré cette complexité &lt;strong&gt;ENORME&lt;/strong&gt;, il ne faut surtout pas changer ! Incompréhensible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Tu passes 2 semaines sur un bug Ribbon, tu mets 1 mois à monter de version Spring, tu mets 3 jours à monter de version ton pom parent, ton &quot;microservice&quot; avec 10 endpoints REST a 60 classes, 10 000 de code et a un pom de 3000 lignes&amp;#8230;&amp;#8203; Mais tout le monde est content et continue dans sa lancée !&amp;gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sur un des projets où je suis intervenu, quelques développeurs (généralement ceux qui avaient codés avec autre chose que Java dans leurs carrières) voulaient lancer un microservice avec &lt;code&gt;Vert.x&lt;/code&gt; pour tester (certains l&amp;#8217;avaient déjà utilisés en prod, d&amp;#8217;ailleurs j&amp;#8217;en ai également entendu de bons retours).&lt;br&gt;
+Bien sûr les autres développeurs étaient contre (fallait faire du microservice mais SPRING), et d&amp;#8217;ailleurs les décideurs étaient aussi contre car &lt;em&gt;Quand je demande à la SSII du coin des développeurs Spring ils en ont en stock&lt;/em&gt;. OK.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_un_nouvel_espoir&quot;&gt;Un nouvel espoir ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Mais de nouveaux frameworks Java apparaissent, amenant simplicité avec eux&amp;#8230;&amp;#8203; Ah non, on me souffle dans l&amp;#8217;oreillette que les Quarkus, Micronaut &amp;amp; co vous feront aussi faire de l&amp;#8217;annotation driven development.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Et c&amp;#8217;est pourquoi j&amp;#8217;ai arrêté de coder en Java.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+<pubDate>
+Sat, 22 Feb 2020 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 https://mcorbin.fr/posts/2020-02-13-informatique-coeur-metier/
