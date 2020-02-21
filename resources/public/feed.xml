@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 22 Feb 2020 00:03:55 +0100
+Sat, 22 Feb 2020 00:10:51 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -143,13 +143,13 @@ Il y a une culture de l&amp;#8217;usine à gaz difficile à comprendre dans la c
 &lt;p&gt;&lt;span class=&quot;image&quot;&gt;&lt;img src=&quot;/img/jvm-ecosysteme/wtf.gif&quot; alt=&quot;what the fuck&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;On me disait &lt;em&gt;tu verras, c&amp;#8217;est des stacks modernes !&lt;/em&gt; Quel naïf j&amp;#8217;étais ! Essayons de résumer un projet Java/Spring comme ils sont faits aujourd&amp;#8217;hui:&lt;/p&gt;
+&lt;p&gt;On me disait &lt;em&gt;tu verras, c&amp;#8217;est des stacks modernes !&lt;/em&gt; Quel naïf j&amp;#8217;étais ! Essayons de résumer un projet Java/Spring comme ils sont faits aujourd&amp;#8217;hui.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
 &lt;h3 id=&quot;_génération_du_projet&quot;&gt;Génération du projet&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Les développeurs adorent générer les projets via des archetypes Maven, ou si vous n&amp;#8217;avez pas de chance avec &lt;a href=&quot;https://mcorbin.fr/posts/2018-02-08-spring-generateur/&quot;&gt;JHipster&lt;/a&gt;.&lt;br&gt;
-Vous avez pas commencé à coder, mais vous avez déjà 25 classes et un pom.xml de 2000 lignes. Soyons franc, la seule chose à faire après ça devrait être &lt;code&gt;rm -rf *&lt;/code&gt; et repartir sur des bases saines, mais bon, c&amp;#8217;est comme ça qu&amp;#8217;il faut faire il paraît.&lt;/p&gt;
+Vous n&amp;#8217;avez pas commencé à coder, mais vous avez déjà 25 classes et un pom.xml de 2000 lignes. Soyons franc, la seule chose à faire après ça devrait être &lt;code&gt;rm -rf *&lt;/code&gt; et repartir sur des bases saines, mais bon, c&amp;#8217;est comme ça qu&amp;#8217;il faut faire il paraît.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
@@ -202,7 +202,7 @@ Bien sûr, comme dit précédemment utiliser &lt;code&gt;new&lt;/code&gt; est in
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code&gt;WTF&lt;/code&gt;&lt;/strong&gt; ? C&amp;#8217;est un vrai nom de fonction hein, que j&amp;#8217;ai conservé précieusement pour la ressortir. C&amp;#8217;est un peu à ce moment où je me suis dis que je devais soit repasser sysadmin, soit trouver une boîte qui ne fait pas du Java (j&amp;#8217;ai fait l&amp;#8217;un puis l&amp;#8217;autre d&amp;#8217;ailleurs). Et ces fonctions ne choquaient &lt;strong&gt;PERSONNE&lt;/strong&gt; sur le projet, c&amp;#8217;était business as usual.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;WTF&lt;/code&gt;&lt;/strong&gt; ? C&amp;#8217;est un vrai nom de fonction qui était dans le projet hein, que j&amp;#8217;ai conservé précieusement pour la ressortir. C&amp;#8217;est un peu à ce moment où je me suis dis que je devais soit repasser sysadmin, soit trouver une boîte qui ne fait pas du Java (j&amp;#8217;ai fait l&amp;#8217;un puis l&amp;#8217;autre d&amp;#8217;ailleurs). Et ces fonctions ne choquaient &lt;strong&gt;PERSONNE&lt;/strong&gt; sur le projet, c&amp;#8217;était business as usual.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
