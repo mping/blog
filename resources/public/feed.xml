@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 22 Feb 2020 00:12:32 +0100
+Sat, 22 Feb 2020 16:46:47 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -194,7 +194,7 @@ Bien sûr, comme dit précédemment utiliser &lt;code&gt;new&lt;/code&gt; est in
 &lt;p&gt;JPA, AspectJ, Hibernate&amp;#8230;&amp;#8203; Il y aurait tellement de choses à dire sur ces technos sorties de l&amp;#8217;enfer.&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Spring Data ? True story: j&amp;#8217;arrive sur un projet (gnagna microservices, gnagna stack moderne on est les big boss de Lyon etc&amp;#8230;&amp;#8203;), j&amp;#8217;ouvre un fichier, je tombe sur une tonne de fonctions ressemblant à:&lt;/p&gt;
+&lt;p&gt;Spring Data ? True story: j&amp;#8217;arrive sur un projet (gnagna microservices, gnagna stack moderne on est le meilleur projet de la ville etc&amp;#8230;&amp;#8203;), j&amp;#8217;ouvre un fichier, je tombe sur une tonne de fonctions ressemblant à:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
