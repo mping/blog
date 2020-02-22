@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 22 Feb 2020 16:49:54 +0100
+Sat, 22 Feb 2020 16:51:50 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -238,7 +238,7 @@ Bien sûr, comme dit précédemment utiliser &lt;code&gt;new&lt;/code&gt; est in
 &lt;p&gt;J&amp;#8217;ai travaillé avec de très bons développeurs Java, certains &quot;connus&quot;. Des devs qui en font depuis &lt;code&gt;199X&lt;/code&gt;. Des gens qui font du Spring depuis le tout début. Même eux ne pourront pas vous aider, le framework est juste trop complexe. Et quand ton annotation marche pas car un truc rentre en conflit avec un autre, va trouver la source du problème&amp;#8230;&amp;#8203;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Je me rappelle d&amp;#8217;une montée de version de Spring où mon CTO avait tweeté &lt;em&gt;Quelle douleur les montées de version spring et ces dépendances. A la limite de l&amp;#8217;abandon mais toujours en cours&lt;/em&gt;. Oui, les montées de versions étaient &lt;strong&gt;dingues&lt;/strong&gt;, de mémoire celle là commençait à se compter en mois.&lt;/p&gt;
+&lt;p&gt;Je me rappelle d&amp;#8217;une montée de version de Spring où mon CTO de l&amp;#8217;époque avait tweeté &lt;em&gt;Quelle douleur les montées de version spring et ces dépendances. A la limite de l&amp;#8217;abandon mais toujours en cours&lt;/em&gt;. Oui, les montées de versions étaient &lt;strong&gt;dingues&lt;/strong&gt;, de mémoire celle là commençait à se compter en mois.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
