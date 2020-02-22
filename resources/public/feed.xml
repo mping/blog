@@ -12,7 +12,7 @@ https://mcorbin.fr
 Blog de mcorbin
 </description>
 <lastBuildDate>
-Sat, 22 Feb 2020 16:51:50 +0100
+Sat, 22 Feb 2020 16:56:47 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -25,14 +25,14 @@ https://mcorbin.fr/posts/2020-02-22-jvm-ecosysteme/
 https://mcorbin.fr/posts/2020-02-22-jvm-ecosysteme/
 </link>
 <title>
-la JVM, Java, ses haters, son écosystème
+La JVM, Java, ses haters, son écosystème
 </title>
 <description>
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Comme beaucoup de monde, j&amp;#8217;ai eu l&amp;#8217;occasion de travailler professionnellement avec Java (et je continue de le faire ponctuellement aujourd&amp;#8217;hui). Dans cet article, je parlerais de la JVM, de Java, et de la (mauvaise) réputation que ce langage se traîne. Mais cette dernière est-elle vraiment justifiée ?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;_la_jvm&quot;&gt;la JVM&lt;/h2&gt;
+&lt;h2 id=&quot;_la_jvm&quot;&gt;La JVM&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Je pense que la JVM est probablement la plateforme la plus mature pour développer des applications aujourd&amp;#8217;hui. Elle a en effet plusieurs avantages:&lt;/p&gt;
